@@ -1,0 +1,7 @@
+# Ignore files with parsing issues
+node_modules/
+dist/
+build/
+*.min.css
+# Add specific problematic CSS files here
+# path/to/problematic-file.css

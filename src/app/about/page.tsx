@@ -1,22 +1,16 @@
 'use client';
 
 import Navigation from '@/components/Navigation';
-import Hero from '@/components/Hero';
 import About from '@/components/About';
-import Services from '@/components/Services';
-import Testimonials from '@/components/Testimonials';
-import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
-export default function ApolloMedical() {
+export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 overflow-x-hidden">
       <Navigation />
-      <Hero />
-      <About />
-      <Services />
-      <Testimonials />
-      <Contact />
+      <div className="pt-20">
+        <About />
+      </div>
       <Footer />
     </div>
   );
