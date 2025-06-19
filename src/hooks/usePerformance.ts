@@ -10,7 +10,6 @@ export function usePerformance() {
     const checkPerformance = () => {
       // Check hardware concurrency (CPU cores)
       const cores = navigator.hardwareConcurrency || 1;
-
       // Check memory (if available)
       const memory = (navigator as any).deviceMemory || 4;
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, Variants } from 'framer-motion';
 import { Heart, Brain, Sparkles, Calendar, Clock, Phone } from 'lucide-react';
 import { useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
@@ -73,7 +73,7 @@ export default function Services() {
   );
 
   // Optimize animation variants
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -84,14 +84,14 @@ export default function Services() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 }, // Reduced from y: 50
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.5, // Reduced from 0.8
-        ease: 'easeOut',
+        ease: [0.6, -0.05, 0.01, 0.99], // Changed from 'easeOut' string
       },
     },
   };
@@ -219,7 +219,7 @@ export default function Services() {
               option for your specific needs.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Button variant="medical" size="lg">
+              <Button variant="default" size="lg">
                 <Phone className="w-5 h-5 mr-2" />
                 CALL (702) 444-7744
               </Button>

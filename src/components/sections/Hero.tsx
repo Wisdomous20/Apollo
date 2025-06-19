@@ -1,199 +1,267 @@
 'use client';
 
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Heart, Sparkles, ChevronDown, Calendar } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import {
+  Heart,
+  Sparkles,
+  Calendar,
+  ArrowDown,
+  Zap,
+  Shield,
+} from 'lucide-react';
 import { useRef } from 'react';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
-function Hero() {
-  const { scrollYProgress } = useScroll();
-  const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, {
-    once: true,
-    margin: '-20% 0px -20% 0px',
+export default function Hero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
   });
 
-  // Optimize transform values for better performance
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']); // Reduced from 30%
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']); // Reduced from 100%
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   return (
     <section
+      ref={containerRef}
       id="main-content"
-      ref={heroRef}
-      className="relative min-h-screen flex items-center pt-20 bg-gradient-to-br from-slate-50 to-medical-50/30"
+      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-neutral-50 to-blue-50"
     >
-      <motion.div
-        style={{ y: backgroundY }}
-        className="absolute inset-0 bg-gradient-to-br from-white/80 to-medical-50/40"
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
+      {/* Animated Background Elements */}
+      <motion.div style={{ y: backgroundY }} className="absolute inset-0">
+        {/* Large floating blob */}
         <motion.div
-          initial={{ opacity: 0, x: -30 }} // Reduced from x: -50
-          animate={heroInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.6 }} // Reduced from 0.8
-          style={{ y: textY }}
-          className="space-y-6"
-        >
-          <motion.div
-            className="inline-flex items-center space-x-2 bg-medical-50 text-medical-700 px-4 py-2 rounded-full text-sm font-medium"
-            initial={{ opacity: 0 }}
-            animate={heroInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.2 }}
-          >
-            <Heart className="w-4 h-4" />
-            <span>TRUSTED HEALTHCARE</span>
-          </motion.div>
+          className="absolute top-20 -right-40 w-96 h-96 gradient-ocean blob opacity-20"
+          animate={{
+            rotate: 360,
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
+            scale: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
+          }}
+        />
 
-          <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.4 }}
-          >
-            Compassionate Care for{' '}
-            <span className="text-gradient-medical">Your Health</span>
-          </motion.h1>
-
-          <motion.p
-            className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.6 }}
-          >
-            At Apollo Medical Group, we provide comprehensive primary care,
-            mental health services, and aesthetic treatments in a welcoming
-            environment.
-          </motion.p>
-
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.8 }}
-          >
-            <Button
-              variant="medical"
-              size="lg"
-              className="shadow-lg hover:shadow-xl"
-              aria-label="Schedule an appointment"
-            >
-              <Calendar className="w-5 h-5 mr-2" />
-              SCHEDULE APPOINTMENT
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              aria-label="Learn more about our services"
-            >
-              LEARN MORE
-            </Button>
-          </motion.div>
-
-          {/* Trust indicators */}
-          <motion.div
-            className="flex items-center space-x-6 pt-6"
-            initial={{ opacity: 0 }}
-            animate={heroInView ? { opacity: 1 } : {}}
-            transition={{ delay: 1.0 }}
-          >
-            <div className="text-center">
-              <div className="text-2xl font-bold text-medical-600">15+</div>
-              <div className="text-sm text-slate-600">Years Experience</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-medical-600">5000+</div>
-              <div className="text-sm text-slate-600">Patients Served</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-medical-600">24/7</div>
-              <div className="text-sm text-slate-600">Support Available</div>
-            </div>
-          </motion.div>
-        </motion.div>
-
+        {/* Medium floating blob */}
         <motion.div
-          className="relative order-first lg:order-last"
-          initial={{ opacity: 0, scale: 0.95 }} // Reduced from 0.9
-          animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }} // Reduced delay
-        >
-          <div className="relative w-full h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-            <Image
-              src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=600&fit=crop&crop=center"
-              alt="Medical professional providing compassionate care"
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 50vw" // Add sizes for better performance
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-medical-900/20 to-transparent" />
+          className="absolute bottom-20 -left-20 w-64 h-64 gradient-forest blob-2 opacity-15"
+          animate={{
+            rotate: -360,
+            y: [0, -30, 0],
+          }}
+          transition={{
+            rotate: { duration: 25, repeat: Infinity, ease: 'linear' },
+            y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+          }}
+        />
 
-            {/* Quality badge */}
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-lg">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-health rounded-full flex items-center justify-center">
-                  <Heart className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-slate-800">
-                    Quality Care
-                  </div>
-                  <div className="text-xs text-slate-600">
-                    Certified Excellence
-                  </div>
-                </div>
+        {/* Small decorative elements */}
+        <motion.div
+          className="absolute top-1/3 left-1/4 w-12 h-12 gradient-sunset rounded-full"
+          animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </motion.div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-32 pb-20">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center min-h-[80vh]">
+          {/* Left Content - Asymmetric Layout */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            style={{ y: textY }}
+            className="lg:col-span-7 space-y-8"
+          >
+            {/* Playful Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="inline-flex items-center space-x-3 bg-white/60 backdrop-blur-sm border border-white/40 px-6 py-3 rounded-full shadow-lg"
+            >
+              <div className="w-8 h-8 gradient-ocean rounded-full flex items-center justify-center">
+                <Heart className="w-4 h-4 text-white" />
               </div>
+              <span className="text-sm font-semibold text-neutral-700 tracking-wide">
+                TRUSTED HEALTHCARE SINCE 2008
+              </span>
+              <Sparkles className="w-4 h-4 text-yellow-500" />
+            </motion.div>
+
+            {/* Main Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-5xl sm:text-6xl lg:text-7xl font-fredoka font-bold leading-tight"
+            >
+              <span className="text-neutral-800">Healthcare</span>
+              <br />
+              <span className="text-gradient">Made Simple</span>
+              <br />
+              <span className="text-neutral-600 text-4xl sm:text-5xl lg:text-6xl">
+                & Joyful
+              </span>
+            </motion.h1>
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="text-xl text-neutral-600 leading-relaxed max-w-2xl"
+            >
+              At Apollo Medical Group, we believe healthcare should be
+              accessible, comprehensive, and surprisingly delightful. From
+              primary care to mental health and aesthetic treatments.
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Button
+                size="lg"
+                className="gradient-ocean text-white hover:opacity-90 rounded-2xl px-8 py-6 text-lg font-semibold shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all"
+              >
+                <Calendar className="w-5 h-5 mr-3" />
+                Book Appointment
+              </Button>
+
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-2 border-neutral-300 hover:border-neutral-400 rounded-2xl px-8 py-6 text-lg font-semibold hover:bg-white/50 transition-all"
+              >
+                Learn More
+              </Button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.1, duration: 0.6 }}
+              className="flex flex-wrap gap-8 pt-8"
+            >
+              {(
+                [
+                  { number: '15K+', label: 'Happy Patients', icon: Heart },
+                  { number: '98%', label: 'Satisfaction', icon: Sparkles },
+                  { number: '24/7', label: 'Support', icon: Shield },
+                ] as const
+              ).map((stat, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className="w-12 h-12 gradient-forest rounded-2xl flex items-center justify-center">
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-fredoka font-bold text-neutral-800">
+                      {stat.number}
+                    </div>
+                    <div className="text-sm text-neutral-600 font-medium">
+                      {stat.label}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right Visual Area - Creative Layout */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4, duration: 1 }}
+            className="lg:col-span-5 relative"
+          >
+            {/* Main Image Placeholder */}
+            <div className="relative">
+              {/* Primary Card */}
+              <motion.div
+                className="relative w-full h-96 gradient-sky rounded-3xl shadow-2xl overflow-hidden"
+                animate={{ y: [0, -10, 0] }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Heart className="w-12 h-12" />
+                    </div>
+                    <p className="text-lg font-semibold">
+                      3D Doctor Illustration
+                    </p>
+                    <p className="text-sm opacity-80">Compassionate Care</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Floating Elements */}
+              <motion.div
+                className="absolute -top-6 -right-6 w-20 h-20 gradient-sunset rounded-3xl shadow-xl flex items-center justify-center"
+                animate={{
+                  rotate: [0, 10, 0],
+                  y: [0, -15, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <Zap className="w-8 h-8 text-white" />
+              </motion.div>
+
+              <motion.div
+                className="absolute -bottom-4 -left-6 w-16 h-16 gradient-ocean rounded-full shadow-lg flex items-center justify-center"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  rotate: [0, -10, 0],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 1,
+                }}
+              >
+                <Sparkles className="w-6 h-6 text-white" />
+              </motion.div>
             </div>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="flex flex-col items-center space-y-2">
+            <ArrowDown className="w-6 h-6 text-neutral-400" />
+            <span className="text-sm text-neutral-400 font-medium">
+              Scroll to explore
+            </span>
           </div>
-
-          {/* Optimize floating animations */}
-          <motion.div
-            className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-medical rounded-2xl flex items-center justify-center shadow-lg"
-            animate={{
-              y: [0, -6, 0], // Reduced from -8
-              rotate: [0, 2, 0], // Reduced from 3
-            }}
-            transition={{
-              duration: 6, // Increased from 4 for smoother animation
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            <Heart className="w-8 h-8 text-white" />
-          </motion.div>
-
-          <motion.div
-            className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-health rounded-2xl flex items-center justify-center shadow-lg"
-            animate={{
-              y: [0, 6, 0], // Reduced from 8
-              rotate: [0, -2, 0], // Reduced from -3
-            }}
-            transition={{
-              duration: 8, // Increased from 5 for smoother animation
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: 1,
-            }}
-          >
-            <Sparkles className="w-6 h-6 text-white" />
-          </motion.div>
         </motion.div>
       </div>
 
-      {/* Optimize scroll indicator animation */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 6, 0] }} // Reduced from 8
-        transition={{ duration: 3, repeat: Infinity }} // Increased duration
-      >
-        <ChevronDown className="w-6 h-6 text-medical-600" />
-        <span className="sr-only">Scroll down for more content</span>
-      </motion.div>
+      {/* Wave Transition */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" className="w-full h-20 fill-white">
+          <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" />
+        </svg>
+      </div>
     </section>
   );
 }
-
-export default Hero;

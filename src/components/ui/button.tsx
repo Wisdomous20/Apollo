@@ -4,29 +4,29 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transform hover:-translate-y-0.5',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-2xl text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 transform hover:-translate-y-1 active:translate-y-0',
   {
     variants: {
       variant: {
         default:
-          'bg-medical-600 text-white hover:bg-medical-700 shadow-lg hover:shadow-xl focus-visible:ring-medical-200',
+          'gradient-ocean text-white shadow-lg hover:shadow-xl focus-visible:ring-blue-200',
         destructive:
-          'bg-red-600 text-white hover:bg-red-700 shadow-lg hover:shadow-xl focus-visible:ring-red-200',
+          'bg-red-500 text-white hover:bg-red-600 shadow-lg hover:shadow-xl focus-visible:ring-red-200',
         outline:
-          'border-2 border-medical-600 text-medical-600 bg-white hover:bg-medical-600 hover:text-white focus-visible:ring-medical-200',
+          'border-2 border-neutral-300 bg-white hover:bg-neutral-50 hover:border-neutral-400 focus-visible:ring-neutral-200',
         secondary:
-          'bg-health-600 text-white hover:bg-health-700 shadow-lg hover:shadow-xl focus-visible:ring-health-200',
+          'gradient-forest text-white shadow-lg hover:shadow-xl focus-visible:ring-green-200',
         ghost:
-          'text-medical-600 hover:bg-medical-50 focus-visible:ring-medical-200',
-        link: 'text-medical-600 underline-offset-4 hover:underline focus-visible:ring-medical-200',
-        medical:
-          'bg-gradient-medical text-white hover:opacity-90 shadow-lg hover:shadow-xl focus-visible:ring-medical-200',
+          'text-neutral-700 hover:bg-neutral-100 focus-visible:ring-neutral-200',
+        link: 'text-blue-600 underline-offset-4 hover:underline focus-visible:ring-blue-200',
+        sunset:
+          'gradient-sunset text-white shadow-lg hover:shadow-xl focus-visible:ring-orange-200',
       },
       size: {
         default: 'h-12 px-6 py-3',
-        sm: 'h-10 rounded-lg px-4 text-sm',
-        lg: 'h-14 rounded-xl px-8 text-base',
-        xl: 'h-16 rounded-2xl px-10 py-4 text-lg font-semibold',
+        sm: 'h-10 rounded-xl px-4 text-sm',
+        lg: 'h-14 rounded-2xl px-8 py-4 text-base',
+        xl: 'h-16 rounded-3xl px-10 py-5 text-lg font-bold',
         icon: 'h-12 w-12',
       },
     },
@@ -48,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size }), className)}
+        className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
       />
