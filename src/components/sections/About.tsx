@@ -12,7 +12,7 @@ export default function About() {
     <section
       id="about"
       ref={aboutRef}
-      className="py-20 bg-white relative overflow-hidden"
+      className="py-20 bg-background relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 space-y-20">
         {/* First section - Our Services */}

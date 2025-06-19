@@ -10,7 +10,7 @@ import Footer from '@/components/Footer';
 
 export default function ApolloMedical() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navigation />
       <Hero />
       <About />

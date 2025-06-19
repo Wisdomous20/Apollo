@@ -44,7 +44,7 @@ export default function Gallery() {
   ];
 
   return (
-    <section className="py-20 px-6 bg-white">
+    <section className="py-20 px-6 bg-background">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -52,7 +52,7 @@ export default function Gallery() {
           className="text-center mb-16"
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="text-gradient-primary">Our Gallery</span>
+            <span className="text-gradient-vibrant">Our Gallery</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Take a look at our state-of-the-art facilities, dedicated healthcare
