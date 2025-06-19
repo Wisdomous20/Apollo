@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import {
   Heart,
   Sparkles,
@@ -19,8 +19,15 @@ export default function Hero() {
     offset: ['start start', 'end start'],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  // Use spring for smoother parallax
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  const backgroundY = useTransform(smoothProgress, [0, 1], ['0%', '15%']); // Reduced from 30%
+  const textY = useTransform(smoothProgress, [0, 1], ['0%', '25%']); // Reduced from 50%
 
   return (
     <section
@@ -28,50 +35,54 @@ export default function Hero() {
       id="main-content"
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-neutral-50 to-blue-50"
     >
-      {/* Animated Background Elements */}
-      <motion.div style={{ y: backgroundY }} className="absolute inset-0">
-        {/* Large floating blob */}
-        <motion.div
-          className="absolute top-20 -right-40 w-96 h-96 gradient-ocean blob opacity-20"
-          animate={{
-            rotate: 360,
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
-            scale: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
-          }}
-        />
+      {/* Animated Background Elements - Separated transforms */}
+      <div className="absolute inset-0">
+        <motion.div style={{ y: backgroundY }} className="absolute inset-0">
+          {/* Large floating blob */}
+          <motion.div
+            className="absolute top-20 -right-40 w-96 h-96 gradient-ocean blob opacity-20"
+            animate={{
+              rotate: 360,
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
+              scale: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
+            }}
+          />
 
-        {/* Medium floating blob */}
-        <motion.div
-          className="absolute bottom-20 -left-20 w-64 h-64 gradient-forest blob-2 opacity-15"
-          animate={{
-            rotate: -360,
-            y: [0, -30, 0],
-          }}
-          transition={{
-            rotate: { duration: 25, repeat: Infinity, ease: 'linear' },
-            y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-          }}
-        />
+          {/* Medium floating blob */}
+          <motion.div
+            className="absolute bottom-20 -left-20 w-64 h-64 gradient-forest blob-2 opacity-15"
+            animate={{
+              rotate: -360,
+              y: [0, -30, 0],
+            }}
+            transition={{
+              rotate: { duration: 25, repeat: Infinity, ease: 'linear' },
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+          />
 
-        {/* Small decorative elements */}
-        <motion.div
-          className="absolute top-1/3 left-1/4 w-12 h-12 gradient-sunset rounded-full"
-          animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </motion.div>
+          {/* Small decorative elements */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-12 h-12 gradient-sunset rounded-full"
+            animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </motion.div>
+      </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-32 pb-20">
+      <motion.div
+        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-32 pb-32"
+        style={{ y: textY }} // Removed opacity style
+      >
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center min-h-[80vh]">
           {/* Left Content - Asymmetric Layout */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            style={{ y: textY }}
             className="lg:col-span-7 space-y-8"
           >
             {/* Playful Badge */}
@@ -147,7 +158,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.1, duration: 0.6 }}
-              className="flex flex-wrap gap-8 pt-8"
+              className="flex flex-wrap gap-8 pt-12 mt-8 border-t border-neutral-200"
             >
               {(
                 [
@@ -156,8 +167,15 @@ export default function Hero() {
                   { number: '24/7', label: 'Support', icon: Shield },
                 ] as const
               ).map((stat, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className="w-12 h-12 gradient-forest rounded-2xl flex items-center justify-center">
+                <motion.div
+                  key={index}
+                  className="flex items-center space-x-3 bg-white/70 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/50"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 + index * 0.1, duration: 0.5 }}
+                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                >
+                  <div className="w-12 h-12 gradient-forest rounded-2xl flex items-center justify-center shadow-md">
                     <stat.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -168,7 +186,7 @@ export default function Hero() {
                       {stat.label}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </motion.div>
@@ -206,7 +224,7 @@ export default function Hero() {
                 </div>
               </motion.div>
 
-              {/* Floating Elements */}
+              {/* Floating Elements - Independent animations */}
               <motion.div
                 className="absolute -top-6 -right-6 w-20 h-20 gradient-sunset rounded-3xl shadow-xl flex items-center justify-center"
                 animate={{
@@ -243,9 +261,10 @@ export default function Hero() {
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-16 left-1/2 transform -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          // Remove opacity style that makes indicator disappear
         >
           <div className="flex flex-col items-center space-y-2">
             <ArrowDown className="w-6 h-6 text-neutral-400" />
@@ -254,14 +273,7 @@ export default function Hero() {
             </span>
           </div>
         </motion.div>
-      </div>
-
-      {/* Wave Transition */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 120" className="w-full h-20 fill-white">
-          <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" />
-        </svg>
-      </div>
+      </motion.div>
     </section>
   );
 }

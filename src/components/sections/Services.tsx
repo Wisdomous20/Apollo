@@ -100,7 +100,7 @@ export default function Services() {
     <section
       id="services"
       ref={servicesRef}
-      className="py-16 bg-white lg:py-24"
+      className="py-24 bg-white lg:py-32"
     >
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <motion.div
