@@ -1,7 +1,7 @@
 'use client';
 
 import Navigation from '@/components/Navigation';
-import Gallery from '@/components/Gallery';
+import Gallery from '@/components/sections/Gallery';
 import Footer from '@/components/Footer';
 
 export default function GalleryPage() {

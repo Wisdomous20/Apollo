@@ -1,7 +1,7 @@
 'use client';
 
 import Navigation from '@/components/Navigation';
-import About from '@/components/About';
+import About from '@/components/sections/About';
 import Footer from '@/components/Footer';
 
 export default function AboutPage() {
