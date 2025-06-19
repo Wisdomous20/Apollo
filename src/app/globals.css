@@ -9,7 +9,7 @@
     --text: #1a365d;
     --background: #ffffff;
     --primary: #2563eb;
-    --secondary: #059669;
+    --secondary: #1e40af;
     --accent: #3b82f6;
     --muted: 248 250 252;
     --muted-foreground: 100 116 139;
@@ -18,7 +18,7 @@
     --destructive: 220 38 38;
     --destructive-foreground: 255 255 255;
     --chart-1: 37 99 235;
-    --chart-2: 5 150 105;
+    --chart-2: 30 64 175;
     --chart-3: 124 58 237;
     --chart-4: 220 38 38;
     --chart-5: 234 88 12;
@@ -29,7 +29,7 @@
     --text: #f1f5f9;
     --background: #0f172a;
     --primary: #3b82f6;
-    --secondary: #10b981;
+    --secondary: #2563eb;
     --accent: #60a5fa;
     --muted: 30 41 59;
     --muted-foreground: 148 163 184;
@@ -90,18 +90,18 @@
     padding: 1.5rem 1.5rem;
     font-weight: 500;
     color: white;
-    background-color: #059669;
+    background-color: #1e40af;
     border-radius: 0.75rem;
     transition: all 0.2s;
   }
 
   .btn-medical-secondary:hover {
-    background-color: #047857;
+    background-color: #1d4ed8;
   }
 
   .btn-medical-secondary:focus {
     outline: none;
-    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.2);
+    box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.2);
   }
 
   .btn-medical-outline {
@@ -187,7 +187,7 @@
   }
 
   .text-gradient-health {
-    background: linear-gradient(135deg, #059669, #10b981);
+    background: linear-gradient(135deg, #1e40af, #2563eb);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

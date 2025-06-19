@@ -14,7 +14,7 @@ export default {
         text: '#1a365d', // Deep blue for better readability
         background: '#ffffff',
         primary: '#2563eb', // Professional medical blue
-        secondary: '#059669', // Calming green for health
+        secondary: '#1e40af', // Deep blue instead of green
         accent: '#3b82f6',
         foreground: '#1a365d',
 
@@ -33,16 +33,16 @@ export default {
         },
 
         health: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
         },
 
         card: {
@@ -66,7 +66,7 @@ export default {
         ring: '#2563eb',
         chart: {
           '1': '#2563eb',
-          '2': '#059669',
+          '2': '#1e40af',
           '3': '#7c3aed',
           '4': '#dc2626',
           '5': '#ea580c',
@@ -79,7 +79,7 @@ export default {
       },
       backgroundImage: {
         'gradient-medical': 'linear-gradient(135deg, #2563eb, #3b82f6)',
-        'gradient-health': 'linear-gradient(135deg, #059669, #10b981)',
+        'gradient-health': 'linear-gradient(135deg, #1e40af, #2563eb)',
         'gradient-trust': 'linear-gradient(135deg, #1e40af, #2563eb)',
       },
       borderRadius: {

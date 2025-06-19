@@ -40,7 +40,7 @@ export default function Services() {
       duration: '30 mins | Varies',
       description:
         'Our Aesthetic Services offer a range of medically supervised treatments designed to enhance your natural beauty, address aesthetic concerns, and boost your confidence...',
-      color: 'from-emerald-500 to-teal-500',
+      color: 'from-blue-500 to-indigo-500',
     },
   ];
 
@@ -50,14 +50,14 @@ export default function Services() {
       ref={servicesRef}
       className="py-20 bg-gradient-to-br from-primary-50 to-primary-100"
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="px-6 mx-auto max-w-7xl">
         <motion.div
-          className="text-center mb-16"
+          className="mb-16 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={servicesInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl">
             Online Appointments
           </h2>
           <p className="text-xl text-gray-600">
@@ -65,7 +65,7 @@ export default function Services() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid gap-8 md:grid-cols-3">
           {services.map((service, index) => (
             <motion.div
               key={service.title}
@@ -74,7 +74,7 @@ export default function Services() {
               transition={{ duration: 0.8, delay: index * 0.2 }}
               whileHover={{ y: -10 }}
             >
-              <Card className="h-full rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 group border-0">
+              <Card className="h-full p-8 transition-all duration-300 border-0 shadow-lg rounded-3xl hover:shadow-2xl group">
                 <CardHeader className="p-0 mb-6">
                   <div
                     className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
@@ -84,21 +84,21 @@ export default function Services() {
                   <CardTitle className="text-2xl font-bold text-gray-900">
                     {service.title}
                   </CardTitle>
-                  <CardDescription className="text-primary-600 font-semibold text-base">
+                  <CardDescription className="text-base font-semibold text-primary-600">
                     {service.duration}
                   </CardDescription>
                 </CardHeader>
 
                 <CardContent className="p-0 mb-6">
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="leading-relaxed text-gray-600">
                     {service.description}
                   </p>
                 </CardContent>
 
-                <CardFooter className="p-0 flex items-center justify-between">
+                <CardFooter className="flex items-center justify-between p-0">
                   <Button
                     variant="ghost"
-                    className="text-primary-600 font-semibold hover:text-primary-700 p-0"
+                    className="p-0 font-semibold text-primary-600 hover:text-primary-700"
                   >
                     + More
                   </Button>
@@ -106,7 +106,7 @@ export default function Services() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Button className="bg-neutral-900 text-white px-6 py-2 rounded-xl font-semibold hover:bg-neutral-800">
+                    <Button className="px-6 py-2 font-semibold text-white bg-neutral-900 rounded-xl hover:bg-neutral-800">
                       BOOK
                     </Button>
                   </motion.div>
