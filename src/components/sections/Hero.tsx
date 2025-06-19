@@ -9,10 +9,14 @@ import { Button } from '@/components/ui/button';
 function Hero() {
   const { scrollYProgress } = useScroll();
   const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, { once: true });
+  const heroInView = useInView(heroRef, {
+    once: true,
+    margin: '-20% 0px -20% 0px',
+  });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  // Optimize transform values for better performance
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']); // Reduced from 30%
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']); // Reduced from 100%
 
   return (
     <section
@@ -27,9 +31,9 @@ function Hero() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -30 }} // Reduced from x: -50
           animate={heroInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }} // Reduced from 0.8
           style={{ y: textY }}
           className="space-y-6"
         >
@@ -112,9 +116,9 @@ function Hero() {
 
         <motion.div
           className="relative order-first lg:order-last"
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }} // Reduced from 0.9
           animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 1, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.2 }} // Reduced delay
         >
           <div className="relative w-full h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
             <Image
@@ -123,6 +127,7 @@ function Hero() {
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 768px) 100vw, 50vw" // Add sizes for better performance
             />
             <div className="absolute inset-0 bg-gradient-to-t from-medical-900/20 to-transparent" />
 
@@ -144,16 +149,16 @@ function Hero() {
             </div>
           </div>
 
-          {/* Floating Elements */}
+          {/* Optimize floating animations */}
           <motion.div
             className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-medical rounded-2xl flex items-center justify-center shadow-lg"
             animate={{
-              y: [0, -8, 0],
-              rotate: [0, 3, 0],
+              y: [0, -6, 0], // Reduced from -8
+              rotate: [0, 2, 0], // Reduced from 3
             }}
             transition={{
-              duration: 4,
-              repeat: Number.POSITIVE_INFINITY,
+              duration: 6, // Increased from 4 for smoother animation
+              repeat: Infinity,
               ease: 'easeInOut',
             }}
           >
@@ -163,12 +168,12 @@ function Hero() {
           <motion.div
             className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-health rounded-2xl flex items-center justify-center shadow-lg"
             animate={{
-              y: [0, 8, 0],
-              rotate: [0, -3, 0],
+              y: [0, 6, 0], // Reduced from 8
+              rotate: [0, -2, 0], // Reduced from -3
             }}
             transition={{
-              duration: 5,
-              repeat: Number.POSITIVE_INFINITY,
+              duration: 8, // Increased from 5 for smoother animation
+              repeat: Infinity,
               ease: 'easeInOut',
               delay: 1,
             }}
@@ -178,10 +183,11 @@ function Hero() {
         </motion.div>
       </div>
 
+      {/* Optimize scroll indicator animation */}
       <motion.div
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+        animate={{ y: [0, 6, 0] }} // Reduced from 8
+        transition={{ duration: 3, repeat: Infinity }} // Increased duration
       >
         <ChevronDown className="w-6 h-6 text-medical-600" />
         <span className="sr-only">Scroll down for more content</span>

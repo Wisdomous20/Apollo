@@ -2,7 +2,7 @@
 
 import { motion, useInView } from 'framer-motion';
 import { Heart, Brain, Sparkles, Calendar, Clock, Phone } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,55 +15,86 @@ import {
 
 export default function Services() {
   const servicesRef = useRef(null);
-  const servicesInView = useInView(servicesRef, { once: true });
+  const servicesInView = useInView(servicesRef, {
+    once: true,
+    margin: '-10% 0px -10% 0px', // Optimize trigger point
+  });
 
-  const services = [
-    {
-      icon: Heart,
-      title: 'Primary Care',
-      duration: '30-60 mins',
-      price: 'Insurance Accepted',
-      description:
-        'Comprehensive primary care services including preventive screenings, chronic disease management, and routine health maintenance. Our experienced physicians are dedicated to keeping you healthy.',
-      features: [
-        'Annual Physicals',
-        'Chronic Care Management',
-        'Preventive Screenings',
-        'Health Education',
-      ],
-      gradient: 'bg-gradient-medical',
+  // Memoize services data to prevent re-renders
+  const services = useMemo(
+    () => [
+      {
+        icon: Heart,
+        title: 'Primary Care',
+        duration: '30-60 mins',
+        price: 'Insurance Accepted',
+        description:
+          'Comprehensive primary care services including preventive screenings, chronic disease management, and routine health maintenance. Our experienced physicians are dedicated to keeping you healthy.',
+        features: [
+          'Annual Physicals',
+          'Chronic Care Management',
+          'Preventive Screenings',
+          'Health Education',
+        ],
+        gradient: 'bg-gradient-medical',
+      },
+      {
+        icon: Brain,
+        title: 'Mental Health',
+        duration: '45-60 mins',
+        price: 'Various Options',
+        description:
+          'Professional mental health services in a safe, confidential environment. Our compassionate specialists address anxiety, depression, and other mental health concerns.',
+        features: [
+          'Individual Therapy',
+          'Anxiety Treatment',
+          'Depression Care',
+          'Stress Management',
+        ],
+        gradient: 'bg-gradient-health',
+      },
+      {
+        icon: Sparkles,
+        title: 'Aesthetic Services',
+        duration: '30-90 mins',
+        price: 'Consultation Required',
+        description:
+          'Medically supervised aesthetic treatments designed to enhance your natural beauty and boost confidence. Safe, effective procedures by skilled practitioners.',
+        features: [
+          'Skin Rejuvenation',
+          'Anti-Aging Treatments',
+          'Cosmetic Procedures',
+          'Beauty Consultations',
+        ],
+        gradient: 'bg-gradient-trust',
+      },
+    ],
+    []
+  );
+
+  // Optimize animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1, // Reduced from 0.2
+        duration: 0.6, // Reduced from 0.8
+      },
     },
-    {
-      icon: Brain,
-      title: 'Mental Health',
-      duration: '45-60 mins',
-      price: 'Various Options',
-      description:
-        'Professional mental health services in a safe, confidential environment. Our compassionate specialists address anxiety, depression, and other mental health concerns.',
-      features: [
-        'Individual Therapy',
-        'Anxiety Treatment',
-        'Depression Care',
-        'Stress Management',
-      ],
-      gradient: 'bg-gradient-health',
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 }, // Reduced from y: 50
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5, // Reduced from 0.8
+        ease: 'easeOut',
+      },
     },
-    {
-      icon: Sparkles,
-      title: 'Aesthetic Services',
-      duration: '30-90 mins',
-      price: 'Consultation Required',
-      description:
-        'Medically supervised aesthetic treatments designed to enhance your natural beauty and boost confidence. Safe, effective procedures by skilled practitioners.',
-      features: [
-        'Skin Rejuvenation',
-        'Anti-Aging Treatments',
-        'Cosmetic Procedures',
-        'Beauty Consultations',
-      ],
-      gradient: 'bg-gradient-trust',
-    },
-  ];
+  };
 
   return (
     <section
@@ -74,9 +105,9 @@ export default function Services() {
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <motion.div
           className="mb-16 text-center"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }} // Reduced from y: 30
           animate={servicesInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }} // Reduced from 0.8
         >
           <div className="inline-flex items-center px-4 py-2 mb-6 space-x-2 text-sm font-medium rounded-full bg-medical-50 text-medical-700">
             <Calendar className="w-4 h-4" />
@@ -91,14 +122,20 @@ export default function Services() {
           </p>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+          variants={containerVariants}
+          initial="hidden"
+          animate={servicesInView ? 'visible' : 'hidden'}
+        >
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              initial={{ opacity: 0, y: 50 }}
-              animate={servicesInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              whileHover={{ y: -8 }}
+              variants={itemVariants}
+              whileHover={{
+                y: -4, // Reduced from -8
+                transition: { duration: 0.2 },
+              }}
               className="h-full"
             >
               <Card className="h-full p-6 border-0 shadow-lg group hover:shadow-2xl">
@@ -164,7 +201,7 @@ export default function Services() {
               </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Call to action */}
         <motion.div

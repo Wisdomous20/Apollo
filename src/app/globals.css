@@ -46,6 +46,10 @@
   html {
     scroll-behavior: smooth;
     font-size: 16px;
+    /* Add performance optimizations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
@@ -55,6 +59,9 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Add performance optimizations */
+    will-change: auto;
+    transform: translateZ(0);
   }
 }
 
@@ -175,6 +182,18 @@
     box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
     border-color: #3b82f6;
   }
+
+  /* Add performance-optimized animation classes */
+  .animate-optimized {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .animate-gpu {
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
 }
 
 @layer utilities {
@@ -260,12 +279,19 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
+/* GPU acceleration for smooth animations */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+
+  [data-motion] {
+    will-change: transform;
+    transform: translateZ(0);
   }
 }
 
