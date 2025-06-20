@@ -1,110 +1,138 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Phone, Heart, Menu, X } from 'lucide-react';
+import { Heart, Phone, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-lg border-b border-neutral-200"
-    >
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <motion.div
-            className="flex items-center space-x-3"
-            whileHover={{ scale: 1.05 }}
-          >
-            <div className="w-12 h-12 gradient-primary-secondary rounded-2xl flex items-center justify-center transform rotate-12">
-              <Heart className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gradient-primary">
-                APOLLO
-              </h1>
-              <p className="text-xs text-muted-foreground -mt-1">
-                MEDICAL GROUP
-              </p>
-            </div>
-          </motion.div>
+    <>
+      {/* Skip link for accessibility */}
+      <a
+        href="#main-content"
+        className="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded-full shadow-lg z-50"
+      >
+        Skip to main content
+      </a>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
-            <motion.a
-              href="/"
-              className="text-foreground hover:text-primary-600 transition-colors font-medium"
-              whileHover={{ y: -2 }}
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-6"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="glass rounded-3xl px-8 py-4 shadow-2xl">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <motion.div
+              className="flex items-center space-x-3"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
             >
-              HOME
-            </motion.a>
-            <motion.a
-              href="/gallery"
-              className="text-foreground hover:text-primary-600 transition-colors font-medium"
-              whileHover={{ y: -2 }}
+              <div className="relative">
+                <div className="w-12 h-12 gradient-ocean rounded-2xl flex items-center justify-center shadow-lg">
+                  <Heart className="w-6 h-6 text-white" />
+                </div>
+                <motion.div
+                  className="absolute -top-1 -right-1 w-4 h-4 gradient-sunset rounded-full"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </div>
+              <div>
+                <h1 className="text-2xl font-fredoka font-bold text-gradient">
+                  APOLLO
+                </h1>
+                <p className="-mt-1 text-xs text-neutral-500 font-medium tracking-wide">
+                  MEDICAL GROUP
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-8">
+              {['HOME', 'SERVICES', 'ABOUT', 'CONTACT'].map((item, index) => (
+                <motion.a
+                  key={item}
+                  href={`/${item.toLowerCase()}`}
+                  className="relative px-4 py-2 text-sm font-medium text-neutral-700 transition-colors rounded-xl hover:text-white group"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <span className="relative z-10">{item}</span>
+                  <motion.div
+                    className="absolute inset-0 gradient-ocean rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                    initial={false}
+                    whileHover={{ scale: 1.05 }}
+                  />
+                </motion.a>
+              ))}
+
+              <motion.a
+                href="tel:7024447744"
+                className="flex items-center space-x-2 px-6 py-3 gradient-sunset text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Call us at (702) 444-7744"
+              >
+                <Phone className="w-4 h-4" />
+                <span>(702) 444-7744</span>
+              </motion.a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-3 rounded-xl text-neutral-700 hover:bg-white/20 transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-expanded={isMenuOpen}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              GALLERY
-            </motion.a>
-            <motion.a
-              href="/about"
-              className="text-foreground hover:text-primary-600 transition-colors font-medium"
-              whileHover={{ y: -2 }}
-            >
-              ABOUT
-            </motion.a>
-            <motion.a
-              href="tel:7024447744"
-              className="flex items-center space-x-2 text-primary-600 font-semibold"
-              whileHover={{ scale: 1.05 }}
-            >
-              <Phone className="w-4 h-4" />
-              <span>(702) 444-7744</span>
-            </motion.a>
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden mt-6 pt-6 border-t border-white/20"
+            >
+              <div className="space-y-4">
+                {['HOME', 'SERVICES', 'ABOUT', 'CONTACT'].map((item) => (
+                  <a
+                    key={item}
+                    href={`/${item.toLowerCase()}`}
+                    className="block px-4 py-3 text-center font-medium text-neutral-700 hover:bg-white/20 rounded-xl transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item}
+                  </a>
+                ))}
+                <a
+                  href="tel:7024447744"
+                  className="block px-6 py-3 gradient-sunset text-white text-center font-semibold rounded-xl shadow-lg"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <Phone className="w-4 h-4" />
+                    <span>(702) 444-7744</span>
+                  </div>
+                </a>
+              </div>
+            </motion.div>
+          )}
         </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          className="md:hidden bg-background border-t border-primary-100"
-        >
-          <div className="px-6 py-4 space-y-4">
-            <a href="/" className="block text-foreground font-medium">
-              HOME
-            </a>
-            <a href="/gallery" className="block text-foreground font-medium">
-              GALLERY
-            </a>
-            <a href="/about" className="block text-foreground font-medium">
-              ABOUT
-            </a>
-            <a
-              href="tel:7024447744"
-              className="block text-primary-600 font-semibold"
-            >
-              (702) 444-7744
-            </a>
-          </div>
-        </motion.div>
-      )}
-    </motion.nav>
+      </motion.nav>
+    </>
   );
 }

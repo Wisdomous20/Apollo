@@ -1,8 +1,8 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { Heart, Brain, Sparkles } from 'lucide-react';
-import { useRef } from 'react';
+import { motion, useInView, Variants } from 'framer-motion';
+import { Heart, Brain, Sparkles, Calendar, Clock, Phone } from 'lucide-react';
+import { useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,106 +15,220 @@ import {
 
 export default function Services() {
   const servicesRef = useRef(null);
-  const servicesInView = useInView(servicesRef, { once: true });
+  const servicesInView = useInView(servicesRef, {
+    once: true,
+    margin: '-10% 0px -10% 0px', // Optimize trigger point
+  });
 
-  const services = [
-    {
-      icon: Heart,
-      title: 'Primary Care',
-      duration: '30 mins | Varies',
-      description:
-        'At the heart of our comprehensive care model is primary care - your first point of contact for all your health needs. Our dedicated primary care physicians...',
-      color: 'from-red-500 to-pink-500',
+  // Memoize services data to prevent re-renders
+  const services = useMemo(
+    () => [
+      {
+        icon: Heart,
+        title: 'Primary Care',
+        duration: '30-60 mins',
+        price: 'Insurance Accepted',
+        description:
+          'Comprehensive primary care services including preventive screenings, chronic disease management, and routine health maintenance. Our experienced physicians are dedicated to keeping you healthy.',
+        features: [
+          'Annual Physicals',
+          'Chronic Care Management',
+          'Preventive Screenings',
+          'Health Education',
+        ],
+        gradient: 'bg-gradient-medical',
+      },
+      {
+        icon: Brain,
+        title: 'Mental Health',
+        duration: '45-60 mins',
+        price: 'Various Options',
+        description:
+          'Professional mental health services in a safe, confidential environment. Our compassionate specialists address anxiety, depression, and other mental health concerns.',
+        features: [
+          'Individual Therapy',
+          'Anxiety Treatment',
+          'Depression Care',
+          'Stress Management',
+        ],
+        gradient: 'bg-gradient-health',
+      },
+      {
+        icon: Sparkles,
+        title: 'Aesthetic Services',
+        duration: '30-90 mins',
+        price: 'Consultation Required',
+        description:
+          'Medically supervised aesthetic treatments designed to enhance your natural beauty and boost confidence. Safe, effective procedures by skilled practitioners.',
+        features: [
+          'Skin Rejuvenation',
+          'Anti-Aging Treatments',
+          'Cosmetic Procedures',
+          'Beauty Consultations',
+        ],
+        gradient: 'bg-gradient-trust',
+      },
+    ],
+    []
+  );
+
+  // Optimize animation variants
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1, // Reduced from 0.2
+        duration: 0.6, // Reduced from 0.8
+      },
     },
-    {
-      icon: Brain,
-      title: 'Behavioral Health',
-      duration: '30 mins | Varies',
-      description:
-        'Our Behavioral Health services provide a safe, compassionate, and confidential space for individuals seeking support and healing for a wide range of mental health concerns...',
-      color: 'from-purple-500 to-indigo-500',
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 }, // Reduced from y: 50
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5, // Reduced from 0.8
+        ease: [0.6, -0.05, 0.01, 0.99], // Changed from 'easeOut' string
+      },
     },
-    {
-      icon: Sparkles,
-      title: 'Beauty and Wellness',
-      duration: '30 mins | Varies',
-      description:
-        'Our Aesthetic Services offer a range of medically supervised treatments designed to enhance your natural beauty, address aesthetic concerns, and boost your confidence...',
-      color: 'from-emerald-500 to-teal-500',
-    },
-  ];
+  };
 
   return (
     <section
       id="services"
       ref={servicesRef}
-      className="py-20 bg-gradient-to-br from-primary-50 to-primary-100"
+      className="py-24 bg-white lg:py-32"
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
+          className="mb-16 text-center"
+          initial={{ opacity: 0, y: 20 }} // Reduced from y: 30
           animate={servicesInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }} // Reduced from 0.8
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Online Appointments
+          <div className="inline-flex items-center px-4 py-2 mb-6 space-x-2 text-sm font-medium rounded-full bg-medical-50 text-medical-700">
+            <Calendar className="w-4 h-4" />
+            <span>OUR SERVICES</span>
+          </div>
+          <h2 className="mb-6 text-3xl font-bold sm:text-4xl lg:text-5xl text-slate-800">
+            Comprehensive Healthcare Services
           </h2>
-          <p className="text-xl text-gray-600">
-            Book your visit with our specialized care teams
+          <p className="max-w-3xl mx-auto text-lg leading-relaxed sm:text-xl text-slate-600">
+            Experience personalized care across our full range of medical
+            services, designed to support your health and well-being.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <motion.div
+          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+          variants={containerVariants}
+          initial="hidden"
+          animate={servicesInView ? 'visible' : 'hidden'}
+        >
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              initial={{ opacity: 0, y: 50 }}
-              animate={servicesInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              whileHover={{ y: -10 }}
+              variants={itemVariants}
+              whileHover={{
+                y: -4, // Reduced from -8
+                transition: { duration: 0.2 },
+              }}
+              className="h-full"
             >
-              <Card className="h-full rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 group border-0">
+              <Card className="h-full p-6 border-0 shadow-lg group hover:shadow-2xl">
                 <CardHeader className="p-0 mb-6">
                   <div
-                    className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+                    className={`w-16 h-16 ${service.gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
                   >
                     <service.icon className="w-8 h-8 text-white" />
                   </div>
-                  <CardTitle className="text-2xl font-bold text-gray-900">
+                  <CardTitle className="mb-2 text-xl font-bold text-slate-800">
                     {service.title}
                   </CardTitle>
-                  <CardDescription className="text-primary-600 font-semibold text-base">
-                    {service.duration}
-                  </CardDescription>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center text-slate-600">
+                      <Clock className="w-4 h-4 mr-1" />
+                      {service.duration}
+                    </div>
+                    <CardDescription className="font-semibold text-medical-600">
+                      {service.price}
+                    </CardDescription>
+                  </div>
                 </CardHeader>
 
-                <CardContent className="p-0 mb-6">
-                  <p className="text-gray-600 leading-relaxed">
+                <CardContent className="p-0 mb-6 space-y-4">
+                  <p className="leading-relaxed text-slate-600">
                     {service.description}
                   </p>
+
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold text-slate-800">
+                      Key Services:
+                    </h4>
+                    <ul className="space-y-1">
+                      {service.features.map((feature, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-center text-sm text-slate-600"
+                        >
+                          <div className="w-1.5 h-1.5 bg-medical-600 rounded-full mr-2"></div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </CardContent>
 
-                <CardFooter className="p-0 flex items-center justify-between">
+                <CardFooter className="flex flex-col gap-3 p-0 sm:flex-row">
                   <Button
-                    variant="ghost"
-                    className="text-primary-600 font-semibold hover:text-primary-700 p-0"
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 text-xs"
                   >
-                    + More
+                    LEARN MORE
                   </Button>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="flex-1 text-xs font-semibold"
                   >
-                    <Button className="bg-neutral-900 text-white px-6 py-2 rounded-xl font-semibold hover:bg-neutral-800">
-                      BOOK
-                    </Button>
-                  </motion.div>
+                    BOOK APPOINTMENT
+                  </Button>
                 </CardFooter>
               </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
+
+        {/* Call to action */}
+        <motion.div
+          className="mt-16 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          animate={servicesInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
+          <div className="max-w-4xl p-8 mx-auto bg-slate-50 rounded-2xl">
+            <h3 className="mb-4 text-2xl font-bold text-slate-800">
+              Need Help Choosing the Right Service?
+            </h3>
+            <p className="mb-6 leading-relaxed text-slate-600">
+              Our care coordinators are here to help you find the best treatment
+              option for your specific needs.
+            </p>
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+              <Button variant="default" size="lg">
+                <Phone className="w-5 h-5 mr-2" />
+                CALL (702) 444-7744
+              </Button>
+              <Button variant="outline" size="lg">
+                REQUEST CONSULTATION
+              </Button>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
