@@ -12,14 +12,14 @@ import Footer from '@/components/Footer';
 export default function ApolloMedical() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-blue-50 overflow-x-hidden">
-      <Navigation />
+      {/* <Navigation /> */}
       <Hero />
-      <About />
+      {/* <About />
       <Services />
       <Gallery />
       <Testimonials />
       <Contact />
-      <Footer />
+      <Footer /> */}
     </div>
   );
 }

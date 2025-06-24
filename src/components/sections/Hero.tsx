@@ -1,279 +1,142 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import {
-  Heart,
-  Sparkles,
-  Calendar,
-  ArrowDown,
-  Zap,
-  Shield,
-} from 'lucide-react';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  });
-
-  // Use spring for smoother parallax
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  const backgroundY = useTransform(smoothProgress, [0, 1], ['0%', '15%']); // Reduced from 30%
-  const textY = useTransform(smoothProgress, [0, 1], ['0%', '25%']); // Reduced from 50%
-
   return (
-    <section
-      ref={containerRef}
-      id="main-content"
-      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-neutral-50 to-blue-50"
-    >
-      {/* Animated Background Elements - Separated transforms */}
-      <div className="absolute inset-0">
-        <motion.div style={{ y: backgroundY }} className="absolute inset-0">
-          {/* Large floating blob */}
-          <motion.div
-            className="absolute top-20 -right-40 w-96 h-96 gradient-ocean blob opacity-20"
-            animate={{
-              rotate: 360,
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
-              scale: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
-            }}
-          />
-
-          {/* Medium floating blob */}
-          <motion.div
-            className="absolute bottom-20 -left-20 w-64 h-64 gradient-forest blob-2 opacity-15"
-            animate={{
-              rotate: -360,
-              y: [0, -30, 0],
-            }}
-            transition={{
-              rotate: { duration: 25, repeat: Infinity, ease: 'linear' },
-              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-            }}
-          />
-
-          {/* Small decorative elements */}
-          <motion.div
-            className="absolute top-1/3 left-1/4 w-12 h-12 gradient-sunset rounded-full"
-            animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.div>
+    <section className="relative overflow-hidden py-16 lg:py-24 xl:py-32 bg-gradient-to-br from-blue-50 to-gray-50 min-h-screen flex items-center">
+      {/* Fixed-position side images (decorative pillars) */}
+      <div className="fixed left-0 top-0 h-screen w-16 md:w-24 lg:w-32 z-0 pointer-events-none">
+        <Image
+          src="/5 - Copy.png"
+          alt="Decorative left pillar"
+          fill
+          className="object-cover opacity-20"
+          priority
+        />
       </div>
-
-      <motion.div
-        className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 pt-32 pb-32"
-        style={{ y: textY }} // Removed opacity style
-      >
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center min-h-[80vh]">
-          {/* Left Content - Asymmetric Layout */}
+      <div className="fixed right-0 top-0 h-screen w-16 md:w-24 lg:w-32 z-0 pointer-events-none">
+        <Image
+          src="/5 - Copy.png"
+          alt="Decorative right pillar"
+          fill
+          className="object-cover opacity-20 scale-x-[-1]"
+          priority
+        />
+      </div>
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-10 left-10 w-32 h-32 border-2 border-blue-300 rounded-full"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 border-2 border-red-300 rounded-full"></div>
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 border-2 border-blue-300 rounded-full"></div>
+      </div>{' '}
+      <div className="container mx-auto px-6 lg:px-8 xl:px-12 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 xl:gap-20 items-center max-w-7xl mx-auto">
+          {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="lg:col-span-7 space-y-8"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="space-y-10 lg:space-y-12 text-center lg:text-left"
           >
-            {/* Playful Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="inline-flex items-center space-x-3 bg-white/60 backdrop-blur-sm border border-white/40 px-6 py-3 rounded-full shadow-lg"
-            >
-              <div className="w-8 h-8 gradient-ocean rounded-full flex items-center justify-center">
-                <Heart className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-sm font-semibold text-neutral-700 tracking-wide">
-                TRUSTED HEALTHCARE SINCE 2008
-              </span>
-              <Sparkles className="w-4 h-4 text-yellow-500" />
-            </motion.div>
+            {/* Heading Section */}
+            <div className="space-y-6">
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight tracking-tight"
+              >
+                <span className="text-blue-700 block">Where</span>
+                <span className="text-red-600 block">healing</span>
+                <span className="text-gray-900 block">begins</span>
+              </motion.h1>
 
-            {/* Main Heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-fredoka font-bold leading-tight"
-            >
-              <span className="text-neutral-800">Healthcare</span>
-              <br />
-              <span className="text-gradient">Made Simple</span>
-              <br />
-              <span className="text-neutral-600 text-4xl sm:text-5xl lg:text-6xl">
-                & Joyful
-              </span>
-            </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="text-xl lg:text-2xl text-gray-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium"
+              >
+                At Apollo Medical Group, we offer comprehensive care for all
+                your health needs with compassion and expertise.
+              </motion.p>
+            </div>
 
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="text-xl text-neutral-600 leading-relaxed max-w-2xl"
-            >
-              At Apollo Medical Group, we believe healthcare should be
-              accessible, comprehensive, and surprisingly delightful. From
-              primary care to mental health and aesthetic treatments.
-            </motion.p>
-
-            {/* CTA Buttons */}
+            {/* CTA Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4"
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="pt-4"
             >
               <Button
                 size="lg"
-                className="gradient-ocean text-white hover:opacity-90 rounded-2xl px-8 py-6 text-lg font-semibold shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all"
-              >
-                <Calendar className="w-5 h-5 mr-3" />
-                Book Appointment
-              </Button>
-
-              <Button
                 variant="outline"
-                size="lg"
-                className="border-2 border-neutral-300 hover:border-neutral-400 rounded-2xl px-8 py-6 text-lg font-semibold hover:bg-white/50 transition-all"
+                className="bg-white text-blue-700 border-2 border-blue-700 hover:bg-blue-700 hover:text-white px-10 py-7 text-xl font-semibold rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 min-w-[280px]"
               >
-                Learn More
+                Schedule Your Visit
               </Button>
             </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.1, duration: 0.6 }}
-              className="flex flex-wrap gap-8 pt-12 mt-8 border-t border-neutral-200"
-            >
-              {(
-                [
-                  { number: '15K+', label: 'Happy Patients', icon: Heart },
-                  { number: '98%', label: 'Satisfaction', icon: Sparkles },
-                  { number: '24/7', label: 'Support', icon: Shield },
-                ] as const
-              ).map((stat, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-center space-x-3 bg-white/70 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/50"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2 + index * 0.1, duration: 0.5 }}
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                >
-                  <div className="w-12 h-12 gradient-forest rounded-2xl flex items-center justify-center shadow-md">
-                    <stat.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-fredoka font-bold text-neutral-800">
-                      {stat.number}
-                    </div>
-                    <div className="text-sm text-neutral-600 font-medium">
-                      {stat.label}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          {/* Right Visual Area - Creative Layout */}
+          </motion.div>{' '}
+          {/* Right Content - Medical Team Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, duration: 1 }}
-            className="lg:col-span-5 relative"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="relative"
           >
-            {/* Main Image Placeholder */}
-            <div className="relative">
-              {/* Primary Card */}
+            <div className="relative max-w-lg mx-auto">
+              {/* Blue vertical pill background */}
               <motion.div
-                className="relative w-full h-96 gradient-sky rounded-3xl shadow-2xl overflow-hidden"
-                animate={{ y: [0, -10, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 1, delay: 0.6 }}
+                className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full transform scale-95 shadow-2xl"
+                style={{ aspectRatio: '4/5' }}
+              ></motion.div>
+
+              {/* Medical team image */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 1, delay: 0.8 }}
+                className="relative z-10"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                      <Heart className="w-12 h-12" />
-                    </div>
-                    <p className="text-lg font-semibold">
-                      3D Doctor Illustration
-                    </p>
-                    <p className="text-sm opacity-80">Compassionate Care</p>
-                  </div>
+                <div
+                  className="relative overflow-hidden rounded-full shadow-2xl"
+                  style={{ aspectRatio: '4/5' }}
+                >
+                  <Image
+                    src="/4.png"
+                    alt="Apollo Medical Group team of three medical professionals"
+                    fill
+                    className="object-cover object-center"
+                    priority
+                  />
                 </div>
-              </motion.div>
-
-              {/* Floating Elements - Independent animations */}
-              <motion.div
-                className="absolute -top-6 -right-6 w-20 h-20 gradient-sunset rounded-3xl shadow-xl flex items-center justify-center"
-                animate={{
-                  rotate: [0, 10, 0],
-                  y: [0, -15, 0],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
-                <Zap className="w-8 h-8 text-white" />
-              </motion.div>
-
-              <motion.div
-                className="absolute -bottom-4 -left-6 w-16 h-16 gradient-ocean rounded-full shadow-lg flex items-center justify-center"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, -10, 0],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 1,
-                }}
-              >
-                <Sparkles className="w-6 h-6 text-white" />
               </motion.div>
             </div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-16 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          // Remove opacity style that makes indicator disappear
+      </div>
+      {/* Curved bottom cutoff */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+        <svg
+          className="relative block w-full h-20 lg:h-28"
+          data-name="Layer 1"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
         >
-          <div className="flex flex-col items-center space-y-2">
-            <ArrowDown className="w-6 h-6 text-neutral-400" />
-            <span className="text-sm text-neutral-400 font-medium">
-              Scroll to explore
-            </span>
-          </div>
-        </motion.div>
-      </motion.div>
+          <path
+            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+            className="fill-white"
+          ></path>
+        </svg>
+      </div>
     </section>
   );
 }
