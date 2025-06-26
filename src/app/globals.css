@@ -191,6 +191,10 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .bg-gradient-radial {
+    background: radial-gradient(circle at center, var(--tw-gradient-stops));
+  }
 }
 
 /* Enhanced accessibility */
