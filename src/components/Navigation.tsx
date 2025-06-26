@@ -1,11 +1,22 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, Phone, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Menu } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50); // Trigger after 50px of scroll
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
@@ -18,84 +29,92 @@ export default function Navigation() {
       </a>
 
       <motion.nav
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-6"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
+          ${isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-sm' : 'lg:bg-transparent bg-white/95'}
+        `}
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="glass rounded-3xl px-8 py-4 shadow-2xl">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
+        <div className="container mx-auto px-6 py-6">
+          <div
+            className="flex items-center
+            justify-between
+            max-w-8xl mx-auto
+            lg:justify-between
+            "
+          >
+            {/* Logo and Brand */}
             <motion.div
-              className="flex items-center space-x-3"
+              className="flex items-center space-x-4"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="relative">
-                <div className="w-12 h-12 gradient-ocean rounded-2xl flex items-center justify-center shadow-lg">
-                  <Heart className="w-6 h-6 text-white" />
+              {/* Logo with triangular design */}
+              <div className="flex items-center">
+                <div className="relative w-12 h-12">
+                  {/* Replace with actual logo */}
+                  <img
+                    src="/logo.png"
+                    alt="Apollo Medical Group Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
-                <motion.div
-                  className="absolute -top-1 -right-1 w-4 h-4 gradient-sunset rounded-full"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </div>
-              <div>
-                <h1 className="text-2xl font-fredoka font-bold text-gradient">
-                  APOLLO
-                </h1>
-                <p className="-mt-1 text-xs text-neutral-500 font-medium tracking-wide">
-                  MEDICAL GROUP
-                </p>
+
+                <div className="ml-4">
+                  <h1 className="text-2xl font-bold text-gray-800 font-sans">
+                    <span className="text-blue-600">Apollo</span>{' '}
+                    <span className="text-red-600">Medical</span>{' '}
+                    <span className="text-blue-600">Group</span>
+                  </h1>
+                  <p className="text-sm text-gray-600 font-medium tracking-wider uppercase font-sans">
+                    Where Healing Begins
+                  </p>
+                </div>
               </div>
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {['HOME', 'SERVICES', 'ABOUT', 'CONTACT'].map((item, index) => (
+            <div className="hidden lg:flex items-center space-x-10">
+              {[
+                { name: 'Home', href: '/' },
+                { name: 'Gallery', href: '/gallery' },
+                { name: 'Contact Us', href: '/contact' },
+              ].map((item) => (
                 <motion.a
-                  key={item}
-                  href={`/${item.toLowerCase()}`}
-                  className="relative px-4 py-2 text-sm font-medium text-neutral-700 transition-colors rounded-xl hover:text-white group"
-                  whileHover={{ y: -2 }}
+                  key={item.name}
+                  href={item.href}
+                  className="text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-200 relative group"
+                  whileHover={{ y: -1 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="relative z-10">{item}</span>
-                  <motion.div
-                    className="absolute inset-0 gradient-ocean rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
-                    initial={false}
-                    whileHover={{ scale: 1.05 }}
-                  />
+                  {item.name}
+                  <motion.div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
                 </motion.a>
               ))}
-
-              <motion.a
-                href="tel:7024447744"
-                className="flex items-center space-x-2 px-6 py-3 gradient-sunset text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Call us at (702) 444-7744"
-              >
-                <Phone className="w-4 h-4" />
-                <span>(702) 444-7744</span>
-              </motion.a>
             </div>
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-3 rounded-xl text-neutral-700 hover:bg-white/20 transition-colors"
+              className={`lg:hidden p-3 rounded-lg text-gray-700 transition-colors ml-auto ${
+                isMenuOpen ? 'bg-gray-100' : ''
+              }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-expanded={isMenuOpen}
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              <motion.span
+                animate={{
+                  rotate: isMenuOpen ? 90 : 0,
+                  scale: isMenuOpen ? 1.1 : 1,
+                }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                style={{ display: 'inline-block' }}
+              >
+                <Menu className="w-7 h-7" />
+              </motion.span>
             </button>
           </div>
 
@@ -105,29 +124,23 @@ export default function Navigation() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden mt-6 pt-6 border-t border-white/20"
+              className="lg:hidden mt-4 pt-4 border-t border-gray-200"
             >
-              <div className="space-y-4">
-                {['HOME', 'SERVICES', 'ABOUT', 'CONTACT'].map((item) => (
+              <div className="space-y-2">
+                {[
+                  { name: 'Home', href: '/' },
+                  { name: 'Gallery', href: '/gallery' },
+                  { name: 'Contact Us', href: '/contact' },
+                ].map((item) => (
                   <a
-                    key={item}
-                    href={`/${item.toLowerCase()}`}
-                    className="block px-4 py-3 text-center font-medium text-neutral-700 hover:bg-white/20 rounded-xl transition-colors"
+                    key={item.name}
+                    href={item.href}
+                    className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item}
+                    {item.name}
                   </a>
                 ))}
-                <a
-                  href="tel:7024447744"
-                  className="block px-6 py-3 gradient-sunset text-white text-center font-semibold rounded-xl shadow-lg"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <div className="flex items-center justify-center space-x-2">
-                    <Phone className="w-4 h-4" />
-                    <span>(702) 444-7744</span>
-                  </div>
-                </a>
               </div>
             </motion.div>
           )}
