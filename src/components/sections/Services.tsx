@@ -1,234 +1,139 @@
 'use client';
 
-import { motion, useInView, Variants } from 'framer-motion';
-import { Heart, Brain, Sparkles, Calendar, Clock, Phone } from 'lucide-react';
-import { useRef, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Heart, Stethoscope, Activity } from 'lucide-react';
+
+const services = [
+  {
+    icon: Heart,
+    title: 'Primary Care',
+    duration: '30 min/Visit',
+    description:
+      'Comprehensive primary care services as your first point of contact for all health needs. Our dedicated team provides personalized care and preventive health management.',
+    buttonText: 'Learn More',
+  },
+  {
+    icon: Stethoscope,
+    title: 'Specialized Care',
+    duration: '45 min/Visit',
+    description:
+      'Expert specialized medical services with board-certified specialists. Advanced diagnostics and treatment plans tailored to your specific health conditions.',
+    buttonText: 'Learn More',
+  },
+  {
+    icon: Activity,
+    title: 'Emergency Care',
+    duration: '24/7 Available',
+    description:
+      'Round-the-clock emergency medical services with rapid response times. State-of-the-art emergency facilities staffed by experienced medical professionals.',
+    buttonText: 'Learn More',
+  },
+];
 
 export default function Services() {
-  const servicesRef = useRef(null);
-  const servicesInView = useInView(servicesRef, {
-    once: true,
-    margin: '-10% 0px -10% 0px', // Optimize trigger point
-  });
-
-  // Memoize services data to prevent re-renders
-  const services = useMemo(
-    () => [
-      {
-        icon: Heart,
-        title: 'Primary Care',
-        duration: '30-60 mins',
-        price: 'Insurance Accepted',
-        description:
-          'Comprehensive primary care services including preventive screenings, chronic disease management, and routine health maintenance. Our experienced physicians are dedicated to keeping you healthy.',
-        features: [
-          'Annual Physicals',
-          'Chronic Care Management',
-          'Preventive Screenings',
-          'Health Education',
-        ],
-        gradient: 'bg-gradient-medical',
-      },
-      {
-        icon: Brain,
-        title: 'Mental Health',
-        duration: '45-60 mins',
-        price: 'Various Options',
-        description:
-          'Professional mental health services in a safe, confidential environment. Our compassionate specialists address anxiety, depression, and other mental health concerns.',
-        features: [
-          'Individual Therapy',
-          'Anxiety Treatment',
-          'Depression Care',
-          'Stress Management',
-        ],
-        gradient: 'bg-gradient-health',
-      },
-      {
-        icon: Sparkles,
-        title: 'Aesthetic Services',
-        duration: '30-90 mins',
-        price: 'Consultation Required',
-        description:
-          'Medically supervised aesthetic treatments designed to enhance your natural beauty and boost confidence. Safe, effective procedures by skilled practitioners.',
-        features: [
-          'Skin Rejuvenation',
-          'Anti-Aging Treatments',
-          'Cosmetic Procedures',
-          'Beauty Consultations',
-        ],
-        gradient: 'bg-gradient-trust',
-      },
-    ],
-    []
-  );
-
-  // Optimize animation variants
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1, // Reduced from 0.2
-        duration: 0.6, // Reduced from 0.8
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 }, // Reduced from y: 50
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5, // Reduced from 0.8
-        ease: [0.6, -0.05, 0.01, 0.99], // Changed from 'easeOut' string
-      },
-    },
-  };
-
   return (
     <section
-      id="services"
-      ref={servicesRef}
-      className="py-24 bg-white lg:py-32"
+      className="relative py-16 lg:py-28 bg-transparent font-serif"
+      aria-labelledby="services-heading"
     >
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <motion.div
-          className="mb-16 text-center"
-          initial={{ opacity: 0, y: 20 }} // Reduced from y: 30
-          animate={servicesInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }} // Reduced from 0.8
-        >
-          <div className="inline-flex items-center px-4 py-2 mb-6 space-x-2 text-sm font-medium rounded-full bg-medical-50 text-medical-700">
-            <Calendar className="w-4 h-4" />
-            <span>OUR SERVICES</span>
-          </div>
-          <h2 className="mb-6 text-3xl font-bold sm:text-4xl lg:text-5xl text-slate-800">
-            Comprehensive Healthcare Services
-          </h2>
-          <p className="max-w-3xl mx-auto text-lg leading-relaxed sm:text-xl text-slate-600">
-            Experience personalized care across our full range of medical
-            services, designed to support your health and well-being.
-          </p>
-        </motion.div>
+      {/* Decorative Top Images */}
+      <div className="absolute left-0 right-0 top-0 -translate-y-1/2 flex justify-center z-0 pointer-events-none select-none w-full">
+        <div className="relative w-1/2 h-auto flex justify-end">
+          <img
+            src="/2.png"
+            alt="Decorative left"
+            className="w-full h-auto opacity-60 rotate-180 object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,1)_30%)]"
+            aria-hidden="true"
+          />
+        </div>
+        <div className="relative w-1/2 h-auto flex justify-start">
+          <img
+            src="/2.png"
+            alt="Decorative right mirrored"
+            className="w-full h-auto opacity-60 scale-x-[-1] rotate-180 object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,1)_30%)]"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
 
-        <motion.div
-          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
-          variants={containerVariants}
-          initial="hidden"
-          animate={servicesInView ? 'visible' : 'hidden'}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Spacer for top margin above heading */}
+        <div className="h-20 md:h-28 lg:h-36" />
+        <motion.header
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mb-10 md:mb-14 lg:mb-20 flex flex-col items-center text-center"
+        >
+          <h2
+            id="services-heading"
+            className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-3 md:mb-5 font-serif drop-shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400"
+            tabIndex={0}
+          >
+            Our Services
+          </h2>
+          <p className="text-base xs:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed font-serif">
+            Comprehensive healthcare solutions designed around your needs
+          </p>
+        </motion.header>
+
+        <section
+          aria-label="Service offerings"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto"
         >
           {services.map((service, index) => (
-            <motion.div
-              key={service.title}
-              variants={itemVariants}
-              whileHover={{
-                y: -4, // Reduced from -8
-                transition: { duration: 0.2 },
-              }}
-              className="h-full"
+            <motion.article
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              tabIndex={0}
+              className="group outline-none focus-visible:ring-4 focus-visible:ring-sky-400 rounded-2xl"
             >
-              <Card className="h-full p-6 border-0 shadow-lg group hover:shadow-2xl">
-                <CardHeader className="p-0 mb-6">
-                  <div
-                    className={`w-16 h-16 ${service.gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                  >
-                    <service.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <CardTitle className="mb-2 text-xl font-bold text-slate-800">
-                    {service.title}
-                  </CardTitle>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center text-slate-600">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {service.duration}
+              <Card className="h-full bg-white/95 dark:bg-blue-900/90 shadow-xl border border-blue-200 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
+                <CardContent className="p-6 md:p-7 flex flex-col h-full">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-blue-800 rounded-full flex items-center justify-center shadow-sm border border-red-200 dark:border-white/10">
+                      <service.icon
+                        className="w-8 h-8 text-red-700 dark:text-sky-300"
+                        aria-hidden="true"
+                      />
                     </div>
-                    <CardDescription className="font-semibold text-medical-600">
-                      {service.price}
-                    </CardDescription>
+                    <div className="flex-1 text-right">
+                      <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-white leading-tight mb-1 font-serif">
+                        {service.title}
+                      </h3>
+                      <p className="text-xs md:text-sm text-blue-700/80 dark:text-white/70 mb-0 font-serif">
+                        {service.duration}
+                      </p>
+                    </div>
                   </div>
-                </CardHeader>
-
-                <CardContent className="p-0 mb-6 space-y-4">
-                  <p className="leading-relaxed text-slate-600">
+                  <p className="text-blue-900 dark:text-white text-sm md:text-base leading-relaxed mb-6 mt-1 font-serif">
                     {service.description}
                   </p>
-
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-semibold text-slate-800">
-                      Key Services:
-                    </h4>
-                    <ul className="space-y-1">
-                      {service.features.map((feature, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-center text-sm text-slate-600"
-                        >
-                          <div className="w-1.5 h-1.5 bg-medical-600 rounded-full mr-2"></div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="flex items-center justify-between mt-auto gap-2">
+                    <button
+                      className="text-blue-900 dark:text-sky-300 text-sm font-semibold underline underline-offset-2 hover:text-blue-950 dark:hover:text-white transition-colors duration-200 px-0 bg-transparent border-none font-serif focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+                      tabIndex={0}
+                    >
+                      + More
+                    </button>
+                    <Button
+                      className="bg-blue-900 hover:bg-blue-950 focus-visible:ring-2 focus-visible:ring-sky-400 text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
+                      tabIndex={0}
+                    >
+                      Book Now
+                    </Button>
                   </div>
                 </CardContent>
-
-                <CardFooter className="flex flex-col gap-3 p-0 sm:flex-row">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-xs"
-                  >
-                    LEARN MORE
-                  </Button>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="flex-1 text-xs font-semibold"
-                  >
-                    BOOK APPOINTMENT
-                  </Button>
-                </CardFooter>
               </Card>
-            </motion.div>
+            </motion.article>
           ))}
-        </motion.div>
-
-        {/* Call to action */}
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={servicesInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
-          <div className="max-w-4xl p-8 mx-auto bg-slate-50 rounded-2xl">
-            <h3 className="mb-4 text-2xl font-bold text-slate-800">
-              Need Help Choosing the Right Service?
-            </h3>
-            <p className="mb-6 leading-relaxed text-slate-600">
-              Our care coordinators are here to help you find the best treatment
-              option for your specific needs.
-            </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Button variant="default" size="lg">
-                <Phone className="w-5 h-5 mr-2" />
-                CALL (702) 444-7744
-              </Button>
-              <Button variant="outline" size="lg">
-                REQUEST CONSULTATION
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+        </section>
       </div>
     </section>
   );

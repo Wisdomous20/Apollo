@@ -2,24 +2,25 @@
 
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/sections/Hero';
-import About from '@/components/sections/About';
-import Services from '@/components/sections/Services';
+import About from '@/app/about/page';
 import Gallery from '@/components/sections/Gallery';
-import Testimonials from '@/components/sections/Testimonials';
 import Contact from '@/components/sections/Contact';
 import Footer from '@/components/Footer';
+import Payment from '@/components/sections/Payment';
+import CombinedSection from '@/components/sections/CombinedSection';
+import ContactSection from '@/components/sections/Contact';
 
 export default function ApolloMedical() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-blue-50 overflow-x-hidden">
-      {/* <Navigation /> */}
+      <Navigation />
       <Hero />
-      {/* <About />
-      <Services />
+      {/* <About /> */}
+      <CombinedSection />
       <Gallery />
-      <Testimonials />
-      <Contact />
-      <Footer /> */}
+      <Payment />
+      <ContactSection />
+      <Footer />
     </div>
   );
 }

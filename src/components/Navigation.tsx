@@ -23,7 +23,7 @@ export default function Navigation() {
       {/* Skip link for accessibility */}
       <a
         href="#main-content"
-        className="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded-full shadow-lg z-50"
+        className="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded-full shadow-lg z-50 text-base md:text-lg"
       >
         Skip to main content
       </a>
@@ -38,23 +38,17 @@ export default function Navigation() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="container mx-auto px-6 py-6">
-          <div
-            className="flex items-center
-            justify-between
-            max-w-8xl mx-auto
-            lg:justify-between
-            "
-          >
+        <div className="container mx-auto px-4 sm:px-6 py-4 md:py-5 lg:py-6">
+          <div className="flex items-center justify-between max-w-screen-2xl mx-auto lg:justify-between gap-2 sm:gap-4">
             {/* Logo and Brand */}
             <motion.div
-              className="flex items-center space-x-4"
+              className="flex items-center gap-2 sm:gap-4"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >
               {/* Logo with triangular design */}
               <div className="flex items-center">
-                <div className="relative w-12 h-12">
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12">
                   {/* Replace with actual logo */}
                   <img
                     src="/logo.png"
@@ -62,14 +56,13 @@ export default function Navigation() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-
-                <div className="ml-4">
-                  <h1 className="text-2xl font-bold text-gray-800 font-sans">
+                <div className="ml-2 sm:ml-4">
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-800 font-sans">
                     <span className="text-blue-600">Apollo</span>{' '}
                     <span className="text-red-600">Medical</span>{' '}
                     <span className="text-blue-600">Group</span>
                   </h1>
-                  <p className="text-sm text-gray-600 font-medium tracking-wider uppercase font-sans">
+                  <p className="text-xs sm:text-sm text-gray-600 font-medium tracking-wider uppercase font-sans">
                     Where Healing Begins
                   </p>
                 </div>
@@ -77,16 +70,15 @@ export default function Navigation() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-10">
+            <div className="hidden lg:flex items-center gap-6 xl:gap-10">
               {[
                 { name: 'Home', href: '/' },
-                { name: 'Gallery', href: '/gallery' },
-                { name: 'Contact Us', href: '/contact' },
+                { name: 'About', href: '/about' },
               ].map((item) => (
                 <motion.a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-200 relative group"
+                  className="text-gray-700 hover:text-blue-600 font-medium text-base xl:text-lg transition-colors duration-200 relative group"
                   whileHover={{ y: -1 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -98,7 +90,7 @@ export default function Navigation() {
 
             {/* Mobile Menu Button */}
             <button
-              className={`lg:hidden p-3 rounded-lg text-gray-700 transition-colors ml-auto ${
+              className={`lg:hidden p-2 sm:p-3 rounded-lg text-gray-700 transition-colors ml-auto ${
                 isMenuOpen ? 'bg-gray-100' : ''
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -113,7 +105,7 @@ export default function Navigation() {
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 style={{ display: 'inline-block' }}
               >
-                <Menu className="w-7 h-7" />
+                <Menu className="w-6 h-6 sm:w-7 sm:h-7" />
               </motion.span>
             </button>
           </div>
@@ -135,7 +127,7 @@ export default function Navigation() {
                   <a
                     key={item.name}
                     href={item.href}
-                    className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors font-medium"
+                    className="block px-4 py-2 sm:px-6 sm:py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors font-medium text-base sm:text-lg"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
