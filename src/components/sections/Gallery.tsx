@@ -1,8 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Gallery() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -46,25 +46,34 @@ export default function Gallery() {
     },
   ];
 
+  // Auto-transition effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSelectedIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
-    <section className="py-16 lg:py-24 bg-slate-50 relative overflow-hidden">
-      {/* Decorative Pillars - Hidden on mobile */}
-      <div className="hidden lg:block absolute left-0 top-0 h-full w-40 md:w-56 lg:w-64 xl:w-72 z-30 pointer-events-none drop-shadow-2xl">
+    <section className="py-12 lg:py-16 bg-slate-50 relative overflow-hidden">
+      {/* Decorative pillars - Hidden on mobile and tablet */}
+      <div className="hidden xl:block absolute left-0 top-0 bottom-0 w-64 z-30 pointer-events-none drop-shadow-2xl">
         <Image
           src="/pillar.png"
           alt="Decorative left pillar"
           fill
-          className="object-contain object-left"
+          className="object-cover object-left"
           priority
           style={{ filter: 'brightness(1.08) contrast(1.1)' }}
         />
       </div>
-      <div className="hidden lg:block absolute right-0 top-0 h-full w-40 md:w-56 lg:w-64 xl:w-72 z-30 pointer-events-none drop-shadow-2xl">
+      <div className="hidden xl:block absolute right-0 top-0 bottom-0 w-64 z-30 pointer-events-none drop-shadow-2xl">
         <Image
           src="/pillar.png"
           alt="Decorative right pillar"
           fill
-          className="object-contain object-right"
+          className="object-cover object-right"
           priority
           style={{ filter: 'brightness(1.08) contrast(1.1)' }}
         />
@@ -119,14 +128,14 @@ export default function Gallery() {
         </svg>
       </div>
 
-      <div className="container mx-auto px-4 max-w-7xl relative">
+      <div className="container mx-auto px-4 max-w-6xl relative">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 lg:mb-14"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 font-serif">
             Our Gallery
@@ -144,12 +153,12 @@ export default function Gallery() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className=" rounded-2xl  overflow-hidden relative"
+          className="rounded-2xl overflow-hidden relative"
         >
           {/* Main Image */}
           <div className="relative aspect-[16/10] md:aspect-[18/10] lg:aspect-[20/10] overflow-hidden">
             {/* Previous Image Preview */}
-            <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 lg:w-40 opacity-30 overflow-hidden">
+            <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 lg:w-28 xl:w-32 opacity-30 overflow-hidden">
               <Image
                 src={
                   images[
@@ -164,7 +173,7 @@ export default function Gallery() {
             </div>
 
             {/* Next Image Preview */}
-            <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 lg:w-40 opacity-30 overflow-hidden">
+            <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 lg:w-28 xl:w-32 opacity-30 overflow-hidden">
               <Image
                 src={
                   images[
@@ -178,28 +187,49 @@ export default function Gallery() {
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/50" />
             </div>
 
-            {/* Main Image */}
-            <div className="absolute inset-0 mx-10 md:mx-16 lg:mx-20">
-              <Image
-                src={images[selectedIndex].src || '/placeholder.svg'}
-                alt={images[selectedIndex].alt}
-                fill
-                className="object-cover transition-all duration-500 rounded-lg"
-                priority
-              />
+            {/* Main Image with Smooth Transitions */}
+            <div className="absolute inset-0 mx-8 md:mx-12 lg:mx-14 xl:mx-16">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedIndex}
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  className="relative w-full h-full"
+                >
+                  <Image
+                    src={images[selectedIndex].src || '/placeholder.svg'}
+                    alt={images[selectedIndex].alt}
+                    fill
+                    className="object-cover rounded-lg"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
-            <div className="absolute bottom-6 left-0 right-0 flex items-center justify-center text-white">
-              <h3 className="text-xl md:text-2xl lg:text-3xl font-bold font-serif text-center px-6">
-                {images[selectedIndex].title}
-              </h3>
+            {/* Title with Smooth Transitions */}
+            <div className="absolute bottom-4 md:bottom-6 left-0 right-0 flex items-center justify-center text-white">
+              <AnimatePresence mode="wait">
+                <motion.h3
+                  key={selectedIndex}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                  className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold font-serif text-center px-4 md:px-6"
+                >
+                  {images[selectedIndex].title}
+                </motion.h3>
+              </AnimatePresence>
             </div>
           </div>
 
           {/* Thumbnail Navigation */}
-          <div className="p-6 bg-transparent relative overflow-hidden">
+          <div className="p-4 md:p-6 bg-transparent relative overflow-hidden">
             {/* Thumbnail Background Pattern */}
             <div className="absolute inset-0 opacity-5">
               <svg
@@ -239,13 +269,13 @@ export default function Gallery() {
               </svg>
             </div>
 
-            <div className="flex gap-4 overflow-x-auto scrollbar-hide relative">
+            <div className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide relative">
               {images.map((image, index) => (
                 <motion.button
                   key={image.id}
                   onClick={() => setSelectedIndex(index)}
                   whileTap={{ scale: 0.95 }}
-                  className={`relative flex-shrink-0 w-28 h-20 md:w-32 md:h-24 lg:w-36 lg:h-28 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                  className={`relative flex-shrink-0 w-20 h-16 md:w-24 md:h-20 lg:w-28 lg:h-24 xl:w-32 xl:h-28 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
                     selectedIndex === index
                       ? 'border-blue-600 shadow-lg'
                       : 'border-slate-200 hover:border-slate-300'
