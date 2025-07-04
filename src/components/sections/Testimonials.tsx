@@ -17,7 +17,7 @@ import {
   Clock,
   Heart,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const testimonials = [
   {
@@ -70,6 +70,14 @@ export default function Testimonials() {
     metrics.map((metric) => ({ ...metric, displayValue: 0 }))
   );
 
+  // Touch/swipe state
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimatedMetrics(
@@ -91,6 +99,31 @@ export default function Testimonials() {
     setCurrentIndex(
       (prev) => (prev - 1 + testimonials.length) % testimonials.length
     );
+  };
+
+  // Touch handlers for swipe functionality
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextTestimonial();
+    }
+    if (isRightSwipe) {
+      prevTestimonial();
+    }
   };
 
   const currentTestimonial = testimonials[currentIndex];
@@ -162,6 +195,10 @@ export default function Testimonials() {
                   className="w-full h-[480px] relative"
                   tabIndex={0}
                   aria-label={`Testimonial from ${currentTestimonial.name}`}
+                  ref={cardRef}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
                 >
                   <Card className="bg-white shadow-lg h-full rounded-2xl relative overflow-hidden group">
                     <Button

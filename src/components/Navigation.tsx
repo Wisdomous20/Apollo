@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Menu } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import AccountDropdown from './account/AccountDropdown';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,8 +48,8 @@ export default function Navigation() {
               transition={{ duration: 0.2 }}
             >
               {/* Logo with triangular design */}
-              <div className="flex items-center">
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12">
+              <div className="flex items-center justify-center gap-2 sm:gap-3">
+                <div className="relative w-14 h-14 sm:w-20 sm:h-20">
                   {/* Replace with actual logo */}
                   <img
                     src="/logo.png"
@@ -56,7 +57,7 @@ export default function Navigation() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <div className="ml-2 sm:ml-4">
+                <div className="ml-1 sm:ml-2">
                   <h1 className="text-xl sm:text-2xl font-bold text-gray-800 font-sans">
                     <span className="text-blue-600">Apollo</span>{' '}
                     <span className="text-red-600">Medical</span>{' '}
@@ -86,28 +87,34 @@ export default function Navigation() {
                   <motion.div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
                 </motion.a>
               ))}
+
+              {/* Account Dropdown */}
+              <AccountDropdown />
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className={`lg:hidden p-2 sm:p-3 rounded-lg text-gray-700 transition-colors ml-auto ${
-                isMenuOpen ? 'bg-gray-100' : ''
-              }`}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-expanded={isMenuOpen}
-              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-            >
-              <motion.span
-                animate={{
-                  rotate: isMenuOpen ? 90 : 0,
-                  scale: isMenuOpen ? 1.1 : 1,
-                }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                style={{ display: 'inline-block' }}
+            {/* Mobile Menu Button and Account */}
+            <div className="flex flex-row-reverse items-center gap-2 lg:hidden">
+              <AccountDropdown />
+              <button
+                className={`p-2 sm:p-3 rounded-lg text-gray-700 transition-colors ${
+                  isMenuOpen ? 'bg-gray-100' : ''
+                }`}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-expanded={isMenuOpen}
+                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               >
-                <Menu className="w-6 h-6 sm:w-7 sm:h-7" />
-              </motion.span>
-            </button>
+                <motion.span
+                  animate={{
+                    rotate: isMenuOpen ? 90 : 0,
+                    scale: isMenuOpen ? 1.1 : 1,
+                  }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  style={{ display: 'inline-block' }}
+                >
+                  <Menu className="w-6 h-6 sm:w-7 sm:h-7" />
+                </motion.span>
+              </button>
+            </div>
           </div>
 
           {/* Mobile Menu */}
