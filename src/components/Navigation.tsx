@@ -128,8 +128,7 @@ export default function Navigation() {
               <div className="space-y-2">
                 {[
                   { name: 'Home', href: '/' },
-                  { name: 'Gallery', href: '/gallery' },
-                  { name: 'Contact Us', href: '/contact' },
+                  { name: 'About', href: '/about' },
                 ].map((item) => (
                   <a
                     key={item.name}

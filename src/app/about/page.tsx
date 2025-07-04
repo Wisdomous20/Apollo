@@ -133,7 +133,7 @@ export default function AboutSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16 lg:mb-20 mt-8 sm:mt-12"
         >
-          <p className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-slate-800 uppercase tracking-[0.2em] mb-4">
+          <p className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-blue-800 uppercase tracking-[0.2em] mb-4">
             About Us
           </p>
         </motion.div>
@@ -191,7 +191,9 @@ export default function AboutSection() {
                     priority
                   />
                   {/* Enhanced gradient overlay for better text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10 lg:from-black/30 lg:via-black/10 lg:to-transparent" />
+                  <div className="absolute inset-0 bg-black/40">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10 lg:from-black/30 lg:via-black/10 lg:to-transparent" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -280,7 +282,9 @@ export default function AboutSection() {
                     className="object-cover"
                   />
                   {/* Enhanced gradient overlay for better text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10 lg:from-black/30 lg:via-black/10 lg:to-transparent" />
+                  <div className="absolute inset-0 bg-black/40">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10 lg:from-black/30 lg:via-black/10 lg:to-transparent" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -316,7 +320,7 @@ export default function AboutSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 font-serif leading-[1.1] mb-6 lg:mb-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-800 font-serif leading-[1.1] mb-6 lg:mb-8">
               Our Services
             </h2>
             <p className="text-lg sm:text-xl text-slate-600 leading-relaxed font-serif max-w-3xl mx-auto px-4">
@@ -357,7 +361,9 @@ export default function AboutSection() {
                           className="object-cover"
                         />
                         {/* Enhanced gradient overlay for text readability */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                        <div className="absolute inset-0 bg-black/40">
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                        </div>
 
                         {/* Service icon overlay */}
                         <div className="absolute top-4 left-4">
@@ -370,7 +376,7 @@ export default function AboutSection() {
                       {/* Service content - Flexible height with consistent alignment */}
                       <div className="p-6 flex-1 flex flex-col justify-between">
                         <div>
-                          <h3 className="text-xl font-bold text-slate-900 mb-3 font-serif leading-tight">
+                          <h3 className="text-xl font-bold text-blue-800 mb-3 font-serif leading-tight">
                             {services[currentServiceIndex].title}
                           </h3>
                           <p className="text-base text-slate-600 leading-relaxed font-serif">
@@ -404,7 +410,9 @@ export default function AboutSection() {
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {/* Light overlay for desktop */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-black/40">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    </div>
 
                     {/* Service icon overlay */}
                     <div className="absolute top-4 left-4">
@@ -416,7 +424,7 @@ export default function AboutSection() {
 
                   {/* Service content */}
                   <div className="p-6 lg:p-8">
-                    <h3 className="text-xl lg:text-2xl font-bold text-slate-900 mb-4 font-serif">
+                    <h3 className="text-xl lg:text-2xl font-bold text-blue-800 mb-4 font-serif">
                       {service.title}
                     </h3>
                     <p className="text-base lg:text-lg text-slate-600 leading-relaxed font-serif">
