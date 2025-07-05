@@ -42,7 +42,7 @@ export default function Footer() {
           className="text-center mt-8 pt-8 border-t border-gray-100"
         >
           <p className="text-sm text-gray-500">
-            Copyright © 2024 Apollo Medical Group - All Rights Reserved.
+            Copyright © 2025 WisdomousTech - All Rights Reserved.
           </p>
         </motion.div>
       </div>
