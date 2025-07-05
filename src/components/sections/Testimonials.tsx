@@ -66,6 +66,7 @@ const certifications = [
 
 export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [animatedMetrics, setAnimatedMetrics] = useState(
     metrics.map((metric) => ({ ...metric, displayValue: 0 }))
   );
@@ -237,7 +238,7 @@ export default function Testimonials() {
                         ))}
                       </div>
                       <blockquote className="text-lg text-slate-700 leading-relaxed italic max-w-lg mx-auto flex-1 flex items-center font-serif">
-                        <span>"{currentTestimonial.content}"</span>
+                        <span>&quot;{currentTestimonial.content}&quot;</span>
                       </blockquote>
                       <div className="flex flex-col items-center space-y-3">
                         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">

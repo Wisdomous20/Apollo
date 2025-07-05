@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Calendar, Clock, FileText, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Appointment } from '@/types/account';
 
 interface AppointmentsSectionProps {
@@ -63,7 +63,7 @@ export default function AppointmentsSection({
             No Appointments
           </h3>
           <p className="text-slate-600 mb-6">
-            You haven't scheduled any appointments yet. Book your first
+            You haven&apos;t scheduled any appointments yet. Book your first
             appointment to get started.
           </p>
           <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">

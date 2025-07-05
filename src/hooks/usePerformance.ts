@@ -11,6 +11,7 @@ export function usePerformance() {
       // Check hardware concurrency (CPU cores)
       const cores = navigator.hardwareConcurrency || 1;
       // Check memory (if available)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const memory = (navigator as any).deviceMemory || 4;
 
       // Simple performance test

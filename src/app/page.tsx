@@ -2,9 +2,7 @@
 
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/sections/Hero';
-import About from '@/app/about/page';
 import Gallery from '@/components/sections/Gallery';
-import Contact from '@/components/sections/Contact';
 import Footer from '@/components/Footer';
 import Payment from '@/components/sections/Payment';
 import CombinedSection from '@/components/sections/CombinedSection';

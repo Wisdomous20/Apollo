@@ -2,10 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Phone, Clock, MapPin, Mail } from 'lucide-react';
+import { Phone, Clock, Mail } from 'lucide-react';
 
-const GOOGLE_MAPS_LINK =
-  'https://www.google.com/maps/place/3110+E+Sunset+Rd,+Paradise,+NV+89120';
+// const GOOGLE_MAPS_LINK =
+//   'https://www.google.com/maps/place/3110+E+Sunset+Rd,+Paradise,+NV+89120';
 const GOOGLE_MAPS_EMBED =
   'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3218.8947!2d-115.0847!3d36.1023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c8c0f0f0f0f0f0%3A0x0!2s3110%20E%20Sunset%20Rd%2C%20Paradise%2C%20NV%2089120!5e0!3m2!1sen!2sus!4v1234567890';
 
@@ -133,8 +133,8 @@ export default function ContactSection() {
                 </h3>
               </div>
               <p className="text-blue-100 mb-6 font-serif">
-                Have questions or need to schedule an appointment? We're here to
-                help.
+                Have questions or need to schedule an appointment? We&apos;re
+                here to help.
               </p>
               <Button
                 variant="secondary"

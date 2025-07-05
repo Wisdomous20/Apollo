@@ -207,7 +207,7 @@ export default function AboutSection() {
                   </h1>
                   <p className="text-sm sm:text-base lg:text-xl text-slate-50 lg:text-slate-600 leading-relaxed font-serif mb-3 sm:mb-4 lg:mb-8 drop-shadow-md lg:drop-shadow-none">
                     At Apollo Medical Group, our name is more than just a title;
-                    it's a reflection of our commitment to providing
+                    it&apos;s a reflection of our commitment to providing
                     comprehensive and compassionate primary care.
                   </p>
                   <p className="text-xs sm:text-sm lg:text-lg text-slate-100 lg:text-slate-600 leading-relaxed font-serif hidden sm:block drop-shadow-md lg:drop-shadow-none">
