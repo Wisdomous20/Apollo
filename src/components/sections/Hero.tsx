@@ -19,14 +19,12 @@ export default function Hero() {
           initial={{ opacity: 0, y: 50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="relative flex flex-col items-start justify-start w-full h-[40vh] sm:h-[min(85vh,70vh)] px-4 sm:px-8 lg:px-20 pr-4 sm:pr-6 lg:pr-12 pt-8 sm:pt-12 lg:pt-18 pb-6 sm:pb-8 lg:pb-12 transition-transform duration-500 bg-transparent sm:bg-[rgba(255,255,255,0.7)] shadow-none sm:shadow-2xl backdrop-blur-0 sm:backdrop-blur-[8px] lg:max-w-5xl lg:mx-auto"
           style={{
-            width: 'min(90vw, 70vw)',
             borderRadius: '1rem',
             transform: 'perspective(800px) scale3d(1.03,1.03,1.03)',
-            position: 'relative',
             overflow: 'hidden',
           }}
-          className="flex flex-col items-start justify-start h-[40vh] sm:h-[min(85vh,70vh)] px-4 sm:px-8 lg:px-20 pr-4 sm:pr-6 lg:pr-12 pt-8 sm:pt-12 lg:pt-18 pb-6 sm:pb-8 lg:pb-12 transition-transform duration-500 bg-transparent sm:bg-[rgba(255,255,255,0.7)] shadow-none sm:shadow-2xl backdrop-blur-0 sm:backdrop-blur-[8px]"
         >
           {/* Decorative Greek key SVG pattern background */}
           <svg
@@ -99,7 +97,7 @@ export default function Hero() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-blue-700 text-white px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-lg font-semibold text-sm sm:text-base w-full md:w-auto"
+              className="bg-blue-700 text-white px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-lg font-semibold text-sm sm:text-base md:w-auto"
             >
               Schedule Your Visit
             </motion.button>
