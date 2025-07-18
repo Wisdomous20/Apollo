@@ -176,7 +176,7 @@ export function BackgroundWrapper({
       {/* Removed floating random circle in the middle as requested */}
 
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 opacity-10"
+        className="absolute bottom-1/4 right-1/4 w-[clamp(12rem,20vw,20rem)] h-[clamp(12rem,20vw,20rem)] opacity-10"
         animate={{
           rotate: [360, 0],
           scale: [1, 0.9, 1],
@@ -202,7 +202,7 @@ export function BackgroundWrapper({
       <div className="relative z-10 w-full h-auto">{children}</div>
 
       {/* Bottom architectural fade */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-900/50 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-[clamp(4rem,8vw,8rem)] bg-gradient-to-t from-slate-900/50 to-transparent pointer-events-none" />
     </div>
   );
 }

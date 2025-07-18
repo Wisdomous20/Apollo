@@ -131,7 +131,7 @@ export default function Testimonials() {
 
   return (
     <section
-      className="relative z-10 py-20 bg-transparent overflow-hidden"
+      className="relative z-10 py-[clamp(3rem,8vw,8rem)] bg-transparent overflow-hidden"
       aria-labelledby="testimonials-heading"
     >
       {/* Mirrored Images at Bottom */}
@@ -154,22 +154,22 @@ export default function Testimonials() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 lg:px-8 relative z-10 pb-56">
+      <div className="container mx-auto px-[clamp(1rem,4vw,2.5rem)] lg:px-[clamp(2rem,6vw,4rem)] relative z-10 pb-[clamp(7rem,14vw,14rem)]">
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-20 text-center"
+          className="mb-[clamp(2rem,5vw,5rem)] text-center"
         >
           <h2
             id="testimonials-heading"
-            className="text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight font-serif"
+            className="text-[clamp(2rem,4vw,3rem)] font-bold text-white mb-4 tracking-tight font-serif"
             tabIndex={0}
           >
             Patient Stories
           </h2>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto font-serif">
+          <p className="text-[clamp(1rem,2vw,1.25rem)] text-white/80 max-w-2xl mx-auto font-serif">
             Real experiences from our patients and the excellence behind our
             care
           </p>

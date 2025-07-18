@@ -54,7 +54,7 @@ export default function Services() {
 
   return (
     <section
-      className="relative py-16 lg:py-28 bg-transparent font-serif"
+      className="relative py-[clamp(2.5rem,6vw,7rem)] bg-transparent font-serif"
       aria-labelledby="services-heading"
     >
       {/* Decorative Top Images */}
@@ -77,24 +77,24 @@ export default function Services() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-[clamp(1rem,4vw,2.5rem)] relative z-10">
         {/* Spacer for top margin above heading */}
-        <div className="h-20 md:h-28 lg:h-36" />
+        <div className="h-[clamp(2.5rem,6vw,5rem)]" />
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-20 text-center"
+          className="mb-[clamp(2rem,5vw,5rem)] text-center"
         >
           <h2
             id="services-heading"
-            className="text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight font-serif"
+            className="text-[clamp(2rem,4vw,3rem)] font-bold text-white mb-4 tracking-tight font-serif"
             tabIndex={0}
           >
             Our Services
           </h2>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto font-serif">
+          <p className="text-[clamp(1rem,2vw,1.25rem)] text-white/80 max-w-2xl mx-auto font-serif">
             Comprehensive healthcare solutions designed around your needs
           </p>
         </motion.header>
