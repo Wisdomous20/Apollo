@@ -28,11 +28,15 @@ export default function Hero() {
 
   // Listen for custom event from Services.tsx
   useEffect(() => {
-    const handler = (e: any) => {
+    const handler = (e: CustomEvent<{ serviceTitle?: string }>) => {
       openModal(e.detail?.serviceTitle);
     };
-    window.addEventListener('open-schedule-modal', handler);
-    return () => window.removeEventListener('open-schedule-modal', handler);
+    window.addEventListener('open-schedule-modal', handler as EventListener);
+    return () =>
+      window.removeEventListener(
+        'open-schedule-modal',
+        handler as EventListener
+      );
   }, []);
   return (
     <section className="relative h-[50vh] md:h-screen w-full overflow-hidden m-0 p-0">

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -19,10 +20,13 @@ export default function Footer() {
             transition={{ type: 'spring', stiffness: 300 }}
             className="flex flex-col items-center space-y-2"
           >
-            <img
+            <Image
               src="/logo.png"
               alt="Apollo Medical Group Logo"
+              width={64}
+              height={64}
               className="w-16 h-16 mb-2"
+              priority
             />
             <h3 className="text-2xl font-serif font-bold text-gray-900 text-center">
               Apollo <span className="text-red-600">Medical Group</span>

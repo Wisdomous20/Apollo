@@ -1,23 +1,12 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Menu } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AccountDropdown from './account/AccountDropdown';
+import Image from 'next/image';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 50); // Trigger after 50px of scroll
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <>
@@ -35,10 +24,13 @@ export default function Navigation() {
                 {/* Logo with circular design */}
                 <div className="flex items-center justify-center gap-2 sm:gap-3">
                   <div className="relative w-[3.5rem] h-[3.5rem] sm:w-[6rem] sm:h-[6rem] rounded-full bg-white shadow border border-gray-200 flex items-center justify-center overflow-hidden">
-                    <img
+                    <Image
                       src="/logo.png"
                       alt="Apollo Medical Group Logo"
+                      width={80}
+                      height={80}
                       className="w-[3rem] h-[3rem] sm:w-[5rem] sm:h-[5rem] object-contain rounded-full"
+                      priority
                     />
                   </div>
                   <div className="ml-[0.25rem] sm:ml-[0.5rem]">

@@ -18,6 +18,7 @@ import {
   Heart,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 const testimonials = [
   {
@@ -137,19 +138,25 @@ export default function Testimonials() {
       {/* Mirrored Images at Bottom */}
       <div className="absolute left-0 right-0 top-full -translate-y-1/2 flex justify-center z-0 pointer-events-none select-none w-full">
         <div className="relative w-1/2 h-auto flex justify-end">
-          <img
+          <Image
             src="/2.png"
             alt="Decorative left mirrored"
+            width={800}
+            height={600}
             className="w-full h-auto opacity-60 scale-x-[-1] object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,1)_30%)]"
             aria-hidden="true"
+            priority
           />
         </div>
         <div className="relative w-1/2 h-auto flex justify-start">
-          <img
+          <Image
             src="/2.png"
             alt="Decorative right"
+            width={800}
+            height={600}
             className="w-full h-auto opacity-60 object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,1)_30%)]"
             aria-hidden="true"
+            priority
           />
         </div>
       </div>

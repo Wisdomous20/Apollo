@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Heart, Stethoscope, Activity } from 'lucide-react';
-import { services as heroServices } from './Hero';
+import Image from 'next/image';
 
 // Helper to open modal from anywhere
 function openScheduleModalWithService(serviceTitle: string) {
@@ -68,19 +68,25 @@ export default function Services() {
       {/* Decorative Top Images */}
       <div className="absolute left-0 right-0 top-0 -translate-y-1/2 flex justify-center z-0 pointer-events-none select-none w-full">
         <div className="relative w-1/2 h-auto flex justify-end">
-          <img
+          <Image
             src="/2.png"
             alt="Decorative left"
+            width={800}
+            height={600}
             className="w-full h-auto opacity-60 rotate-180 object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,1)_30%)]"
             aria-hidden="true"
+            priority
           />
         </div>
         <div className="relative w-1/2 h-auto flex justify-start">
-          <img
+          <Image
             src="/2.png"
             alt="Decorative right mirrored"
+            width={800}
+            height={600}
             className="w-full h-auto opacity-60 scale-x-[-1] rotate-180 object-cover [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,1)_30%)]"
             aria-hidden="true"
+            priority
           />
         </div>
       </div>
