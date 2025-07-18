@@ -18,7 +18,7 @@ const mockUser = {
   id: '2',
   name: 'Alex Kim',
   email: 'alex.kim@apollomedical.com',
-  avatar: '/logo.png',
+  avatar: '/blank-user.svg', // Use a blank default image
   dateJoined: '2024-02-10',
   contactNumber: '+1 (555) 987-6543',
 };
