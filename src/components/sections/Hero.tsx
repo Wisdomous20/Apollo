@@ -4,10 +4,45 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
+import ScheduleVisitModal from '@/components/account/ScheduleVisitModal';
+
+// Export services array for use in Services.tsx
+export const services = [
+  { title: 'Primary Care' },
+  { title: 'Specialized Care' },
+  { title: 'Emergency Care' },
+];
 
 export default function Hero() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [preselectedService, setPreselectedService] = useState<
+    string | undefined
+  >(undefined);
+
+  // Function to open modal with optional preselected service
+  const openModal = (serviceTitle?: string) => {
+    setPreselectedService(serviceTitle);
+    setModalOpen(true);
+  };
+
+  // Listen for custom event from Services.tsx
+  useEffect(() => {
+    const handler = (e: any) => {
+      openModal(e.detail?.serviceTitle);
+    };
+    window.addEventListener('open-schedule-modal', handler);
+    return () => window.removeEventListener('open-schedule-modal', handler);
+  }, []);
   return (
     <section className="relative h-[50vh] md:h-screen w-full overflow-hidden m-0 p-0">
+      {/* Modal for scheduling visit */}
+      <ScheduleVisitModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        services={services}
+        preselectedService={preselectedService}
+      />
       {/* Mobile-only faded clouds overlay */}
       <div className="absolute inset-0 block md:hidden z-0">
         <div className="absolute inset-0 bg-[url('/clouds.jpg')] bg-cover bg-center opacity-60" />
@@ -98,15 +133,13 @@ export default function Hero() {
             className="mb-[1vh] flex flex-col sm:flex-row gap-[1vw] sm:gap-[2vw] lg:gap-[1vw] relative z-10 items-center md:items-start justify-center md:justify-start w-full"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="#services" passHref legacyBehavior>
-                <Button
-                  asChild
-                  size="lg"
-                  className="font-semibold text-base md:w-auto bg-[#000080] text-white hover:bg-[#0000a0] border-none"
-                >
-                  <a>Schedule Your Visit</a>
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="font-semibold text-base md:w-auto bg-[#000080] text-white hover:bg-[#0000a0] border-none"
+                onClick={() => openModal()}
+              >
+                Schedule Your Visit
+              </Button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="#contact" passHref legacyBehavior>

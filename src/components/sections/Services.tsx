@@ -5,6 +5,14 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Heart, Stethoscope, Activity } from 'lucide-react';
+import { services as heroServices } from './Hero';
+
+// Helper to open modal from anywhere
+function openScheduleModalWithService(serviceTitle: string) {
+  window.dispatchEvent(
+    new CustomEvent('open-schedule-modal', { detail: { serviceTitle } })
+  );
+}
 
 const services = [
   {
@@ -148,6 +156,9 @@ export default function Services() {
                       <Button
                         className="bg-blue-900 hover:bg-blue-950 focus-visible:ring-2 focus-visible:ring-sky-400 text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                         tabIndex={0}
+                        onClick={() =>
+                          openScheduleModalWithService(service.title)
+                        }
                       >
                         Book Now
                       </Button>
@@ -230,6 +241,9 @@ export default function Services() {
                     <Button
                       className="bg-blue-900 hover:bg-blue-950 focus-visible:ring-2 focus-visible:ring-sky-400 text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                       tabIndex={0}
+                      onClick={() =>
+                        openScheduleModalWithService(service.title)
+                      }
                     >
                       Book Now
                     </Button>
