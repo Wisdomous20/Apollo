@@ -15,6 +15,7 @@ export default function Navigation() {
         className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm overflow-hidden"
         role="navigation"
         aria-label="Main navigation"
+        style={{ fontFamily: "'Cinzel', serif" }}
       >
         <div className="relative z-10">
           <div className="container mx-auto px-4 sm:px-6 py-1 md:py-2 lg:py-2">
@@ -23,7 +24,7 @@ export default function Navigation() {
               <div className="flex items-center gap-2 sm:gap-4">
                 {/* Logo with circular design */}
                 <div className="flex items-center justify-center gap-2 sm:gap-3">
-                  <div className="relative w-[3.5rem] h-[3.5rem] sm:w-[6rem] sm:h-[6rem] rounded-full bg-white shadow border border-gray-200 flex items-center justify-center overflow-hidden">
+                  <div className="relative w-[3.5rem] h-[3.5rem] sm:w-[6rem] sm:h-[6rem] flex items-center justify-center overflow-hidden">
                     <Image
                       src="/logo.png"
                       alt="Apollo Medical Group Logo"
@@ -34,12 +35,18 @@ export default function Navigation() {
                     />
                   </div>
                   <div className="ml-[0.25rem] sm:ml-[0.5rem]">
-                    <h1 className="text-[clamp(1.1rem,2vw,1.5rem)] sm:text-[clamp(1.5rem,2.5vw,2rem)] font-bold text-gray-800 font-sans leading-tight">
+                    <h1
+                      className="text-[clamp(1.1rem,2vw,1.5rem)] sm:text-[clamp(1.5rem,2.5vw,2rem)] font-bold text-gray-800 font-serif leading-tight"
+                      style={{ fontFamily: "'Cinzel', serif" }}
+                    >
                       <span className="text-red-700">Apollo</span>{' '}
                       <span className="text-[#000080]">Medical</span>{' '}
                       <span className="text-[#000080]">Group</span>
                     </h1>
-                    <p className="text-[clamp(0.7rem,1.2vw,0.95rem)] sm:text-[clamp(0.85rem,1.5vw,1.1rem)] text-gray-600 font-medium tracking-wider uppercase font-sans">
+                    <p
+                      className="text-[clamp(0.7rem,1.2vw,0.95rem)] sm:text-[clamp(0.85rem,1.5vw,1.1rem)] text-gray-600 font-medium tracking-wider uppercase font-serif"
+                      style={{ fontFamily: "'Cinzel', serif" }}
+                    >
                       Where Healing Begins
                     </p>
                   </div>
