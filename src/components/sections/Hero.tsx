@@ -16,20 +16,16 @@ export const services = [
 
 export default function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [preselectedService, setPreselectedService] = useState<
-    string | undefined
-  >(undefined);
 
   // Function to open modal with optional preselected service
-  const openModal = (serviceTitle?: string) => {
-    setPreselectedService(serviceTitle);
+  const openModal = () => {
     setModalOpen(true);
   };
 
   // Listen for custom event from Services.tsx
   useEffect(() => {
-    const handler = (e: CustomEvent<{ serviceTitle?: string }>) => {
-      openModal(e.detail?.serviceTitle);
+    const handler = () => {
+      openModal();
     };
     window.addEventListener('open-schedule-modal', handler as EventListener);
     return () =>
@@ -44,8 +40,6 @@ export default function Hero() {
       <ScheduleVisitModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        services={services}
-        preselectedService={preselectedService}
       />
       {/* Mobile-only faded clouds overlay */}
       <div className="absolute inset-0 block md:hidden z-0">

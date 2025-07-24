@@ -6,25 +6,44 @@ import Navigation from '@/components/Navigation';
 import { Calendar as LucideCalendar } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { mockAppointments as baseMockAppointments } from '@/data/mockData';
-import AppointmentsSection from '@/components/account/AppointmentsSection';
+import type { Appointment, User } from '@/types/account';
+
+// Local type for appointments with user info
+type AppointmentWithUser = Appointment & { user?: User };
 
 export default function AdminDashboard() {
   // For calendar, you might want to use a real calendar library for production
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   // Add more mock appointments for demo
-  const moreExamples = Array.from({ length: 20 }, (_, i) => ({
-    ...baseMockAppointments[0],
-    serviceType: `Service Example ${i + 1}`,
-    dateRequested: new Date(Date.now() - i * 86400000).toISOString(),
-    status: i % 3 === 0 ? 'pending' : i % 3 === 1 ? 'approved' : 'rejected',
-    remarks: i % 2 === 0 ? 'Auto-generated example.' : '',
-    user: {
-      name: `User${i + 1}`,
-      email: `user${i + 1}@example.com`,
-    },
-  }));
-  const allMockAppointments = [...baseMockAppointments, ...moreExamples];
-  const [appointments, setAppointments] = useState([...allMockAppointments]);
+  const moreExamples: AppointmentWithUser[] = Array.from(
+    { length: 20 },
+    (_, i) => ({
+      ...baseMockAppointments[0],
+      serviceType: `Service Example ${i + 1}`,
+      dateRequested: new Date(Date.now() - i * 86400000).toISOString(),
+      status: (i % 3 === 0
+        ? 'pending'
+        : i % 3 === 1
+          ? 'approved'
+          : 'rejected') as 'pending' | 'approved' | 'rejected',
+      remarks: i % 2 === 0 ? 'Auto-generated example.' : '',
+      user: {
+        id: `${i + 1}`,
+        name: `User${i + 1}`,
+        email: `user${i + 1}@example.com`,
+        dateJoined: '2024-01-01',
+        contactNumber: '+1 (555) 000-0000',
+      },
+      id: `${i + 100}`,
+    })
+  );
+  const allMockAppointments: AppointmentWithUser[] = [
+    ...baseMockAppointments,
+    ...moreExamples,
+  ];
+  const [appointments, setAppointments] = useState<AppointmentWithUser[]>([
+    ...allMockAppointments,
+  ]);
 
   // Pagination and search state
   const [search, setSearch] = useState('');
@@ -33,7 +52,7 @@ export default function AdminDashboard() {
 
   // Filtered appointments for All Appointments
   const filteredAppointments = appointments.filter(
-    (a: any) =>
+    (a) =>
       a.serviceType.toLowerCase().includes(search.toLowerCase()) ||
       (a.user?.name &&
         a.user.name.toLowerCase().includes(search.toLowerCase())) ||
@@ -68,7 +87,7 @@ export default function AdminDashboard() {
   };
 
   // Helper to get user info (if available)
-  const getUserInfo = (appointment: any) => {
+  const getUserInfo = (appointment: AppointmentWithUser) => {
     if (appointment.user) {
       return (
         <span className="text-xs text-slate-500">
@@ -185,10 +204,10 @@ export default function AdminDashboard() {
               </span>
             </div>
             <ul className="divide-y divide-slate-200">
-              {paginatedAppointments.map((a: any, idx: number) => {
+              {paginatedAppointments.map((a, idx) => {
                 // Find the real index in appointments for approve/reject
                 const realIdx = appointments.findIndex(
-                  (ap: any) =>
+                  (ap) =>
                     ap.dateRequested === a.dateRequested &&
                     ap.serviceType === a.serviceType &&
                     ap.user?.email === a.user?.email

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import {
@@ -16,13 +16,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function ScheduleVisitModal({
   open,
   onClose,
-  services,
-  preselectedService,
 }: {
   open: boolean;
   onClose: () => void;
-  services: { title: string }[];
-  preselectedService?: string;
 }) {
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState('');
@@ -34,11 +30,14 @@ export default function ScheduleVisitModal({
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Example doctor list and prices
-  const doctors = [
-    { name: 'Dr. Athena Papadopoulos', price: 120 },
-    { name: 'Dr. Nikos Stavros', price: 100 },
-    { name: 'Dr. Eleni Georgiou', price: 110 },
-  ];
+  const doctors = useMemo(
+    () => [
+      { name: 'Dr. Athena Papadopoulos', price: 120 },
+      { name: 'Dr. Nikos Stavros', price: 100 },
+      { name: 'Dr. Eleni Georgiou', price: 110 },
+    ],
+    []
+  );
 
   useEffect(() => {
     if (doctor) {
@@ -47,7 +46,7 @@ export default function ScheduleVisitModal({
     } else {
       setPrice(null);
     }
-  }, [doctor]);
+  }, [doctor, doctors]);
 
   // 9am-5pm, 1 hour slots
   const timeSlots = Array.from({ length: 8 }, (_, i) => {
