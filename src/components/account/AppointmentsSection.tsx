@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, FileText, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -47,6 +48,14 @@ export default function AppointmentsSection({
     }
   };
 
+  // Search state
+  const [search, setSearch] = useState('');
+  const filteredAppointments = appointments.filter(
+    (a) =>
+      a.serviceType.toLowerCase().includes(search.toLowerCase()) ||
+      (a.remarks && a.remarks.toLowerCase().includes(search.toLowerCase()))
+  );
+
   if (appointments.length === 0) {
     return (
       <motion.div
@@ -81,20 +90,36 @@ export default function AppointmentsSection({
       transition={{ duration: 0.6 }}
       className="space-y-6"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h2 className="text-2xl font-bold text-slate-900 font-serif">
           Your Appointments
         </h2>
+        <div className="flex gap-2 items-center">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search appointments..."
+            className="border border-slate-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
+            onClick={(e) => e.preventDefault()}
+            type="button"
+          >
+            Search
+          </button>
+        </div>
         <Badge variant="outline" className="text-sm">
-          {appointments.length} appointment
-          {appointments.length !== 1 ? 's' : ''}
+          {filteredAppointments.length} appointment
+          {filteredAppointments.length !== 1 ? 's' : ''}
         </Badge>
       </div>
 
       <div className="grid gap-4">
-        {appointments.map((appointment, index) => (
+        {filteredAppointments.map((appointment, index) => (
           <motion.div
-            key={appointment.id}
+            key={appointment.dateRequested + appointment.serviceType}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -133,9 +158,6 @@ export default function AppointmentsSection({
                       {appointment.status.charAt(0).toUpperCase() +
                         appointment.status.slice(1)}
                     </Badge>
-                    <div className="text-xs text-slate-500">
-                      ID: {appointment.id}
-                    </div>
                   </div>
                 </div>
               </CardContent>

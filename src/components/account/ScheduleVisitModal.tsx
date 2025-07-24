@@ -26,20 +26,28 @@ export default function ScheduleVisitModal({
 }) {
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState('');
-  const [service, setService] = useState('');
-  const [email, setEmail] = useState('');
+  // Removed service and email
+  const [doctor, setDoctor] = useState('');
+  const [price, setPrice] = useState<number | null>(null);
   const [phone, setPhone] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Set service if preselectedService changes and modal is open
+  // Example doctor list and prices
+  const doctors = [
+    { name: 'Dr. Athena Papadopoulos', price: 120 },
+    { name: 'Dr. Nikos Stavros', price: 100 },
+    { name: 'Dr. Eleni Georgiou', price: 110 },
+  ];
+
   useEffect(() => {
-    if (open && preselectedService) {
-      setService(preselectedService);
-    } else if (open && !preselectedService) {
-      setService('');
+    if (doctor) {
+      const found = doctors.find((d) => d.name === doctor);
+      setPrice(found ? found.price : null);
+    } else {
+      setPrice(null);
     }
-  }, [open, preselectedService]);
+  }, [doctor]);
 
   // 9am-5pm, 1 hour slots
   const timeSlots = Array.from({ length: 8 }, (_, i) => {
@@ -167,39 +175,29 @@ export default function ScheduleVisitModal({
                   </SelectContent>
                 </Select>
                 <label className="font-semibold text-sm sm:text-base">
-                  Service Type
+                  Select Doctor
                 </label>
-                <Select
-                  key={service}
-                  value={service}
-                  onValueChange={setService}
-                >
+                <Select value={doctor} onValueChange={setDoctor}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Choose a service" />
+                    <SelectValue placeholder="Choose a doctor" />
                   </SelectTrigger>
                   <SelectContent>
-                    {services.map((s) => (
+                    {doctors.map((d) => (
                       <SelectItem
-                        key={s.title}
-                        value={s.title}
+                        key={d.name}
+                        value={d.name}
                         className="text-base"
                       >
-                        {s.title}
+                        {d.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <label className="font-semibold text-sm sm:text-base">
-                  Email
-                </label>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@email.com"
-                  required
-                  className="w-full"
-                />
+                {price !== null && (
+                  <div className="text-right text-blue-900 font-semibold text-lg mt-2 mb-1">
+                    Price: ${price}
+                  </div>
+                )}
                 <label className="font-semibold text-sm sm:text-base">
                   Phone Number
                 </label>
