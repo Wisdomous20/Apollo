@@ -140,14 +140,13 @@ export default function Hero() {
               </Button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="#contact" passHref legacyBehavior>
+              <Link href="#contact" passHref>
                 <Button
-                  asChild
                   variant="outline"
                   size="lg"
                   className="font-semibold text-base md:w-auto border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-700 transition-colors"
                 >
-                  <a>Learn More</a>
+                  Learn More
                 </Button>
               </Link>
             </motion.div>
