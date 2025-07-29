@@ -1,87 +1,46 @@
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import { prisma } from './utils';
+import jwt from 'jsonwebtoken';
 
-export const authOptions = {
-  providers: [
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret';
 
-        try {
-          const user = await prisma.user.findUnique({
-            where: {
-              email: credentials.email,
-            },
-          });
+export interface JWTPayload {
+  userId: string;
+  email: string;
+  userType: 'PATIENT' | 'DOCTOR';
+}
 
-          if (!user) {
-            return null;
-          }
+export function generateTokens(payload: JWTPayload) {
+  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
+    expiresIn: '7d',
+  });
 
-          // Check if password is hashed or plain text
-          let isPasswordValid = false;
-          if (
-            user.password.startsWith('$2a$') ||
-            user.password.startsWith('$2b$')
-          ) {
-            // Password is hashed
-            isPasswordValid = await bcrypt.compare(
-              credentials.password,
-              user.password
-            );
-          } else {
-            // Password is plain text (for backward compatibility)
-            isPasswordValid = credentials.password === user.password;
-          }
+  return { accessToken, refreshToken };
+}
 
-          if (!isPasswordValid) {
-            return null;
-          }
+export function verifyAccessToken(token: string): JWTPayload | null {
+  try {
+    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+  } catch {
+    return null;
+  }
+}
 
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-          };
-        } catch (error) {
-          console.error('Auth error:', error);
-          return null;
-        }
-      },
-    }),
-  ],
-  session: {
-    strategy: 'jwt' as const,
-  },
-  callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user }: { token: any; user?: any }) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async session({ session, token }: { session: any; token: any }) {
-      if (token) {
-        session.user.id = token.id as string;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: '/login',
-  },
-};
+export function verifyRefreshToken(token: string): JWTPayload | null {
+  try {
+    return jwt.verify(token, JWT_REFRESH_SECRET) as JWTPayload;
+  } catch {
+    return null;
+  }
+}
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+// Helper function to get user from token
+export function getUserFromToken(token: string): JWTPayload | null {
+  try {
+    // Remove 'Bearer ' prefix if present
+    const cleanToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+    return verifyAccessToken(cleanToken);
+  } catch {
+    return null;
+  }
+}

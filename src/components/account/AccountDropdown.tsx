@@ -2,7 +2,14 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Settings, LogOut, Calendar, ChevronDown } from 'lucide-react';
+import {
+  User,
+  Settings,
+  LogOut,
+  Calendar,
+  ChevronDown,
+  LogIn,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +36,9 @@ export default function AccountDropdown() {
   const handleProfileClick = () => {
     // Navigate to account page
     window.location.href = '/account';
+  };
+  const handleLogin = () => {
+    window.location.href = '/login';
   };
 
   const handleAppointmentsClick = () => {
@@ -112,6 +122,11 @@ export default function AccountDropdown() {
         >
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={handleLogin} className="cursor-pointer">
+          <LogIn className="mr-2 h-4 w-4" />
+          <span>Login</span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

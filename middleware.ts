@@ -1,40 +1,77 @@
-import { withAuth } from 'next-auth/middleware';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyAccessToken } from './src/lib/auth';
 
-export default withAuth(
-  function middleware(req) {
-    // If user is not authenticated and trying to access admin routes
-    if (req.nextUrl.pathname.startsWith('/admin') && !req.nextauth.token) {
-      return NextResponse.redirect(new URL('/login', req.url));
+export interface AuthenticatedRequest extends NextRequest {
+  user?: {
+    userId: string;
+    email: string;
+    userType: 'PATIENT' | 'DOCTOR';
+  };
+}
+
+export function withAuth(
+  handler: (req: AuthenticatedRequest) => Promise<NextResponse>
+) {
+  return async (req: NextRequest) => {
+    try {
+      const authHeader = req.headers.get('authorization');
+
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return NextResponse.json(
+          { error: 'Authorization header missing or invalid' },
+          { status: 401 }
+        );
+      }
+
+      const token = authHeader.slice(7);
+      const payload = verifyAccessToken(token);
+
+      if (!payload) {
+        return NextResponse.json(
+          { error: 'Invalid or expired token' },
+          { status: 401 }
+        );
+      }
+
+      // Attach user info to request
+      const authenticatedReq = req as AuthenticatedRequest;
+      authenticatedReq.user = payload;
+
+      return handler(authenticatedReq);
+    } catch (error) {
+      console.error('Auth middleware error:', error);
+      return NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      );
     }
+  };
+}
 
-    // If user is authenticated and trying to access login page, redirect to admin dashboard
-    if (req.nextUrl.pathname === '/login' && req.nextauth.token) {
-      return NextResponse.redirect(new URL('/admin', req.url));
+export function withDoctorAuth(
+  handler: (req: AuthenticatedRequest) => Promise<NextResponse>
+) {
+  return withAuth(async (req: AuthenticatedRequest) => {
+    if (req.user?.userType !== 'DOCTOR') {
+      return NextResponse.json(
+        { error: 'Doctor access required' },
+        { status: 403 }
+      );
     }
+    return handler(req);
+  });
+}
 
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Allow access to login page without authentication
-        if (req.nextUrl.pathname === '/login') {
-          return true;
-        }
-
-        // Require authentication for all other admin routes
-        if (req.nextUrl.pathname.startsWith('/admin')) {
-          return !!token;
-        }
-
-        // Allow access to all other routes
-        return true;
-      },
-    },
-  }
-);
-
-export const config = {
-  matcher: ['/admin/:path*'],
-};
+export function withPatientAuth(
+  handler: (req: AuthenticatedRequest) => Promise<NextResponse>
+) {
+  return withAuth(async (req: AuthenticatedRequest) => {
+    if (req.user?.userType !== 'PATIENT') {
+      return NextResponse.json(
+        { error: 'Patient access required' },
+        { status: 403 }
+      );
+    }
+    return handler(req);
+  });
+}
