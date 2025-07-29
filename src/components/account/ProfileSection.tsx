@@ -37,7 +37,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white shadow-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user.avatar ?? "/file.svg"} alt={user.name} />
                 <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-semibold">
                   {user.name
                     .split(' ')
@@ -50,7 +50,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                   {user.name}
                 </CardTitle>
                 <p className="text-slate-600 text-sm sm:text-base">
-                  Member since {formatDate(user.dateJoined)}
+                  Member since {formatDate(user.dateJoined.toLocaleString())}
                 </p>
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                     Contact Number
                   </p>
                   <p className="text-slate-900 font-medium">
-                    {user.contactNumber}
+                    {user.phoneNumber}
                   </p>
                 </div>
               </div>
@@ -108,7 +108,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                     Date Joined
                   </p>
                   <p className="text-slate-900 font-medium">
-                    {formatDate(user.dateJoined)}
+                    {formatDate(user.dateJoined.toLocaleString())}
                   </p>
                 </div>
               </div>

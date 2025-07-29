@@ -181,7 +181,7 @@ export default function AccountSettingsPage() {
                     <div className="flex items-center gap-4">
                       <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white shadow-lg">
                         <AvatarImage
-                          src={mockUser.avatar}
+                          src={mockUser.avatar ?? "/file.svg"}
                           alt={mockUser.name}
                         />
                         <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-semibold">

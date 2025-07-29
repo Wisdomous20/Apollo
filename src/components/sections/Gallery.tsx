@@ -16,7 +16,7 @@ export default function Gallery() {
     },
     {
       id: 2,
-      src: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=600&fit=crop&crop=center',
+      src: 'https://images.unsplash.com/photo-1631039302217-5a6c56371e86?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       alt: 'Healthcare team consultation',
       title: 'Team Consultation',
     },
@@ -275,11 +275,10 @@ export default function Gallery() {
                   key={image.id}
                   onClick={() => setSelectedIndex(index)}
                   whileTap={{ scale: 0.95 }}
-                  className={`relative flex-shrink-0 w-20 h-16 md:w-24 md:h-20 lg:w-28 lg:h-24 xl:w-32 xl:h-28 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                    selectedIndex === index
+                  className={`relative flex-shrink-0 w-20 h-16 md:w-24 md:h-20 lg:w-28 lg:h-24 xl:w-32 xl:h-28 rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedIndex === index
                       ? 'border-blue-600 shadow-lg'
                       : 'border-slate-200 hover:border-slate-300'
-                  }`}
+                    }`}
                 >
                   <Image
                     src={image.src || '/placeholder.svg'}
@@ -288,11 +287,10 @@ export default function Gallery() {
                     className="object-cover"
                   />
                   <div
-                    className={`absolute inset-0 transition-opacity duration-300 ${
-                      selectedIndex === index
+                    className={`absolute inset-0 transition-opacity duration-300 ${selectedIndex === index
                         ? 'bg-blue-600/20'
                         : 'bg-black/10 hover:bg-black/5'
-                    }`}
+                      }`}
                   />
                 </motion.button>
               ))}

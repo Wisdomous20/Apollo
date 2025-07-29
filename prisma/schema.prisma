@@ -20,24 +20,26 @@ enum AppointmentStatus {
 }
 
 model User {
-  id String @id @default(cuid()) @map("_id")
-  name String
-  email String @unique
-  phoneNumber String
-  password String
-  dateJoined DateTime
-  userType UserType
-  doctorAppointments Appointment[] @relation("DoctorAppointments")
+  id                  String        @id @default(cuid()) @map("_id")
+  name                String
+  email               String        @unique
+  avatar              String?
+  phoneNumber         String
+  password            String
+  dateJoined          DateTime
+  userType            UserType
+  doctorAppointments  Appointment[] @relation("DoctorAppointments")
   patientAppointments Appointment[] @relation("PatientAppointments")
 }
+
 model Appointment {
-  id String @id @default(cuid()) @map("_id")
+  id            String            @id @default(cuid()) @map("_id")
   dateRequested DateTime
-  serviceType String
-  description String
-  status AppointmentStatus @default(PENDING)
-  doctor User @relation("DoctorAppointments", fields: [doctorId], references: [id])
-  doctorId String
-  patient User @relation("PatientAppointments", fields: [patientId], references: [id])
-  patientId String
+  serviceType   String
+  description   String
+  status        AppointmentStatus @default(PENDING)
+  doctor        User              @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  doctorId      String
+  patient       User              @relation("PatientAppointments", fields: [patientId], references: [id])
+  patientId     String
 }

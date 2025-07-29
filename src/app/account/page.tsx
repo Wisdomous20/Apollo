@@ -1,11 +1,63 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import AccountTabs from '@/components/account/AccountTabs';
-import { mockUser, mockAppointments } from '@/data/mockData';
+import { getUserById } from '@/lib/actions/user-actions';
+import { User, Appointment } from '@/types/account';
+import { getAppointmentsByUserId } from '@/lib/actions/user-actions';
 
 export default function AccountPage() {
+
+  const [user, setUser] = useState<User | null>(null);
+  const [appointments, setAppointments] = useState<Appointment[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchUser() {
+      setIsLoading(true);
+      const userId = 'cmdnsjrag0000iu8g9buf5co5';
+      const fetchedUser = await getUserById(userId);
+      if (typeof fetchedUser === 'string') {
+        console.error(fetchedUser);
+        setIsLoading(false);
+      } else {
+        setUser(fetchedUser);
+        setIsLoading(false);
+      }
+    }
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    async function fetchAppointments() {
+      if (user) {
+        const fetchedAppointments = await getAppointmentsByUserId(user.id);
+        setAppointments(fetchedAppointments);
+      }
+    }
+
+    fetchAppointments();
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <p className="text-lg text-slate-600">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user || !appointments) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <p className="text-lg text-slate-600">no user data found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Navigation />
@@ -29,7 +81,7 @@ export default function AccountPage() {
                 fontFamily: 'Georgia, Times New Roman, Times, serif',
               }}
             >
-              Welcome Back, {mockUser.name.split(' ')[0]}!
+              Welcome Back, {user.name.split(' ')[0]}!
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -43,7 +95,7 @@ export default function AccountPage() {
           </div>
 
           {/* Tabs Content */}
-          <AccountTabs user={mockUser} appointments={mockAppointments} />
+          <AccountTabs user={user} appointments={appointments} />
         </motion.div>
       </main>
 

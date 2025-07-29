@@ -1,18 +1,22 @@
+import { AppointmentStatus } from "../../generated/prisma";
+
 export interface User {
   id: string;
   name: string;
   email: string;
-  avatar?: string;
-  dateJoined: string;
-  contactNumber: string;
+  avatar: string | null;
+  dateJoined: Date;
+  phoneNumber: string;
 }
 
 export interface Appointment {
   id: string;
-  dateRequested: string;
+  dateRequested: Date;
   serviceType: string;
-  status: 'pending' | 'approved' | 'rejected';
-  remarks?: string;
+  status: AppointmentStatus;
+  description: string | null;
+  doctorId: string;
+  patientId: string;
 }
 
 export interface AccountTab {

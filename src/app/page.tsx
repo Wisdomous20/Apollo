@@ -1,5 +1,3 @@
-'use client';
-
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/sections/Hero';
 import Gallery from '@/components/sections/Gallery';
@@ -13,7 +11,6 @@ export default function ApolloMedical() {
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-blue-50 overflow-x-hidden">
       <Navigation />
       <Hero />
-      {/* <About /> */}
       <CombinedSection />
       <Gallery />
       <Payment />
