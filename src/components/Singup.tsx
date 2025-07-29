@@ -19,7 +19,7 @@ export default function SignupPage() {
     phoneNumber: '',
     password: '',
     confirmPassword: '',
-    userType: 'PATIENT', // Default to PATIENT
+    userType: 'DOCTOR', // Default to PATIENT
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

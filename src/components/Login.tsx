@@ -71,7 +71,6 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Store token and redirect based on user type
         localStorage.setItem('accessToken', data.accessToken);
 
         if (data.user.userType === 'DOCTOR') {

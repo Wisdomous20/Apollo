@@ -28,10 +28,10 @@ export async function createUser() {
   })
 }
 
-export async function getAppointmentsByUserId(id: string) {
-  return await prisma.appointment.findMany({
+export async function getAllDoctors() {
+  return await prisma.user.findMany({
     where: {
-      doctorId: id
-    },
+      userType: "DOCTOR"
+    }
   })
 }

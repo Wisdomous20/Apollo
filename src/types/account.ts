@@ -15,8 +15,8 @@ export interface Appointment {
   serviceType: string;
   status: AppointmentStatus;
   description: string | null;
-  doctorId: string;
-  patientId: string;
+  doctor: User;
+  patient: User;
 }
 
 export interface AccountTab {

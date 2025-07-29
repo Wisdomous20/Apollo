@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import ScheduleVisitModal from '@/components/account/ScheduleVisitModal';
+import { getUserFromToken } from '@/lib/actions/jwt-actions';
 
 // Export services array for use in Services.tsx
 export const services = [
@@ -16,11 +17,23 @@ export const services = [
 
 export default function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [userId, setUserId] = useState("");
 
   // Function to open modal with optional preselected service
   const openModal = () => {
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      getUserFromToken(token).then(user => {
+        if (user) {
+          setUserId(user.userId);
+        }
+      });
+    }
+  }, []);
 
   // Listen for custom event from Services.tsx
   useEffect(() => {
@@ -40,6 +53,7 @@ export default function Hero() {
       <ScheduleVisitModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        userId={userId}
       />
       {/* Mobile-only faded clouds overlay */}
       <div className="absolute inset-0 block md:hidden z-0">

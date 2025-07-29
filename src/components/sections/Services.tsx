@@ -191,11 +191,10 @@ export default function Services() {
                   });
                 }}
                 aria-label={`Go to service ${idx + 1}`}
-                className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                  idx === activeIndex
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${idx === activeIndex
                     ? 'bg-white w-6'
                     : 'bg-white/50 hover:bg-white/70'
-                }`}
+                  }`}
               />
             ))}
           </nav>
