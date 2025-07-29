@@ -6,25 +6,20 @@ import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phoneNumber: '',
     password: '',
     confirmPassword: '',
-    userType: '',
+    userType: 'PATIENT', // Default to PATIENT
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -37,13 +32,6 @@ export default function SignupPage() {
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, userType: value }));
-    if (errors.userType) {
-      setErrors((prev) => ({ ...prev, userType: '' }));
     }
   };
 
@@ -80,10 +68,6 @@ export default function SignupPage() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (!formData.userType) {
-      newErrors.userType = 'Please select account type';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -95,15 +79,33 @@ export default function SignupPage() {
 
     setIsLoading(true);
 
-    // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          password: formData.password,
+          userType: formData.userType, // Will always be 'PATIENT'
+        }),
+      });
 
-      // Redirect to login page on success
-      window.location.href = '/login';
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store token and redirect to account page
+        localStorage.setItem('accessToken', data.accessToken);
+        router.push('/account');
+      } else {
+        setErrors({ submit: data.error || 'Signup failed. Please try again.' });
+      }
     } catch (error) {
       console.error('Signup failed:', error);
-      setErrors({ submit: 'Signup failed. Please try again.' });
+      setErrors({ submit: 'Network error. Please try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -146,7 +148,7 @@ export default function SignupPage() {
                 className="text-blue-100 font-serif"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
-                Create your account to get started
+                Create your patient account to get started
               </p>
             </CardHeader>
 
@@ -224,32 +226,7 @@ export default function SignupPage() {
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2 font-serif">
-                    Account Type
-                  </label>
-                  <Select
-                    value={formData.userType}
-                    onValueChange={handleSelectChange}
-                  >
-                    <SelectTrigger
-                      className={`${errors.userType ? 'border-red-300 focus:border-red-500' : ''}`}
-                    >
-                      <SelectValue placeholder="Select account type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PATIENT">Patient</SelectItem>
-                      <SelectItem value="DOCTOR">
-                        Healthcare Professional
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.userType && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.userType}
-                    </p>
-                  )}
-                </div>
+                {/* Removed Account Type Selection - Default to PATIENT */}
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2 font-serif">
@@ -354,7 +331,7 @@ export default function SignupPage() {
                       Creating Account...
                     </div>
                   ) : (
-                    'Create Account'
+                    'Create Patient Account'
                   )}
                 </Button>
               </form>
@@ -368,6 +345,13 @@ export default function SignupPage() {
                   >
                     Sign in here
                   </Link>
+                </p>
+              </div>
+
+              <div className="mt-4 text-center">
+                <p className="text-xs text-slate-500 font-serif">
+                  Healthcare professionals should contact administration for
+                  account setup
                 </p>
               </div>
 

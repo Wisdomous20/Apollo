@@ -9,8 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -54,15 +56,35 @@ export default function LoginPage() {
 
     setIsLoading(true);
 
-    // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      // Redirect to account page on success
-      window.location.href = '/account';
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store token and redirect based on user type
+        localStorage.setItem('accessToken', data.accessToken);
+
+        if (data.user.userType === 'DOCTOR') {
+          router.push('/admin');
+        } else {
+          router.push('/account');
+        }
+      } else {
+        setErrors({ submit: data.error || 'Login failed. Please try again.' });
+      }
     } catch (error) {
       console.error('Login failed:', error);
-      setErrors({ submit: 'Login failed. Please try again.' });
+      setErrors({ submit: 'Network error. Please try again.' });
     } finally {
       setIsLoading(false);
     }
