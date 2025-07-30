@@ -53,7 +53,9 @@ export default function AccountDropdown() {
 
   const handleLogoutClick = () => {
     // Placeholder for logout functionality
-    console.log('Logout clicked');
+    localStorage.removeItem('accessToken');
+    setIsOpen(false);
+    window.location.href = '/'
   };
 
   return (

@@ -18,9 +18,14 @@ export const services = [
 export default function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
   const [userId, setUserId] = useState("");
+  const [token, setToken] = useState("");
 
   // Function to open modal with optional preselected service
   const openModal = () => {
+    if (!token) {
+      alert('Please log in to schedule a visit.');
+      return;
+    }
     setModalOpen(true);
   };
 
@@ -29,6 +34,7 @@ export default function Hero() {
     if (token) {
       getUserFromToken(token).then(user => {
         if (user) {
+          setToken(token);
           setUserId(user.userId);
         }
       });

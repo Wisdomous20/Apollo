@@ -8,6 +8,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { getAppointmentsByUserId } from '@/lib/actions/appointment-actions';
 import { Appointment } from '@/types/account';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
+import { handleAppointmentStatus } from '@/lib/actions/appointment-actions';
 
 export default function AdminDashboard() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -40,14 +41,19 @@ export default function AdminDashboard() {
     )
     .slice(0, 5);
 
-  const handleApprove = (idx: number) => {
+  const handleApprove = async (id: string) => {
+
+    await handleAppointmentStatus(id, 'APPROVED')
+
     setAppointments((prev) =>
-      prev.map((a, i) => (i === idx ? { ...a, status: 'APPROVED' } : a))
+      prev.map((a) => (a.id === id ? { ...a, status: 'APPROVED' } : a))
     );
   };
-  const handleReject = (idx: number) => {
+  const handleReject = async (id: string) => {
+    await handleAppointmentStatus(id, "REJECTED")
+
     setAppointments((prev) =>
-      prev.map((a, i) => (i === idx ? { ...a, status: 'REJECTED' } : a))
+      prev.map((a) => (a.id === id ? { ...a, status: 'REJECTED' } : a))
     );
   };
 
@@ -152,7 +158,7 @@ export default function AdminDashboard() {
                           className="px-3 py-1 rounded bg-green-500 text-white text-xs hover:bg-green-600"
                           onClick={() =>
                             handleApprove(
-                              appointments.findIndex((ap) => ap === a)
+                              a.id
                             )
                           }
                         >
@@ -162,7 +168,7 @@ export default function AdminDashboard() {
                           className="px-3 py-1 rounded bg-red-500 text-white text-xs hover:bg-red-600"
                           onClick={() =>
                             handleReject(
-                              appointments.findIndex((ap) => ap === a)
+                              a.id
                             )
                           }
                         >
@@ -195,13 +201,6 @@ export default function AdminDashboard() {
             </div>
             <ul className="divide-y divide-slate-200">
               {paginatedAppointments.map((a, idx) => {
-                // Find the real index in appointments for approve/reject
-                const realIdx = appointments.findIndex(
-                  (ap) =>
-                    ap.dateRequested === a.dateRequested &&
-                    ap.serviceType === a.serviceType &&
-                    ap.patient?.email === a.patient?.email
-                );
                 return (
                   <li
                     key={a.dateRequested + a.serviceType + idx}
@@ -230,13 +229,13 @@ export default function AdminDashboard() {
                       <div className="mt-2 flex gap-2">
                         <button
                           className="px-3 py-1 rounded bg-green-500 text-white text-xs hover:bg-green-600"
-                          onClick={() => handleApprove(realIdx)}
+                          onClick={() => handleApprove(a.id)}
                         >
                           Approve
                         </button>
                         <button
                           className="px-3 py-1 rounded bg-red-500 text-white text-xs hover:bg-red-600"
-                          onClick={() => handleReject(realIdx)}
+                          onClick={() => handleReject(a.id)}
                         >
                           Reject
                         </button>

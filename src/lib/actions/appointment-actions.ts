@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "../utils";
+import { $Enums } from "../../../generated/prisma";
 
 interface AppointmentData {
   dateRequested: Date;
@@ -31,4 +32,15 @@ export async function getAppointmentsByUserId(id: string) {
     }
   });
   return result;
+}
+
+export async function handleAppointmentStatus(appointmentId: string, status: $Enums.AppointmentStatus) {
+  await prisma.appointment.update({
+    where: {
+      id: appointmentId
+    },
+    data: {
+      status: status
+    }
+  })
 }

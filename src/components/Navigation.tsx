@@ -83,9 +83,8 @@ export default function Navigation() {
               <div className="flex flex-row-reverse items-center gap-2 lg:hidden">
                 {/* Burger button only, no AccountDropdown */}
                 <button
-                  className={`p-[0.5em] sm:p-[0.75em] rounded-lg text-gray-700 transition-colors ${
-                    isMenuOpen ? 'bg-gray-100' : ''
-                  }`}
+                  className={`p-[0.5em] sm:p-[0.75em] rounded-lg text-gray-700 transition-colors ${isMenuOpen ? 'bg-gray-100' : ''
+                    }`}
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                   aria-expanded={isMenuOpen}
                   aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
