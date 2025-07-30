@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from "react";
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,13 +22,13 @@ export default function Hero() {
   const [token, setToken] = useState("");
 
   // Function to open modal with optional preselected service
-  const openModal = () => {
+  const openModal = useCallback(() => {
     if (!token) {
       alert('Please log in to schedule a visit.');
       return;
     }
     setModalOpen(true);
-  };
+  }, [token]);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -52,7 +53,7 @@ export default function Hero() {
         'open-schedule-modal',
         handler as EventListener
       );
-  }, []);
+  }, [openModal]);
   return (
     <section className="relative h-[50vh] md:h-screen w-full overflow-hidden m-0 p-0">
       {/* Modal for scheduling visit */}
