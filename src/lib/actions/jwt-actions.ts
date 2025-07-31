@@ -13,3 +13,13 @@ export async function getUserFromToken(token: string): Promise<JWTPayload | null
     return null;
   }
 }
+
+export async function verifyAccessToken(token: string): Promise<JWTPayload | null> {
+  try {
+    const verifiedPayload = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return verifiedPayload;
+  } catch (error) {
+    console.error("error verifying: ", error)
+    return null;
+  }
+}

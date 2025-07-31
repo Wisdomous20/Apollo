@@ -1,12 +1,36 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Menu } from 'lucide-react';
 import { useState } from 'react';
 import AccountDropdown from './account/AccountDropdown';
 import Image from 'next/image';
+import { verifyAccessToken } from '@/lib/actions/jwt-actions';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [tokenStatus, setTokenStatus] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const verify = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        const verifyToken = await verifyAccessToken(token)
+        console.log("test: ", verifyToken)
+        if (verifyToken) {
+          setTokenStatus(true);
+          setName(verifyToken.name);
+          setEmail(verifyToken.email);
+        } else {
+          setTokenStatus(false);
+        }
+      }
+    }
+
+    verify();
+  }, [])
 
   return (
     <>
@@ -76,7 +100,16 @@ export default function Navigation() {
                 ))}
 
                 {/* Account Dropdown (desktop only) */}
-                <AccountDropdown />
+                {tokenStatus ? (
+                  <AccountDropdown name={name} email={email} />
+                ) : (
+                  <a
+                    href="/login"
+                    className="text-[#000080] font-bold text-[clamp(1rem,1.2vw,1.15rem)] xl:text-[clamp(1.1rem,1.5vw,1.25rem)] transition-colors duration-200 rounded-full px-[1.2em] py-[0.6em] hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#000080] focus-visible:ring-offset-2"
+                  >
+                    Login
+                  </a>
+                )}
               </div>
 
               {/* Mobile Menu Button and Account */}

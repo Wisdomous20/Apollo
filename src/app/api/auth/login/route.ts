@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       email: user.email,
       userType: user.userType,
+      name: user.name,
     });
 
     // Create response

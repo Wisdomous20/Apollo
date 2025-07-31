@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
       userId: newUser.id,
       email: newUser.email,
       userType: newUser.userType,
+      name: newUser.name,
     });
 
     // Create response
