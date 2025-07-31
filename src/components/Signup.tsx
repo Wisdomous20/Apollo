@@ -226,8 +226,6 @@ export default function SignupPage() {
                   )}
                 </div>
 
-                {/* Removed Account Type Selection - Default to PATIENT */}
-
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2 font-serif">
                     Password

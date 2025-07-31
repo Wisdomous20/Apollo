@@ -155,13 +155,39 @@ export default function ScheduleVisitModal({
 
             {isSubmitSuccessful ? (
               <motion.div
-                className="text-green-600 text-center py-12 font-semibold text-lg"
+                className="flex flex-col items-center justify-center py-12"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                Appointment scheduled!
+                <svg
+                  className="w-16 h-16 text-green-500 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" fill="none" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 12.5l3 3 5-5"
+                  />
+                </svg>
+                <h3 className="text-2xl font-bold text-green-700 mb-2">
+                  Appointment Requested!
+                </h3>
+                <p className="text-gray-500 text-sm text-center">
+                  You will be notified via email once your appointment is approved.
+                </p>
+                <Button
+                  className="mt-6 bg-blue-900 text-white hover:bg-blue-950 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-400"
+                  size="lg"
+                  onClick={onClose}
+                >
+                  Close
+                </Button>
               </motion.div>
             ) : (
               <form

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   User,
-  Settings,
   LogOut,
   Calendar,
   ChevronDown,
@@ -34,11 +33,6 @@ export default function AccountDropdown({ name, email }: { name?: string; email?
   const handleAppointmentsClick = () => {
     // Navigate to account page and scroll to appointments section
     window.location.href = '/account#appointments';
-  };
-
-  const handleSettingsClick = () => {
-    // Placeholder for settings page
-    console.log('Settings clicked');
   };
 
   const handleLogoutClick = () => {
@@ -107,14 +101,6 @@ export default function AccountDropdown({ name, email }: { name?: string; email?
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          onClick={handleSettingsClick}
-          className="cursor-pointer"
-        >
-          <Settings className="mr-2 h-4 w-4" />
-          <span>Settings</span>
-        </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleLogin} className="cursor-pointer">
           <LogIn className="mr-2 h-4 w-4" />

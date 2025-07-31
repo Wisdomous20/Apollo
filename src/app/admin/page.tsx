@@ -19,6 +19,8 @@ export default function AdminDashboard() {
   const [page, setPage] = useState(1);
   const pageSize = 5;
 
+  const appointmentDates = appointments.map(a => new Date(a.dateRequested));
+
   const filteredAppointments = appointments.filter(
     (a) =>
       a.serviceType.toLowerCase().includes(search.toLowerCase()) ||
@@ -114,12 +116,20 @@ export default function AdminDashboard() {
             {/* Calendar */}
             <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <LucideCalendar className="h-6 w-6 text-blue-600" /> Calendar
+                <LucideCalendar className="h-6 w-6 text-blue-600" />
+                Calendar
               </h2>
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
+                disabled={{ dayOfWeek: [0] }}
+                modifiers={{
+                  appointment: appointmentDates,
+                }}
+                modifiersClassNames={{
+                  appointment: "bg-green-500 text-white rounded-full",
+                }}
               />
             </div>
             {/* Latest Appointments */}

@@ -1,9 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, Calendar, Edit } from 'lucide-react';
+import { User, Mail, Phone, Calendar } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { User as UserType } from '@/types/account';
 
@@ -18,11 +17,6 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
       month: 'long',
       day: 'numeric',
     });
-  };
-
-  const handleEditProfile = () => {
-    // Placeholder for edit profile functionality
-    console.log('Edit profile clicked');
   };
 
   return (
@@ -54,15 +48,6 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                 </p>
               </div>
             </div>
-            <Button
-              onClick={handleEditProfile}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2 bg-white hover:bg-slate-50 border-slate-300"
-            >
-              <Edit className="h-4 w-4" />
-              <span className="hidden sm:inline">Edit Profile</span>
-            </Button>
           </div>
         </CardHeader>
 
@@ -122,7 +107,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                     Account Type
                   </p>
                   <p className="text-slate-900 font-medium">
-                    Healthcare Professional
+                    Patient
                   </p>
                 </div>
               </div>

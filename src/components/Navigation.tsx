@@ -18,7 +18,6 @@ export default function Navigation() {
       const token = localStorage.getItem('accessToken');
       if (token) {
         const verifyToken = await verifyAccessToken(token)
-        console.log("test: ", verifyToken)
         if (verifyToken) {
           setTokenStatus(true);
           setName(verifyToken.name);
