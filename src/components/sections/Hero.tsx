@@ -1,183 +1,192 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { BookingForm } from './BookingForm';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
-import ScheduleVisitModal from '@/components/account/ScheduleVisitModal';
-
-// Export services array for use in Services.tsx
-export const services = [
-  { title: 'Primary Care' },
-  { title: 'Specialized Care' },
-  { title: 'Emergency Care' },
-];
+import { motion } from 'framer-motion';
 
 export default function Hero() {
-  const [modalOpen, setModalOpen] = useState(false);
+  // ===== ANIMATION VARIANTS =====
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.2,
+      },
+    },
+  } as const;
 
-  // Function to open modal with optional preselected service
-  const openModal = () => {
-    setModalOpen(true);
-  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: 'easeOut',
+      },
+    },
+  } as const;
 
-  // Listen for custom event from Services.tsx
-  useEffect(() => {
-    const handler = () => {
-      openModal();
-    };
-    window.addEventListener('open-schedule-modal', handler as EventListener);
-    return () =>
-      window.removeEventListener(
-        'open-schedule-modal',
-        handler as EventListener
-      );
-  }, []);
+  const imageVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+      },
+    },
+  } as const;
+
   return (
-    <section className="relative h-[50vh] md:h-screen w-full overflow-hidden m-0 p-0">
-      {/* Modal for scheduling visit */}
-      <ScheduleVisitModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
-      {/* Mobile-only faded clouds overlay */}
-      <div className="absolute inset-0 block md:hidden z-0">
-        <div className="absolute inset-0 bg-[url('/clouds.jpg')] bg-cover bg-center opacity-60" />
-        <div className="absolute inset-0 bg-white/15" />
-      </div>
-      {/* Desktop clouds background */}
-      <div className="hidden md:block absolute inset-0 bg-[url('/clouds.jpg')] bg-cover bg-center z-0" />
-      {/* Desktop clouds dark overlay */}
-      <div className="hidden md:block absolute inset-0 bg-black/10 z-0" />
-      {/* Main hero card content */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center px-[2vw] sm:px-[4vw] lg:px-0">
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative flex flex-col items-start justify-start w-[80vw] h-[40vh] sm:h-[min(85vh,70vh)] px-[2vw] sm:px-[4vw] lg:px-[5vw] pr-[2vw] sm:pr-[3vw] lg:pr-[4vw] pt-[3vh] sm:pt-[5vh] lg:pt-[7vh] pb-[2vh] sm:pb-[3vh] lg:pb-[4vh] transition-transform duration-500 bg-transparent sm:bg-[rgba(255,255,255,0.7)] shadow-none sm:shadow-lg md:shadow-[0_8px_40px_8px_rgba(30,41,59,0.25)] backdrop-blur-0 sm:backdrop-blur-[12px] mx-auto ring-1 ring-white/30 md:rounded-2xl lg:mt-[6rem]"
-          style={{
-            borderRadius: '2.5rem', // default for mobile/tablet
-            // On md+ screens, border-radius is controlled by Tailwind class md:rounded-2xl
-            transform: 'perspective(800px) scale3d(1.03,1.03,1.03)',
-            overflow: 'hidden',
-          }}
+    <section className="relative overflow-hidden font-serif min-h-[70vh] lg:min-h-screen mt-12 lg:mt-0">
+      {/* ===== BACKGROUND & GRADIENT SECTION ===== */}
+      <div className="absolute top-0 left-0 w-full h-full z-15">
+        {/* Main clouds background */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/clouds.jpg"
+            alt="Clouds background"
+            fill
+            className="object-cover object-center scale-x-[-1]"
+            priority
+            quality={90}
+            sizes="100vw"
+          />
+        </div>
+
+        {/* Building overlay - responsive positioning */}
+        <div
+          className="absolute top-0 right-0 
+                        w-full h-full opacity-30
+                        sm:opacity-40 md:opacity-50
+                        lg:w-[40%] lg:opacity-70
+                        xl:w-[40%] 2xl:w-1/2 
+                        z-5"
         >
-          {/* Decorative Greek key SVG pattern background */}
-          <svg
-            className="hidden sm:block absolute inset-0 w-full h-full z-0 pointer-events-none"
-            style={{ opacity: 0.03 }}
-            xmlns="http://www.w3.org/2000/svg"
-            width="100%"
-            height="100%"
-            fill="none"
-          >
-            <defs>
-              <pattern
-                id="greekKey"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M0 0h32v8H8v24h24v-8H16v-8h16"
-                  stroke="#1e293b"
-                  strokeWidth="2"
-                  fill="none"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#greekKey)" />
-          </svg>
+          <Image
+            src="/building.png"
+            alt="Building background"
+            fill
+            className="object-cover object-center"
+            priority
+            quality={90}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+        </div>
 
-          {/* Headings: Centered on mobile, left on md+ */}
-          <div className="w-full text-center md:text-left mt-[6vh] md:mt-0 lg:mt-[4vh]">
-            <motion.h1
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold text-[#000080] font-serif relative z-10"
-            >
-              Where Healing
-            </motion.h1>
+        {/* Responsive gradient overlays */}
+        <div
+          className="absolute inset-0 
+                        bg-gradient-to-b from-transparent via-white/60 to-white/80
+                        sm:bg-gradient-to-b sm:from-transparent sm:via-white/50 sm:to-white/70
+                        md:bg-gradient-to-r md:from-white/60 md:via-white/40 md:to-transparent
+                        lg:bg-gradient-to-r lg:from-white/70 lg:via-white/50 lg:to-transparent"
+        />
+      </div>
 
-            <motion.h1
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold text-red-700 font-serif relative z-10"
-            >
-              BEGINS
-            </motion.h1>
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-[2vh] sm:mt-[3vh] lg:mt-[3vh] mb-[2vh] sm:mb-[3vh] lg:mb-[4vh] text-sm sm:text-base lg:text-2xl text-gray-800 w-full sm:w-3/4 lg:w-1/2 relative z-10 text-center md:text-left font-bold md:font-normal"
-          >
-            At Apollo Medical Group, we blend trusted care with modern
-            treatments to guide you on your path to wellness.
-          </motion.p>
-
-          <div className="flex-grow" />
-
+      {/* ===== TEXT CONTENT SECTION ===== */}
+      {/* Mobile: Near top, Desktop: Left 60% */}
+      <motion.div
+        className="relative z-20 
+                      w-full pt-16 pb-20 px-4
+                      sm:pt-20 sm:pb-24 sm:px-6
+                      md:pt-24 md:pb-32 md:px-8
+                      lg:w-[60%] lg:pt-0 lg:pb-0 lg:px-8 lg:min-h-screen lg:flex lg:flex-col lg:items-start lg:justify-center
+                      xl:px-16"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="w-full max-w-4xl lg:w-full lg:flex lg:flex-col lg:items-start">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mb-[1vh] flex flex-col sm:flex-row gap-[1vw] sm:gap-[2vw] lg:gap-[1vw] relative z-10 items-center md:items-start justify-center md:justify-start w-full"
+            className="text-foreground text-center lg:text-left"
+            variants={itemVariants}
           >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                className="font-semibold text-base md:w-auto bg-[#000080] text-white hover:bg-[#0000a0] border-none"
-                onClick={() => openModal()}
+            {/* Hero Headline */}
+            <motion.div
+              className="text-center mb-6 sm:mb-8"
+              variants={itemVariants}
+            >
+              <motion.h1
+                className="font-serif-black leading-tight text-primary flex flex-col items-center gap-1 sm:gap-2
+                           text-2xl
+                           sm:text-3xl
+                           md:text-4xl
+                           lg:text-5xl
+                           xl:text-6xl
+                           2xl:text-7xl"
+                variants={itemVariants}
               >
-                Schedule Your Visit
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="#contact" passHref>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="font-semibold text-base md:w-auto border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-700 transition-colors"
+                <span className="text-primary whitespace-nowrap">
+                  WHERE HEALING
+                </span>
+                <motion.span
+                  className="text-secondary font-serif-black"
+                  variants={itemVariants}
                 >
-                  Learn More
-                </Button>
-              </Link>
+                  BEGINS
+                </motion.span>
+              </motion.h1>
+
+              {/* Hero Description */}
+              <motion.p
+                className="text-primary max-w-3xl mx-auto font-serif-normal mt-4 sm:mt-6
+                           text-sm leading-relaxed
+                           sm:text-base sm:leading-relaxed
+                           md:text-lg md:leading-relaxed
+                           lg:text-xl lg:leading-relaxed
+                           xl:text-2xl xl:leading-relaxed"
+                variants={itemVariants}
+              >
+                At Apollo Medical Group, we blend trusted care with modern
+                treatments to guide you on your path to
+                <span className="text-secondary font-serif-bold">
+                  {' '}
+                  wellness.
+                </span>
+              </motion.p>
             </motion.div>
           </motion.div>
-        </motion.div>
-      </div>
+          {/* ===== BOOKING FORM SECTION (desktop only) ===== */}
+          <div className="mt-8 w-full lg:w-3/4 lg:mx-0 hidden lg:block">
+            <BookingForm />
+          </div>
+        </div>
+      </motion.div>
 
-      {/* Medical professional image - responsive positioning */}
+      {/* ===== APOLLO IMAGE SECTION ===== */}
+      {/* Mobile: Bottom section, Desktop: Right 40% at bottom */}
       <motion.div
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        className="absolute bottom-0 z-0 md:z-30 m-0 p-0 w-full flex justify-center md:justify-end lg:pr-[10vw] pointer-events-none"
-        style={{ right: undefined }}
+        className="absolute bottom-0 right-0 
+                   w-full h-[32vh] sm:h-[38vh] md:h-[45vh]
+                   lg:w-[40%] lg:h-full 
+                   z-20"
+        variants={imageVariants}
+        initial="hidden"
+        animate="visible"
       >
-        <div className="relative w-[70vw] h-[40vh] md:w-[clamp(60vw,80vw,80rem)] md:h-[clamp(50vh,70vh,70rem)] md:mr-[clamp(-15vw,-9vw,-5.625rem)] max-w-[90vw] md:max-w-[60vw]">
-          <div
-            className="block md:hidden absolute inset-0 bg-white/15 rounded-b-2xl"
-            style={{ zIndex: 1 }}
-          />
+        <div className="relative w-full h-full flex items-end justify-center opacity-90">
           <Image
-            src="/apollo3.png"
-            alt="Medical professional"
+            src="/apollo.png"
+            alt="Two medical professionals - a Black woman and white man with glasses, both in white coats"
             fill
-            className="object-contain object-bottom drop-shadow-2xl opacity-60 md:opacity-100"
+            className="object-contain object-bottom 
+                       sm:object-contain md:object-contain
+                       lg:object-contain"
             priority
-            sizes="(max-width: 475px) 80vw, (max-width: 640px) 70vw, (max-width: 768px) 60vw, (max-width: 1024px) 50vw, 40vw"
-            style={{ zIndex: 2 }}
+            sizes="(max-width: 1024px) 100vw, 40vw"
           />
         </div>
       </motion.div>
+
+      {/* ===== BOOKING FORM SECTION (mobile/tablet only) ===== */}
+      <div className="block lg:hidden w-full px-4 sm:px-6 md:px-8 mt-6">
+        <BookingForm />
+      </div>
     </section>
   );
 }
