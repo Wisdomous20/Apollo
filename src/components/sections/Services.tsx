@@ -7,11 +7,20 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Heart, Stethoscope, Activity } from 'lucide-react';
 import Image from 'next/image';
 
-// Helper to open modal from anywhere
-function openScheduleModalWithService(serviceTitle: string) {
-  window.dispatchEvent(
-    new CustomEvent('open-schedule-modal', { detail: { serviceTitle } })
-  );
+// Helper to scroll to booking form in hero section
+function scrollToBookingForm(serviceTitle: string) {
+  // First scroll to top smoothly
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+
+  // Then trigger the booking form with the service pre-selected
+  setTimeout(() => {
+    window.dispatchEvent(
+      new CustomEvent('focus-booking-form', { detail: { serviceTitle } })
+    );
+  }, 800); // Wait for scroll to complete
 }
 
 const services = [
@@ -162,9 +171,7 @@ export default function Services() {
                       <Button
                         className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                         tabIndex={0}
-                        onClick={() =>
-                          openScheduleModalWithService(service.title)
-                        }
+                        onClick={() => scrollToBookingForm(service.title)}
                       >
                         Book Now
                       </Button>
@@ -247,9 +254,7 @@ export default function Services() {
                     <Button
                       className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                       tabIndex={0}
-                      onClick={() =>
-                        openScheduleModalWithService(service.title)
-                      }
+                      onClick={() => scrollToBookingForm(service.title)}
                     >
                       Book Now
                     </Button>
