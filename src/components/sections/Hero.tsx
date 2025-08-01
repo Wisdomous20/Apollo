@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 export default function Hero() {
+  // ===== ANIMATION VARIANTS =====
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -41,71 +42,77 @@ export default function Hero() {
   } as const;
 
   return (
-    <section className="relative min-h-screen sm:min-h-screen overflow-hidden font-serif">
-      {/* Background: clouds image gradienting to blue */}
-      <div className="absolute inset-0 z-0 pointer-events-none select-none">
-        <div className="w-full h-full absolute inset-0">
-          <Image
-            src="/clouds.jpg"
-            alt="Clouds background"
-            fill
-            className="object-cover object-center blur-md"
-            priority
-            quality={90}
-            sizes="100vw"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(to right, transparent 0%, transparent 10%, rgba(255, 255, 255, 0.8) 100%, rgba(255, 255, 255, 0.3) 100%)',
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Image - Positioned separately at bottom right */}
+    <section className="relative min-h-screen overflow-hidden font-serif">
+      {/* ===== APOLLO IMAGE SECTION ===== */}
+      {/* Position: Right 40% of screen, z-20 (in front) */}
       <motion.div
-        className="absolute bottom-0 right-0 w-full lg:w-1/2 h-[12.5rem] sm:h-[17.5rem] md:h-[21.875rem] lg:h-[60vh] xl:h-[70vh] 2xl:h-[80vh] z-10"
+        className="absolute top-0 right-0 w-[40%] h-full z-20"
         variants={imageVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="relative w-full h-full flex items-end">
+        <div className="relative w-full h-full flex items-end justify-center opacity-90">
           <Image
             src="/apollo.png"
             alt="Two medical professionals - a Black woman and white man with glasses, both in white coats"
             fill
-            className="object-contain object-bottom opacity-80"
+            className="object-contain object-bottom"
             priority
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1200px) 50vw, 50vw"
+            sizes="40vw"
           />
         </div>
       </motion.div>
 
-      {/* Primary Background - Left half over text area, behind text */}
-      {/* <div className="hidden lg:block absolute bottom-0 left-0 right-2/3 h-[90vh] bg-primary/30 z-8"></div> */}
+      {/* ===== BACKGROUND & GRADIENT SECTION ===== */}
+      {/* Full clouds background with building overlay */}
+      <div className="absolute top-0 left-0 w-full h-full z-15">
+        {/* Main clouds background - full screen */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/clouds.jpg"
+            alt="Clouds background"
+            fill
+            className="object-cover object-center scale-x-[-1]"
+            priority
+            quality={90}
+            sizes="100vw"
+          />
+        </div>
 
-      {/* Text Content Container - Centered vertically */}
+        {/* Building overlay - positioned on right side */}
+        <div className="absolute top-0 right-0 2xl:w-1/2 xl:w-[40%] h-full z-5 opacity-70">
+          <Image
+            src="/building.png"
+            alt="Building background"
+            fill
+            className="object-cover object-center"
+            priority
+            quality={90}
+            sizes="50vw"
+          />
+        </div>
+
+        {/* Gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/70 via-white/50 to-transparent" />
+      </div>
+
+      {/* ===== TEXT CONTENT SECTION ===== */}
+      {/* Main headline and description, centered in left 60% */}
       <motion.div
-        className="responsive-container min-h-[80vh] sm:min-h-screen flex items-start sm:items-center justify-start relative z-10 pt-0.5 sm:pt-2.5"
+        className="relative z-20 w-[60%] min-h-screen flex items-center justify-center px-8 lg:px-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="w-full lg:w-2/3 lg:mr-auto">
-          {/* Content Section */}
+        <div className="w-full max-w-4xl">
           <motion.div
-            className="responsive-content text-foreground text-center lg:text-center p-1 rounded-lg"
+            className="text-foreground text-center"
             variants={itemVariants}
           >
-            {/* Main Headline */}
-            <motion.div
-              className="responsive-typography text-center"
-              variants={itemVariants}
-            >
+            {/* Hero Headline */}
+            <motion.div className="text-center mb-8" variants={itemVariants}>
               <motion.h1
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-serif-black leading-tight text-primary flex flex-col items-center gap-0.25 sm:gap-0.5"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif-black leading-tight text-primary flex flex-col items-center gap-2"
                 variants={itemVariants}
               >
                 <span className="text-primary whitespace-nowrap">
@@ -118,8 +125,10 @@ export default function Hero() {
                   BEGINS
                 </motion.span>
               </motion.h1>
+
+              {/* Hero Description */}
               <motion.p
-                className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-2xl text-primary max-w-2xl mx-auto px-1 sm:px-0 font-serif-normal mt-0.5 sm:mt-1"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl text-primary max-w-3xl mx-auto font-serif-normal mt-6"
                 variants={itemVariants}
               >
                 At Apollo Medical Group, we blend trusted care with modern
@@ -134,8 +143,11 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* Overlapping Booking Form - Component */}
-      <BookingForm />
+      {/* ===== BOOKING FORM SECTION ===== */}
+      {/* Overlapping booking form positioned absolutely */}
+      <div className="relative z-20 w-[60%]">
+        <BookingForm />
+      </div>
     </section>
   );
 }
