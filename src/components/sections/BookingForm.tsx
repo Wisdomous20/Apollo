@@ -52,7 +52,7 @@ export function BookingForm() {
         doctor: '',
         phone: '',
       });
-    } catch (error) {
+    } catch {
       alert('Failed to submit appointment request. Please try again.');
     } finally {
       setIsSubmitting(false);
