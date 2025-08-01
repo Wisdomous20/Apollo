@@ -129,38 +129,38 @@ export default function Services() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 tabIndex={0}
-                className="group outline-none focus-visible:ring-4 focus-visible:ring-sky-400 rounded-2xl min-w-full max-w-full snap-center flex-shrink-0"
+                className="group outline-none focus-visible:ring-4 focus-visible:ring-primary rounded-2xl min-w-full max-w-full snap-center flex-shrink-0"
               >
-                <Card className="h-full bg-white/95 dark:bg-blue-900/90 shadow-xl border border-blue-200 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
+                <Card className="h-full bg-white/95 dark:bg-primary/90 shadow-xl border border-primary/20 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
                   <CardContent className="p-5 flex flex-col h-full">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-blue-800 rounded-full flex items-center justify-center shadow-sm border border-red-200 dark:border-white/10">
+                      <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-primary rounded-full flex items-center justify-center shadow-sm border border-secondary/20 dark:border-white/10">
                         <service.icon
-                          className="w-8 h-8 text-red-700 dark:text-sky-300"
+                          className="w-8 h-8 text-secondary dark:text-white"
                           aria-hidden="true"
                         />
                       </div>
                       <div className="flex-1 text-right">
-                        <h3 className="text-xl font-bold text-blue-900 dark:text-white leading-tight mb-1 font-serif">
+                        <h3 className="text-xl font-bold text-primary dark:text-white leading-tight mb-1 font-serif">
                           {service.title}
                         </h3>
-                        <p className="text-xs text-blue-700/80 dark:text-white/70 mb-0 font-serif">
+                        <p className="text-xs text-primary/80 dark:text-white/70 mb-0 font-serif">
                           {service.duration}
                         </p>
                       </div>
                     </div>
-                    <p className="text-blue-900 dark:text-white text-sm leading-relaxed mb-6 mt-1 font-serif">
+                    <p className="text-primary dark:text-white text-sm leading-relaxed mb-6 mt-1 font-serif">
                       {service.description}
                     </p>
                     <div className="flex items-center justify-between mt-auto gap-2">
                       <button
-                        className="text-blue-900 dark:text-sky-300 text-sm font-semibold underline underline-offset-2 hover:text-blue-950 dark:hover:text-white transition-colors duration-200 px-0 bg-transparent border-none font-serif focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+                        className="text-primary dark:text-white text-sm font-semibold underline underline-offset-2 hover:text-primary/80 dark:hover:text-white transition-colors duration-200 px-0 bg-transparent border-none font-serif focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                         tabIndex={0}
                       >
                         + More
                       </button>
                       <Button
-                        className="bg-blue-900 hover:bg-blue-950 focus-visible:ring-2 focus-visible:ring-sky-400 text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
+                        className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                         tabIndex={0}
                         onClick={() =>
                           openScheduleModalWithService(service.title)
@@ -214,38 +214,38 @@ export default function Services() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
               tabIndex={0}
-              className="group outline-none focus-visible:ring-4 focus-visible:ring-sky-400 rounded-2xl"
+              className="group outline-none focus-visible:ring-4 focus-visible:ring-primary rounded-2xl"
             >
-              <Card className="h-full bg-white/95 dark:bg-blue-900/90 shadow-xl border border-blue-200 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
+              <Card className="h-full bg-white/95 dark:bg-primary/90 shadow-xl border border-primary/20 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
                 <CardContent className="p-6 md:p-7 flex flex-col h-full">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-blue-800 rounded-full flex items-center justify-center shadow-sm border border-red-200 dark:border-white/10">
+                    <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-primary rounded-full flex items-center justify-center shadow-sm border border-secondary/20 dark:border-white/10">
                       <service.icon
-                        className="w-8 h-8 text-red-700 dark:text-sky-300"
+                        className="w-8 h-8 text-secondary dark:text-white"
                         aria-hidden="true"
                       />
                     </div>
                     <div className="flex-1 text-right">
-                      <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-white leading-tight mb-1 font-serif">
+                      <h3 className="text-xl md:text-2xl font-bold text-primary dark:text-white leading-tight mb-1 font-serif">
                         {service.title}
                       </h3>
-                      <p className="text-xs md:text-sm text-blue-700/80 dark:text-white/70 mb-0 font-serif">
+                      <p className="text-xs md:text-sm text-primary/80 dark:text-white/70 mb-0 font-serif">
                         {service.duration}
                       </p>
                     </div>
                   </div>
-                  <p className="text-blue-900 dark:text-white text-sm md:text-base leading-relaxed mb-6 mt-1 font-serif">
+                  <p className="text-primary dark:text-white text-sm md:text-base leading-relaxed mb-6 mt-1 font-serif">
                     {service.description}
                   </p>
                   <div className="flex items-center justify-between mt-auto gap-2">
                     <button
-                      className="text-blue-900 dark:text-sky-300 text-sm font-semibold underline underline-offset-2 hover:text-blue-950 dark:hover:text-white transition-colors duration-200 px-0 bg-transparent border-none font-serif focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+                      className="text-primary dark:text-white text-sm font-semibold underline underline-offset-2 hover:text-primary/80 dark:hover:text-white transition-colors duration-200 px-0 bg-transparent border-none font-serif focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       tabIndex={0}
                     >
                       + More
                     </button>
                     <Button
-                      className="bg-blue-900 hover:bg-blue-950 focus-visible:ring-2 focus-visible:ring-sky-400 text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
+                      className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                       tabIndex={0}
                       onClick={() =>
                         openScheduleModalWithService(service.title)

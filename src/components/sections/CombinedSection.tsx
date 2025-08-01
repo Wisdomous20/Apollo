@@ -14,13 +14,13 @@ export function BackgroundWrapper({
 }: BackgroundWrapperProps) {
   return (
     <div className={`relative min-h-screen overflow-hidden ${className}`}>
-      {/* Base marble gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900" />
+      {/* Base marble gradient background using CSS variables */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-slate-900" />
 
       {/* Marble texture overlay */}
       <div className="absolute inset-0 opacity-20">
         <div
-          className="w-full h-full bg-gradient-to-br from-transparent via-blue-200/30 to-transparent"
+          className="w-full h-full bg-gradient-to-br from-transparent via-primary/30 to-transparent"
           style={{
             backgroundImage: `
                  radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
@@ -87,7 +87,7 @@ export function BackgroundWrapper({
           transition={{ duration: 1.5, delay: 1.5 }}
         />
 
-        {/* Gradient definitions */}
+        {/* Gradient definitions using CSS variables */}
         <defs>
           <linearGradient
             id="marbleGradient1"
@@ -96,9 +96,9 @@ export function BackgroundWrapper({
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="rgba(219, 234, 254, 0.3)" />
-            <stop offset="50%" stopColor="rgba(147, 197, 253, 0.2)" />
-            <stop offset="100%" stopColor="rgba(59, 130, 246, 0.1)" />
+            <stop offset="0%" stopColor="hsl(var(--primary) / 0.3)" />
+            <stop offset="50%" stopColor="hsl(var(--primary) / 0.2)" />
+            <stop offset="100%" stopColor="hsl(var(--primary) / 0.1)" />
           </linearGradient>
 
           <linearGradient
@@ -108,9 +108,9 @@ export function BackgroundWrapper({
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="rgba(191, 219, 254, 0.2)" />
-            <stop offset="50%" stopColor="rgba(96, 165, 250, 0.15)" />
-            <stop offset="100%" stopColor="rgba(37, 99, 235, 0.1)" />
+            <stop offset="0%" stopColor="hsl(var(--primary) / 0.2)" />
+            <stop offset="50%" stopColor="hsl(var(--primary) / 0.15)" />
+            <stop offset="100%" stopColor="hsl(var(--primary) / 0.1)" />
           </linearGradient>
 
           <linearGradient
@@ -120,9 +120,9 @@ export function BackgroundWrapper({
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="rgba(147, 197, 253, 0.4)" />
-            <stop offset="50%" stopColor="rgba(59, 130, 246, 0.3)" />
-            <stop offset="100%" stopColor="rgba(29, 78, 216, 0.2)" />
+            <stop offset="0%" stopColor="hsl(var(--primary) / 0.4)" />
+            <stop offset="50%" stopColor="hsl(var(--primary) / 0.3)" />
+            <stop offset="100%" stopColor="hsl(var(--primary) / 0.2)" />
           </linearGradient>
 
           <pattern
@@ -138,43 +138,41 @@ export function BackgroundWrapper({
               y="0"
               width="100"
               height="20"
-              fill="rgba(147, 197, 253, 0.1)"
+              fill="hsl(var(--primary) / 0.1)"
             />
             <rect
               x="10"
               y="5"
               width="15"
               height="10"
-              fill="rgba(219, 234, 254, 0.3)"
+              fill="hsl(var(--primary) / 0.3)"
             />
             <rect
               x="35"
               y="5"
               width="15"
               height="10"
-              fill="rgba(219, 234, 254, 0.3)"
+              fill="hsl(var(--primary) / 0.3)"
             />
             <rect
               x="60"
               y="5"
               width="15"
               height="10"
-              fill="rgba(219, 234, 254, 0.3)"
+              fill="hsl(var(--primary) / 0.3)"
             />
             <rect
               x="85"
               y="5"
               width="15"
               height="10"
-              fill="rgba(219, 234, 254, 0.3)"
+              fill="hsl(var(--primary) / 0.3)"
             />
           </pattern>
         </defs>
       </svg>
 
       {/* Floating architectural elements */}
-      {/* Removed floating random circle in the middle as requested */}
-
       <motion.div
         className="absolute bottom-1/4 right-1/4 w-[clamp(12rem,20vw,20rem)] h-[clamp(12rem,20vw,20rem)] opacity-10"
         animate={{
@@ -188,15 +186,13 @@ export function BackgroundWrapper({
         }}
       >
         <div
-          className="w-full h-full border border-blue-300"
+          className="w-full h-full border border-primary/30"
           style={{
             clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-            background: `linear-gradient(45deg, transparent, rgba(191, 219, 254, 0.1), transparent)`,
+            background: `linear-gradient(45deg, transparent, hsl(var(--primary) / 0.1), transparent)`,
           }}
         />
       </motion.div>
-
-      {/* Large symmetrical divider shapes and vertical symmetry lines removed as requested */}
 
       {/* Content container with proper z-index */}
       <div className="relative z-10 w-full h-auto">{children}</div>
