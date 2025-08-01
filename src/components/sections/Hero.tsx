@@ -1,183 +1,141 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { BookingForm } from './BookingForm';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
-import ScheduleVisitModal from '@/components/account/ScheduleVisitModal';
-
-// Export services array for use in Services.tsx
-export const services = [
-  { title: 'Primary Care' },
-  { title: 'Specialized Care' },
-  { title: 'Emergency Care' },
-];
+import { motion } from 'framer-motion';
 
 export default function Hero() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.2,
+      },
+    },
+  } as const;
 
-  // Function to open modal with optional preselected service
-  const openModal = () => {
-    setModalOpen(true);
-  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: 'easeOut',
+      },
+    },
+  } as const;
 
-  // Listen for custom event from Services.tsx
-  useEffect(() => {
-    const handler = () => {
-      openModal();
-    };
-    window.addEventListener('open-schedule-modal', handler as EventListener);
-    return () =>
-      window.removeEventListener(
-        'open-schedule-modal',
-        handler as EventListener
-      );
-  }, []);
+  const imageVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+      },
+    },
+  } as const;
+
   return (
-    <section className="relative h-[50vh] md:h-screen w-full overflow-hidden m-0 p-0">
-      {/* Modal for scheduling visit */}
-      <ScheduleVisitModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
-      {/* Mobile-only faded clouds overlay */}
-      <div className="absolute inset-0 block md:hidden z-0">
-        <div className="absolute inset-0 bg-[url('/clouds.jpg')] bg-cover bg-center opacity-60" />
-        <div className="absolute inset-0 bg-white/15" />
-      </div>
-      {/* Desktop clouds background */}
-      <div className="hidden md:block absolute inset-0 bg-[url('/clouds.jpg')] bg-cover bg-center z-0" />
-      {/* Desktop clouds dark overlay */}
-      <div className="hidden md:block absolute inset-0 bg-black/10 z-0" />
-      {/* Main hero card content */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center px-[2vw] sm:px-[4vw] lg:px-0">
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative flex flex-col items-start justify-start w-[80vw] h-[40vh] sm:h-[min(85vh,70vh)] px-[2vw] sm:px-[4vw] lg:px-[5vw] pr-[2vw] sm:pr-[3vw] lg:pr-[4vw] pt-[3vh] sm:pt-[5vh] lg:pt-[7vh] pb-[2vh] sm:pb-[3vh] lg:pb-[4vh] transition-transform duration-500 bg-transparent sm:bg-[rgba(255,255,255,0.7)] shadow-none sm:shadow-lg md:shadow-[0_8px_40px_8px_rgba(30,41,59,0.25)] backdrop-blur-0 sm:backdrop-blur-[12px] mx-auto ring-1 ring-white/30 md:rounded-2xl lg:mt-[6rem]"
-          style={{
-            borderRadius: '2.5rem', // default for mobile/tablet
-            // On md+ screens, border-radius is controlled by Tailwind class md:rounded-2xl
-            transform: 'perspective(800px) scale3d(1.03,1.03,1.03)',
-            overflow: 'hidden',
-          }}
-        >
-          {/* Decorative Greek key SVG pattern background */}
-          <svg
-            className="hidden sm:block absolute inset-0 w-full h-full z-0 pointer-events-none"
-            style={{ opacity: 0.03 }}
-            xmlns="http://www.w3.org/2000/svg"
-            width="100%"
-            height="100%"
-            fill="none"
-          >
-            <defs>
-              <pattern
-                id="greekKey"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M0 0h32v8H8v24h24v-8H16v-8h16"
-                  stroke="#1e293b"
-                  strokeWidth="2"
-                  fill="none"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#greekKey)" />
-          </svg>
-
-          {/* Headings: Centered on mobile, left on md+ */}
-          <div className="w-full text-center md:text-left mt-[6vh] md:mt-0 lg:mt-[4vh]">
-            <motion.h1
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold text-[#000080] font-serif relative z-10"
-            >
-              Where Healing
-            </motion.h1>
-
-            <motion.h1
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold text-red-700 font-serif relative z-10"
-            >
-              BEGINS
-            </motion.h1>
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-[2vh] sm:mt-[3vh] lg:mt-[3vh] mb-[2vh] sm:mb-[3vh] lg:mb-[4vh] text-sm sm:text-base lg:text-2xl text-gray-800 w-full sm:w-3/4 lg:w-1/2 relative z-10 text-center md:text-left font-bold md:font-normal"
-          >
-            At Apollo Medical Group, we blend trusted care with modern
-            treatments to guide you on your path to wellness.
-          </motion.p>
-
-          <div className="flex-grow" />
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mb-[1vh] flex flex-col sm:flex-row gap-[1vw] sm:gap-[2vw] lg:gap-[1vw] relative z-10 items-center md:items-start justify-center md:justify-start w-full"
-          >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                className="font-semibold text-base md:w-auto bg-[#000080] text-white hover:bg-[#0000a0] border-none"
-                onClick={() => openModal()}
-              >
-                Schedule Your Visit
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="#contact" passHref>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="font-semibold text-base md:w-auto border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-700 transition-colors"
-                >
-                  Learn More
-                </Button>
-              </Link>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Medical professional image - responsive positioning */}
-      <motion.div
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        className="absolute bottom-0 z-0 md:z-30 m-0 p-0 w-full flex justify-center md:justify-end lg:pr-[10vw] pointer-events-none"
-        style={{ right: undefined }}
-      >
-        <div className="relative w-[70vw] h-[40vh] md:w-[clamp(60vw,80vw,80rem)] md:h-[clamp(50vh,70vh,70rem)] md:mr-[clamp(-15vw,-9vw,-5.625rem)] max-w-[90vw] md:max-w-[60vw]">
-          <div
-            className="block md:hidden absolute inset-0 bg-white/15 rounded-b-2xl"
-            style={{ zIndex: 1 }}
-          />
+    <section className="relative min-h-screen sm:min-h-screen overflow-hidden font-serif">
+      {/* Background: clouds image gradienting to blue */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none">
+        <div className="w-full h-full absolute inset-0">
           <Image
-            src="/apollo3.png"
-            alt="Medical professional"
+            src="/clouds.jpg"
+            alt="Clouds background"
             fill
-            className="object-contain object-bottom drop-shadow-2xl opacity-60 md:opacity-100"
+            className="object-cover object-center blur-md"
             priority
-            sizes="(max-width: 475px) 80vw, (max-width: 640px) 70vw, (max-width: 768px) 60vw, (max-width: 1024px) 50vw, 40vw"
-            style={{ zIndex: 2 }}
+            quality={90}
+            sizes="100vw"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(to right, transparent 0%, transparent 10%, rgba(255, 255, 255, 0.8) 100%, rgba(255, 255, 255, 0.3) 100%)',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Image - Positioned separately at bottom right */}
+      <motion.div
+        className="absolute bottom-0 right-0 w-full lg:w-1/2 h-[12.5rem] sm:h-[17.5rem] md:h-[21.875rem] lg:h-[60vh] xl:h-[70vh] 2xl:h-[80vh] z-10"
+        variants={imageVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="relative w-full h-full flex items-end">
+          <Image
+            src="/apollo.png"
+            alt="Two medical professionals - a Black woman and white man with glasses, both in white coats"
+            fill
+            className="object-contain object-bottom opacity-80"
+            priority
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1200px) 50vw, 50vw"
           />
         </div>
       </motion.div>
+
+      {/* Primary Background - Left half over text area, behind text */}
+      {/* <div className="hidden lg:block absolute bottom-0 left-0 right-2/3 h-[90vh] bg-primary/30 z-8"></div> */}
+
+      {/* Text Content Container - Centered vertically */}
+      <motion.div
+        className="responsive-container min-h-[80vh] sm:min-h-screen flex items-start sm:items-center justify-start relative z-10 pt-0.5 sm:pt-2.5"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="w-full lg:w-2/3 lg:mr-auto">
+          {/* Content Section */}
+          <motion.div
+            className="responsive-content text-foreground text-center lg:text-center p-1 rounded-lg"
+            variants={itemVariants}
+          >
+            {/* Main Headline */}
+            <motion.div
+              className="responsive-typography text-center"
+              variants={itemVariants}
+            >
+              <motion.h1
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-serif-black leading-tight text-primary flex flex-col items-center gap-0.25 sm:gap-0.5"
+                variants={itemVariants}
+              >
+                <span className="text-primary whitespace-nowrap">
+                  WHERE HEALING
+                </span>
+                <motion.span
+                  className="text-secondary font-serif-black"
+                  variants={itemVariants}
+                >
+                  BEGINS
+                </motion.span>
+              </motion.h1>
+              <motion.p
+                className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-2xl text-primary max-w-2xl mx-auto px-1 sm:px-0 font-serif-normal mt-0.5 sm:mt-1"
+                variants={itemVariants}
+              >
+                At Apollo Medical Group, we blend trusted care with modern
+                treatments to guide you on your path to
+                <span className="text-secondary font-serif-bold">
+                  {' '}
+                  wellness.
+                </span>
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Overlapping Booking Form - Component */}
+      <BookingForm />
     </section>
   );
 }
