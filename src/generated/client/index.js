@@ -157,11 +157,11 @@ const config = {
       },
       {
         "fromEnvVar": null,
-        "value": "linux-musl"
+        "value": "rhel-openssl-3.0.x"
       },
       {
         "fromEnvVar": null,
-        "value": "rhel-openssl-3.0.x"
+        "value": "linux-musl"
       }
     ],
     "previewFeatures": [],
@@ -169,7 +169,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
@@ -188,8 +188,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"linux-musl\", \"rhel-openssl-3.0.x\"]\n  output        = \"../src/generated/client\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum UserType {\n  DOCTOR\n  PATIENT\n}\n\nenum AppointmentStatus {\n  PENDING\n  APPROVED\n  REJECTED\n}\n\nmodel User {\n  id                  String        @id @default(cuid()) @map(\"_id\")\n  name                String\n  email               String        @unique\n  avatar              String?\n  phoneNumber         String\n  password            String\n  dateJoined          DateTime\n  userType            UserType\n  doctorAppointments  Appointment[] @relation(\"DoctorAppointments\")\n  patientAppointments Appointment[] @relation(\"PatientAppointments\")\n}\n\nmodel Appointment {\n  id            String            @id @default(cuid()) @map(\"_id\")\n  dateRequested DateTime\n  timeRequested String\n  serviceType   String\n  description   String\n  status        AppointmentStatus @default(PENDING)\n  doctor        User              @relation(\"DoctorAppointments\", fields: [doctorId], references: [id])\n  doctorId      String\n  patient       User              @relation(\"PatientAppointments\", fields: [patientId], references: [id])\n  patientId     String\n}\n",
-  "inlineSchemaHash": "1cdf209ee36aad0c4766ca28c4d5b16d2c547e87100472e0cf1cec2e647887dd",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\", \"linux-musl\"]\n  output        = \"../src/generated/client\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum UserType {\n  DOCTOR\n  PATIENT\n}\n\nenum AppointmentStatus {\n  PENDING\n  APPROVED\n  REJECTED\n}\n\nmodel User {\n  id                  String        @id @default(cuid()) @map(\"_id\")\n  name                String\n  email               String        @unique\n  avatar              String?\n  phoneNumber         String\n  password            String\n  dateJoined          DateTime\n  userType            UserType\n  doctorAppointments  Appointment[] @relation(\"DoctorAppointments\")\n  patientAppointments Appointment[] @relation(\"PatientAppointments\")\n}\n\nmodel Appointment {\n  id            String            @id @default(cuid()) @map(\"_id\")\n  dateRequested DateTime\n  timeRequested String\n  serviceType   String\n  description   String\n  status        AppointmentStatus @default(PENDING)\n  doctor        User              @relation(\"DoctorAppointments\", fields: [doctorId], references: [id])\n  doctorId      String\n  patient       User              @relation(\"PatientAppointments\", fields: [patientId], references: [id])\n  patientId     String\n}\n",
+  "inlineSchemaHash": "3887e341987b657df66144c5eb2198bd6838f6ca76f3dbe7b39dd182696cfcf9",
   "copyEngine": true
 }
 
@@ -232,12 +232,12 @@ path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
 path.join(process.cwd(), "src/generated/client/libquery_engine-debian-openssl-3.0.x.so.node")
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-linux-musl.so.node");
-path.join(process.cwd(), "src/generated/client/libquery_engine-linux-musl.so.node")
-
-// file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
 path.join(process.cwd(), "src/generated/client/libquery_engine-rhel-openssl-3.0.x.so.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-linux-musl.so.node");
+path.join(process.cwd(), "src/generated/client/libquery_engine-linux-musl.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "src/generated/client/schema.prisma")
