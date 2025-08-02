@@ -24,11 +24,11 @@ export default function AppointmentsSection({
 
   const getStatusIcon = (status: Appointment['status']) => {
     switch (status) {
-      case 'approved':
+      case 'APPROVED':
         return <Calendar className="h-4 w-4 text-green-600" />;
-      case 'pending':
+      case 'PENDING':
         return <Clock className="h-4 w-4 text-yellow-600" />;
-      case 'rejected':
+      case 'REJECTED':
         return <AlertCircle className="h-4 w-4 text-red-600" />;
       default:
         return <Calendar className="h-4 w-4 text-slate-600" />;
@@ -37,11 +37,11 @@ export default function AppointmentsSection({
 
   const getStatusColor = (status: Appointment['status']) => {
     switch (status) {
-      case 'approved':
+      case 'APPROVED':
         return 'approved';
-      case 'pending':
+      case 'PENDING':
         return 'pending';
-      case 'rejected':
+      case 'REJECTED':
         return 'rejected';
       default:
         return 'default';
@@ -53,7 +53,7 @@ export default function AppointmentsSection({
   const filteredAppointments = appointments.filter(
     (a) =>
       a.serviceType.toLowerCase().includes(search.toLowerCase()) ||
-      (a.remarks && a.remarks.toLowerCase().includes(search.toLowerCase()))
+      (a.description && a.description.toLowerCase().includes(search.toLowerCase()))
   );
 
   if (appointments.length === 0) {
@@ -139,16 +139,16 @@ export default function AppointmentsSection({
                         <div className="flex items-center gap-4 text-sm text-slate-600">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
-                            {formatDate(appointment.dateRequested)}
+                            {formatDate(appointment.dateRequested.toLocaleString())}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    {appointment.remarks && (
+                    {appointment.description && (
                       <div className="flex items-start gap-2 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg">
                         <FileText className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <p className="flex-1">{appointment.remarks}</p>
+                        <p className="flex-1">{appointment.description}</p>
                       </div>
                     )}
                   </div>

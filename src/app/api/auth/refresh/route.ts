@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyRefreshToken, generateTokens } from '@/lib/auth';
-import { PrismaClient } from '../../../../../generated/prisma';
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,6 +37,7 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       email: user.email,
       userType: user.userType,
+      name: user.name
     });
 
     // Create response

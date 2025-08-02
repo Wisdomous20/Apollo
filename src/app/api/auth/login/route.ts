@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcryptjs from 'bcryptjs';
-import { PrismaClient } from '../../../../../generated/prisma';
+import { prisma } from '@/lib/utils';
 import { generateTokens } from '@/lib/auth';
-
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'User not found' },
         { status: 401 }
       );
     }
@@ -44,6 +42,7 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       email: user.email,
       userType: user.userType,
+      name: user.name,
     });
 
     // Create response

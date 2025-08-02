@@ -6,7 +6,6 @@ import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -113,7 +112,6 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <Navigation />
 
       <div className="flex items-center justify-center min-h-screen pt-20 pb-8 px-4">
         <motion.div
@@ -225,8 +223,6 @@ export default function SignupPage() {
                     </p>
                   )}
                 </div>
-
-                {/* Removed Account Type Selection - Default to PATIENT */}
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2 font-serif">

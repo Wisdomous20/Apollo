@@ -1,63 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import { Calendar as LucideCalendar } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { mockAppointments as baseMockAppointments } from '@/data/mockData';
-import type { Appointment, User } from '@/types/account';
-
-// Local type for appointments with user info
-type AppointmentWithUser = Appointment & { user?: User };
+import { getAppointmentsByUserId } from '@/lib/actions/appointment-actions';
+import { Appointment } from '@/types/account';
+import { getUserFromToken } from '@/lib/actions/jwt-actions';
+import { handleAppointmentStatus } from '@/lib/actions/appointment-actions';
 
 export default function AdminDashboard() {
-  // For calendar, you might want to use a real calendar library for production
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  // Add more mock appointments for demo
-  const moreExamples: AppointmentWithUser[] = Array.from(
-    { length: 20 },
-    (_, i) => ({
-      ...baseMockAppointments[0],
-      serviceType: `Service Example ${i + 1}`,
-      dateRequested: new Date(Date.now() - i * 86400000).toISOString(),
-      status: (i % 3 === 0
-        ? 'pending'
-        : i % 3 === 1
-          ? 'approved'
-          : 'rejected') as 'pending' | 'approved' | 'rejected',
-      remarks: i % 2 === 0 ? 'Auto-generated example.' : '',
-      user: {
-        id: `${i + 1}`,
-        name: `User${i + 1}`,
-        email: `user${i + 1}@example.com`,
-        dateJoined: '2024-01-01',
-        contactNumber: '+1 (555) 000-0000',
-      },
-      id: `${i + 100}`,
-    })
-  );
-  const allMockAppointments: AppointmentWithUser[] = [
-    ...baseMockAppointments,
-    ...moreExamples,
-  ];
-  const [appointments, setAppointments] = useState<AppointmentWithUser[]>([
-    ...allMockAppointments,
-  ]);
+  const [token, setToken] = useState<string | null>(null);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
-  // Pagination and search state
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 5;
 
-  // Filtered appointments for All Appointments
+  const appointmentDates = appointments.map(a => new Date(a.dateRequested));
+
   const filteredAppointments = appointments.filter(
     (a) =>
       a.serviceType.toLowerCase().includes(search.toLowerCase()) ||
-      (a.user?.name &&
-        a.user.name.toLowerCase().includes(search.toLowerCase())) ||
-      (a.user?.email &&
-        a.user.email.toLowerCase().includes(search.toLowerCase()))
+      (a.patient?.name &&
+        a.patient.name.toLowerCase().includes(search.toLowerCase())) ||
+      (a.patient?.email &&
+        a.patient.email.toLowerCase().includes(search.toLowerCase()))
   );
   const totalPages = Math.ceil(filteredAppointments.length / pageSize);
   const paginatedAppointments = filteredAppointments.slice(
@@ -65,7 +35,6 @@ export default function AdminDashboard() {
     page * pageSize
   );
 
-  // Show latest 5 appointments (from all users)
   const latestAppointments = [...appointments]
     .sort(
       (a, b) =>
@@ -74,29 +43,58 @@ export default function AdminDashboard() {
     )
     .slice(0, 5);
 
-  // Approve/Reject handlers
-  const handleApprove = (idx: number) => {
+  const handleApprove = async (id: string) => {
+
+    await handleAppointmentStatus(id, 'APPROVED')
+
     setAppointments((prev) =>
-      prev.map((a, i) => (i === idx ? { ...a, status: 'approved' } : a))
+      prev.map((a) => (a.id === id ? { ...a, status: 'APPROVED' } : a))
     );
   };
-  const handleReject = (idx: number) => {
+  const handleReject = async (id: string) => {
+    await handleAppointmentStatus(id, "REJECTED")
+
     setAppointments((prev) =>
-      prev.map((a, i) => (i === idx ? { ...a, status: 'rejected' } : a))
+      prev.map((a) => (a.id === id ? { ...a, status: 'REJECTED' } : a))
     );
   };
 
-  // Helper to get user info (if available)
-  const getUserInfo = (appointment: AppointmentWithUser) => {
-    if (appointment.user) {
+  const getUserInfo = (appointment: Appointment) => {
+    if (appointment.patient) {
       return (
         <span className="text-xs text-slate-500">
-          {appointment.user.name} ({appointment.user.email})
+          {appointment.patient.name} ({appointment.patient.email})
         </span>
       );
     }
     return null;
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    setToken(token);
+  }, []);
+
+  useEffect(() => {
+    async function fetchAppointments() {
+      if (!token) {
+        console.log("No token. Please try Again.")
+        return;
+      }
+      const user = await getUserFromToken(token);
+      if (!user) {
+        console.error('Invalid or missing token');
+        return;
+      }
+      const data = await getAppointmentsByUserId(user.userId);
+      if (data) {
+        setAppointments(data);
+      } else {
+        console.error('Failed to fetch appointments');
+      }
+    }
+    fetchAppointments();
+  }, [token]);
 
   return (
     <div
@@ -118,12 +116,20 @@ export default function AdminDashboard() {
             {/* Calendar */}
             <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <LucideCalendar className="h-6 w-6 text-blue-600" /> Calendar
+                <LucideCalendar className="h-6 w-6 text-blue-600" />
+                Calendar
               </h2>
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
+                disabled={{ dayOfWeek: [0] }}
+                modifiers={{
+                  appointment: appointmentDates,
+                }}
+                modifiersClassNames={{
+                  appointment: "bg-green-500 text-white rounded-full",
+                }}
               />
             </div>
             {/* Latest Appointments */}
@@ -145,24 +151,24 @@ export default function AdminDashboard() {
                         {new Date(a.dateRequested).toLocaleDateString()}
                       </span>
                       <span
-                        className={`text-xs px-2 py-1 rounded capitalize ${a.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : a.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                        className={`text-xs px-2 py-1 rounded capitalize ${a.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : a.status === 'APPROVED' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
                       >
                         {a.status}
                       </span>
                     </div>
                     {getUserInfo(a)}
-                    {a.remarks && (
+                    {a.description && (
                       <div className="text-xs text-slate-500 mt-1">
-                        {a.remarks}
+                        {a.description}
                       </div>
                     )}
-                    {a.status === 'pending' && (
+                    {a.status === 'PENDING' && (
                       <div className="mt-2 flex gap-2">
                         <button
                           className="px-3 py-1 rounded bg-green-500 text-white text-xs hover:bg-green-600"
                           onClick={() =>
                             handleApprove(
-                              appointments.findIndex((ap) => ap === a)
+                              a.id
                             )
                           }
                         >
@@ -172,7 +178,7 @@ export default function AdminDashboard() {
                           className="px-3 py-1 rounded bg-red-500 text-white text-xs hover:bg-red-600"
                           onClick={() =>
                             handleReject(
-                              appointments.findIndex((ap) => ap === a)
+                              a.id
                             )
                           }
                         >
@@ -205,13 +211,6 @@ export default function AdminDashboard() {
             </div>
             <ul className="divide-y divide-slate-200">
               {paginatedAppointments.map((a, idx) => {
-                // Find the real index in appointments for approve/reject
-                const realIdx = appointments.findIndex(
-                  (ap) =>
-                    ap.dateRequested === a.dateRequested &&
-                    ap.serviceType === a.serviceType &&
-                    ap.user?.email === a.user?.email
-                );
                 return (
                   <li
                     key={a.dateRequested + a.serviceType + idx}
@@ -225,28 +224,28 @@ export default function AdminDashboard() {
                         {new Date(a.dateRequested).toLocaleDateString()}
                       </span>
                       <span
-                        className={`text-xs px-2 py-1 rounded capitalize ${a.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : a.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                        className={`text-xs px-2 py-1 rounded capitalize ${a.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : a.status === 'APPROVED' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
                       >
                         {a.status}
                       </span>
                     </div>
                     {getUserInfo(a)}
-                    {a.remarks && (
+                    {a.description && (
                       <div className="text-xs text-slate-500 mt-1">
-                        {a.remarks}
+                        {a.description}
                       </div>
                     )}
-                    {a.status === 'pending' && (
+                    {a.status === 'PENDING' && (
                       <div className="mt-2 flex gap-2">
                         <button
                           className="px-3 py-1 rounded bg-green-500 text-white text-xs hover:bg-green-600"
-                          onClick={() => handleApprove(realIdx)}
+                          onClick={() => handleApprove(a.id)}
                         >
                           Approve
                         </button>
                         <button
                           className="px-3 py-1 rounded bg-red-500 text-white text-xs hover:bg-red-600"
-                          onClick={() => handleReject(realIdx)}
+                          onClick={() => handleReject(a.id)}
                         >
                           Reject
                         </button>

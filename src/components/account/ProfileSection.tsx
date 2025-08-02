@@ -1,9 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, Calendar, Edit } from 'lucide-react';
+import { User, Mail, Phone, Calendar } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { User as UserType } from '@/types/account';
 
@@ -20,11 +19,6 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
     });
   };
 
-  const handleEditProfile = () => {
-    // Placeholder for edit profile functionality
-    console.log('Edit profile clicked');
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -37,7 +31,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white shadow-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user.avatar ?? "/file.svg"} alt={user.name} />
                 <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-semibold">
                   {user.name
                     .split(' ')
@@ -50,19 +44,10 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                   {user.name}
                 </CardTitle>
                 <p className="text-slate-600 text-sm sm:text-base">
-                  Member since {formatDate(user.dateJoined)}
+                  Member since {formatDate(user.dateJoined.toLocaleString())}
                 </p>
               </div>
             </div>
-            <Button
-              onClick={handleEditProfile}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2 bg-white hover:bg-slate-50 border-slate-300"
-            >
-              <Edit className="h-4 w-4" />
-              <span className="hidden sm:inline">Edit Profile</span>
-            </Button>
           </div>
         </CardHeader>
 
@@ -92,7 +77,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                     Contact Number
                   </p>
                   <p className="text-slate-900 font-medium">
-                    {user.contactNumber}
+                    {user.phoneNumber}
                   </p>
                 </div>
               </div>
@@ -108,7 +93,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                     Date Joined
                   </p>
                   <p className="text-slate-900 font-medium">
-                    {formatDate(user.dateJoined)}
+                    {formatDate(user.dateJoined.toLocaleString())}
                   </p>
                 </div>
               </div>
@@ -122,7 +107,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
                     Account Type
                   </p>
                   <p className="text-slate-900 font-medium">
-                    Healthcare Professional
+                    Patient
                   </p>
                 </div>
               </div>

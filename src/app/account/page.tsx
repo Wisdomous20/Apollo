@@ -1,11 +1,66 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import AccountTabs from '@/components/account/AccountTabs';
-import { mockUser, mockAppointments } from '@/data/mockData';
+import { User, Appointment } from '@/types/account';
+import { getAppointmentsByUserId } from '@/lib/actions/appointment-actions';
+import { getUserFromToken } from '@/lib/actions/jwt-actions';
+import { getUserById } from '@/lib/actions/user-actions';
 
 export default function AccountPage() {
+
+  const [user, setUser] = useState<User | null>(null);
+  const [appointments, setAppointments] = useState<Appointment[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    setToken(token);
+  }, []);
+
+  useEffect(() => {
+    async function fetchAppointments() {
+      setIsLoading(true);
+      try {
+        if (!token) {
+          console.log("No token. Please try Again.")
+          return;
+        }
+        const user = await getUserFromToken(token);
+        if (!user) {
+          console.error('Invalid or missing token');
+          return;
+        }
+        const [userData, appointmentsData] = await Promise.all([
+          getUserById(user.userId),
+          getAppointmentsByUserId(user.userId)
+        ])
+        if (typeof userData === 'string' || !appointmentsData) {
+          console.error('Failed to fetch appointments');
+        } else {
+          setAppointments(appointmentsData);
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchAppointments();
+  }, [token]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <p className="text-lg text-slate-600">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Navigation />
@@ -29,7 +84,7 @@ export default function AccountPage() {
                 fontFamily: 'Georgia, Times New Roman, Times, serif',
               }}
             >
-              Welcome Back, {mockUser.name.split(' ')[0]}!
+              Welcome Back, {user?.name.split(' ')[0]}!
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -43,7 +98,9 @@ export default function AccountPage() {
           </div>
 
           {/* Tabs Content */}
-          <AccountTabs user={mockUser} appointments={mockAppointments} />
+          {((appointments && user) && (
+            <AccountTabs user={user} appointments={appointments} />
+          ))}
         </motion.div>
       </main>
 

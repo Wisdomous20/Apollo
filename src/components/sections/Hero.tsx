@@ -1,8 +1,20 @@
 'use client';
 
+// import { useCallback } from "react";
 import { BookingForm } from './BookingForm';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+// import Link from 'next/link';
+// import { Button } from '@/components/ui/button';
+// import { useState, useEffect } from 'react';
+// import ScheduleVisitModal from '@/components/account/ScheduleVisitModal';
+
+// Export services array for use in Services.tsx
+export const services = [
+  { title: 'Primary Care' },
+  { title: 'Specialized Care' },
+  { title: 'Emergency Care' },
+];
 
 export default function Hero() {
   // ===== ANIMATION VARIANTS =====
@@ -61,11 +73,11 @@ export default function Hero() {
         {/* Building overlay - responsive positioning */}
         <div
           className="absolute top-0 right-0 
-                        w-full h-full opacity-30
-                        sm:opacity-40 md:opacity-50
-                        lg:w-[40%] lg:opacity-70
-                        xl:w-[40%] 2xl:w-1/2 
-                        z-5"
+            w-full h-full opacity-30
+            sm:opacity-40 md:opacity-50
+            lg:w-[40%] lg:opacity-70
+            xl:w-[40%] 2xl:w-1/2 
+            z-5"
         >
           <Image
             src="/building.png"
@@ -81,10 +93,10 @@ export default function Hero() {
         {/* Responsive gradient overlays */}
         <div
           className="absolute inset-0 
-                        bg-gradient-to-b from-transparent via-white/60 to-white/80
-                        sm:bg-gradient-to-b sm:from-transparent sm:via-white/50 sm:to-white/70
-                        md:bg-gradient-to-r md:from-white/60 md:via-white/40 md:to-transparent
-                        lg:bg-gradient-to-r lg:from-white/70 lg:via-white/50 lg:to-transparent"
+            bg-gradient-to-b from-transparent via-white/60 to-white/80
+            sm:bg-gradient-to-b sm:from-transparent sm:via-white/50 sm:to-white/70
+            md:bg-gradient-to-r md:from-white/60 md:via-white/40 md:to-transparent
+            lg:bg-gradient-to-r lg:from-white/70 lg:via-white/50 lg:to-transparent"
         />
       </div>
 
@@ -92,11 +104,11 @@ export default function Hero() {
       {/* Mobile: Near top, Desktop: Left 60% */}
       <motion.div
         className="relative z-20 
-                      w-full pt-16 pb-20 px-4
-                      sm:pt-20 sm:pb-24 sm:px-6
-                      md:pt-24 md:pb-32 md:px-8
-                      lg:w-[60%] lg:pt-0 lg:pb-0 lg:px-8 lg:min-h-screen lg:flex lg:flex-col lg:items-start lg:justify-center
-                      xl:px-16"
+          w-full pt-16 pb-20 px-4
+          sm:pt-20 sm:pb-24 sm:px-6
+          md:pt-24 md:pb-32 md:px-8
+          lg:w-[60%] lg:pt-0 lg:pb-0 lg:px-8 lg:min-h-screen lg:flex lg:flex-col lg:items-start lg:justify-center
+          xl:px-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -113,12 +125,12 @@ export default function Hero() {
             >
               <motion.h1
                 className="font-serif-black leading-tight text-primary flex flex-col items-center gap-1 sm:gap-2
-                           text-2xl
-                           sm:text-3xl
-                           md:text-4xl
-                           lg:text-5xl
-                           xl:text-6xl
-                           2xl:text-7xl"
+                  text-2xl
+                  sm:text-3xl
+                  md:text-4xl
+                  lg:text-5xl
+                  xl:text-6xl
+                  2xl:text-7xl"
                 variants={itemVariants}
               >
                 <span className="text-primary whitespace-nowrap">
@@ -135,11 +147,11 @@ export default function Hero() {
               {/* Hero Description */}
               <motion.p
                 className="text-primary max-w-3xl mx-auto font-serif-normal mt-4 sm:mt-6
-                           text-sm leading-relaxed
-                           sm:text-base sm:leading-relaxed
-                           md:text-lg md:leading-relaxed
-                           lg:text-xl lg:leading-relaxed
-                           xl:text-2xl xl:leading-relaxed"
+                  text-sm leading-relaxed
+                  sm:text-base sm:leading-relaxed
+                  md:text-lg md:leading-relaxed
+                  lg:text-xl lg:leading-relaxed
+                  xl:text-2xl xl:leading-relaxed"
                 variants={itemVariants}
               >
                 At Apollo Medical Group, we blend trusted care with modern
@@ -162,9 +174,9 @@ export default function Hero() {
       {/* Mobile: Bottom section, Desktop: Right 40% at bottom */}
       <motion.div
         className="absolute bottom-0 right-0 
-                   w-full h-[32vh] sm:h-[38vh] md:h-[45vh]
-                   lg:w-[40%] lg:h-full 
-                   z-20"
+          w-full h-[32vh] sm:h-[38vh] md:h-[45vh]
+          lg:w-[40%] lg:h-full 
+          z-20"
         variants={imageVariants}
         initial="hidden"
         animate="visible"
@@ -175,8 +187,8 @@ export default function Hero() {
             alt="Two medical professionals - a Black woman and white man with glasses, both in white coats"
             fill
             className="object-contain object-bottom 
-                       sm:object-contain md:object-contain
-                       lg:object-contain"
+              sm:object-contain md:object-contain
+              lg:object-contain"
             priority
             sizes="(max-width: 1024px) 100vw, 40vw"
           />

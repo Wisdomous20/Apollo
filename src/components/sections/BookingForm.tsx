@@ -4,8 +4,12 @@ import type React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Calendar, UserCheck, Phone, Heart, DollarSign } from 'lucide-react';
+import { Calendar, UserCheck, Phone, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { User } from '@/types/account';
+import { getAllDoctors } from '@/lib/actions/user-actions';
+import { bookAppointment } from '@/lib/actions/appointment-actions';
+import { getUserFromToken } from '@/lib/actions/jwt-actions';
 
 // Service and pricing data
 const services = [
@@ -16,65 +20,6 @@ const services = [
   { id: 'check-up', name: 'Health Check-up', icon: '🔍' },
 ];
 
-const doctors = [
-  {
-    id: 'dr-sarah-johnson',
-    name: 'Dr. Sarah Johnson',
-    specialty: 'General Practice',
-  },
-  { id: 'dr-michael-chen', name: 'Dr. Michael Chen', specialty: 'Cardiology' },
-  {
-    id: 'dr-emily-rodriguez',
-    name: 'Dr. Emily Rodriguez',
-    specialty: 'Pediatrics',
-  },
-  {
-    id: 'dr-david-thompson',
-    name: 'Dr. David Thompson',
-    specialty: 'Emergency Medicine',
-  },
-  { id: 'dr-lisa-park', name: 'Dr. Lisa Park', specialty: 'Internal Medicine' },
-];
-
-// Pricing matrix based on doctor and service combination
-const pricingMatrix: Record<string, Record<string, number>> = {
-  'dr-sarah-johnson': {
-    'primary-care': 150,
-    'specialized-care': 250,
-    'emergency-care': 300,
-    consultation: 100,
-    'check-up': 120,
-  },
-  'dr-michael-chen': {
-    'primary-care': 180,
-    'specialized-care': 350,
-    'emergency-care': 400,
-    consultation: 150,
-    'check-up': 200,
-  },
-  'dr-emily-rodriguez': {
-    'primary-care': 160,
-    'specialized-care': 280,
-    'emergency-care': 350,
-    consultation: 120,
-    'check-up': 140,
-  },
-  'dr-david-thompson': {
-    'primary-care': 200,
-    'specialized-care': 300,
-    'emergency-care': 250,
-    consultation: 180,
-    'check-up': 220,
-  },
-  'dr-lisa-park': {
-    'primary-care': 170,
-    'specialized-care': 320,
-    'emergency-care': 380,
-    consultation: 130,
-    'check-up': 160,
-  },
-};
-
 export function BookingForm() {
   const [formData, setFormData] = useState({
     selectedDate: '',
@@ -84,9 +29,32 @@ export function BookingForm() {
     phone: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState<number | null>(null);
+  const [doctorLists, setDoctorLists] = useState<User[]>([]);
+  const [token, setToken] = useState("");
+  const [userId, setUserId] = useState("");
 
   // Initialize form data with default values
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      getUserFromToken(token).then(user => {
+        if (user) {
+          setToken(token);
+          setUserId(user.userId);
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    async function fetchDoctors() {
+      const doctorsData = await getAllDoctors();
+      setDoctorLists(doctorsData);
+    }
+    fetchDoctors();
+  }, []);
+
   useEffect(() => {
     const today = new Date();
     const tomorrow = new Date(today);
@@ -99,16 +67,6 @@ export function BookingForm() {
       phone: '',
     });
   }, []);
-
-  // Calculate price when service or doctor changes
-  useEffect(() => {
-    if (formData.service && formData.doctor) {
-      const price = pricingMatrix[formData.doctor]?.[formData.service];
-      setCurrentPrice(price || null);
-    } else {
-      setCurrentPrice(null);
-    }
-  }, [formData.service, formData.doctor]);
 
   // Listen for service pre-selection from Services section
   useEffect(() => {
@@ -150,14 +108,23 @@ export function BookingForm() {
       return;
     }
 
+    if (!token) {
+      alert("Please log in first in order to book an ppointment.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // Simulate form submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const serviceName = services.find((s) => s.id === formData.service)?.name;
-      const doctorName = doctors.find((d) => d.id === formData.doctor)?.name;
+      await bookAppointment({
+        dateRequested: formData.selectedDate ? new Date(formData.selectedDate) : new Date(),
+        timeRequested: formData.selectedTime,
+        serviceType: formData.service,
+        doctorId: doctorLists.find(d => d.name === formData.doctor)?.id ?? '',
+        patientId: userId,
+        description: formData.service,
+      })
       alert(
-        `Appointment request submitted successfully!\n\nService: ${serviceName}\nDoctor: ${doctorName}\nPrice: $${currentPrice}\nDate: ${formData.selectedDate}\nTime: ${formData.selectedTime}`
+        `Appointment request submitted successfully!\n\nService: ${formData.service}\nDoctor: ${formData.doctor}\nTime: ${formData.selectedTime}`
       );
 
       // Reset form
@@ -261,7 +228,7 @@ export function BookingForm() {
                   style={{ fontFamily: "'Cinzel', serif" }}
                 >
                   <option value="">Select doctor</option>
-                  {doctors.map((doctor) => (
+                  {doctorLists.map((doctor) => (
                     <option key={doctor.id} value={doctor.id}>
                       {doctor.name}
                     </option>
@@ -329,15 +296,6 @@ export function BookingForm() {
                   className="bg-input border-border text-xs h-9"
                   style={{ fontFamily: "'Cinzel', serif" }}
                 />
-              </motion.div>
-              <motion.div className="space-y-2" variants={fieldVariants}>
-                <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                  <DollarSign className="w-3 h-3" />
-                  Price
-                </label>
-                <div className="bg-input border border-border rounded-md px-2 py-2 h-9 flex items-center justify-center text-xs font-bold text-primary">
-                  {currentPrice ? `$${currentPrice}` : '--'}
-                </div>
               </motion.div>
             </div>
 
@@ -417,9 +375,9 @@ export function BookingForm() {
                   style={{ fontFamily: "'Cinzel', serif" }}
                 >
                   <option value="">Select doctor</option>
-                  {doctors.map((doctor) => (
+                  {doctorLists.map((doctor) => (
                     <option key={doctor.id} value={doctor.id}>
-                      {doctor.name} - {doctor.specialty}
+                      {doctor.name}
                     </option>
                   ))}
                 </select>
@@ -485,15 +443,6 @@ export function BookingForm() {
                   className="bg-input border-border"
                   style={{ fontFamily: "'Cinzel', serif" }}
                 />
-              </motion.div>
-              <motion.div className="space-y-2" variants={fieldVariants}>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <DollarSign className="w-4 h-4" />
-                  Price
-                </label>
-                <div className="bg-input border border-border rounded-md px-3 py-2 h-[42px] flex items-center justify-center font-bold text-primary">
-                  {currentPrice ? `$${currentPrice}` : '--'}
-                </div>
               </motion.div>
               <motion.div
                 className="space-y-2 flex flex-col justify-end"
@@ -576,7 +525,7 @@ export function BookingForm() {
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
                 <option value="">Select doctor</option>
-                {doctors.map((doctor) => (
+                {doctorLists.map((doctor) => (
                   <option key={doctor.id} value={doctor.id}>
                     {doctor.name}
                   </option>
@@ -645,18 +594,6 @@ export function BookingForm() {
                 className="bg-input border-border"
                 style={{ fontFamily: "'Cinzel', serif" }}
               />
-            </motion.div>
-            <motion.div
-              className="space-y-2 w-full lg:flex-1 lg:min-w-0"
-              variants={fieldVariants}
-            >
-              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <DollarSign className="w-4 h-4" />
-                Price
-              </label>
-              <div className="bg-input border border-border rounded-md px-3 py-2 h-[42px] flex items-center justify-center font-bold text-primary">
-                {currentPrice ? `$${currentPrice}` : '--'}
-              </div>
             </motion.div>
             <motion.div
               className="space-y-2 flex flex-col justify-end h-full w-full lg:flex-1 lg:min-w-0"

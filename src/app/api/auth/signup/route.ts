@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcryptjs from 'bcryptjs';
-import { PrismaClient } from '../../../../../generated/prisma';
+import { prisma } from '@/lib/utils';
 import { generateTokens } from '@/lib/auth';
-
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,6 +56,7 @@ export async function POST(request: NextRequest) {
       userId: newUser.id,
       email: newUser.email,
       userType: newUser.userType,
+      name: newUser.name,
     });
 
     // Create response

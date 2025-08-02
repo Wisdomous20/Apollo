@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   User,
-  Settings,
   LogOut,
   Calendar,
   ChevronDown,
@@ -20,17 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-// Updated mock user
-const mockUser = {
-  id: '2',
-  name: 'Alex Kim',
-  email: 'alex.kim@apollomedical.com',
-  avatar: '/blank-user.svg', // Use a blank default image
-  dateJoined: '2024-02-10',
-  contactNumber: '+1 (555) 987-6543',
-};
-
-export default function AccountDropdown() {
+export default function AccountDropdown({ name, email }: { name?: string; email?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleProfileClick = () => {
@@ -46,14 +35,11 @@ export default function AccountDropdown() {
     window.location.href = '/account#appointments';
   };
 
-  const handleSettingsClick = () => {
-    // Placeholder for settings page
-    console.log('Settings clicked');
-  };
-
   const handleLogoutClick = () => {
     // Placeholder for logout functionality
-    console.log('Logout clicked');
+    localStorage.removeItem('accessToken');
+    setIsOpen(false);
+    window.location.href = '/'
   };
 
   return (
@@ -66,16 +52,16 @@ export default function AccountDropdown() {
           aria-label="Account menu"
         >
           <Avatar className="h-8 w-8">
-            <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
+            <AvatarImage src="/profile-default.svg" alt={name} />
             <AvatarFallback className="bg-blue-100 text-blue-600 text-sm font-semibold">
-              {mockUser.name
+              {name!
                 .split(' ')
                 .map((n) => n[0])
                 .join('')}
             </AvatarFallback>
           </Avatar>
           <span className="hidden lg:block text-sm font-medium text-slate-700">
-            {mockUser.name.split(' ')[0]}
+            {name!.split(' ')[0]}
           </span>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
@@ -89,9 +75,9 @@ export default function AccountDropdown() {
       <DropdownMenuContent align="end" className="w-56 mt-2" sideOffset={8}>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{mockUser.name}</p>
+            <p className="text-sm font-medium leading-none">{name}</p>
             <p className="text-xs leading-none text-slate-500">
-              {mockUser.email}
+              {email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -115,14 +101,6 @@ export default function AccountDropdown() {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          onClick={handleSettingsClick}
-          className="cursor-pointer"
-        >
-          <Settings className="mr-2 h-4 w-4" />
-          <span>Settings</span>
-        </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleLogin} className="cursor-pointer">
           <LogIn className="mr-2 h-4 w-4" />

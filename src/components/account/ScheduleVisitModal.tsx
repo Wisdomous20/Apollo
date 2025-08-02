@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,47 +13,60 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { User } from '@/types/account';
+import { getAllDoctors } from '@/lib/actions/user-actions';
+import { bookAppointment } from '@/lib/actions/appointment-actions';
+
+type FormValues = {
+  date: Date | undefined;
+  time: string;
+  doctor: string;
+  serviceType: string;
+  description: string;
+};
 
 export default function ScheduleVisitModal({
   open,
   onClose,
+  userId,
 }: {
   open: boolean;
   onClose: () => void;
+  userId: string;
 }) {
-  const [date, setDate] = useState<Date | undefined>();
-  const [time, setTime] = useState('');
-  // Removed service and email
-  const [doctor, setDoctor] = useState('');
-  const [price, setPrice] = useState<number | null>(null);
-  const [phone, setPhone] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { isSubmitSuccessful },
+  } = useForm<FormValues>({
+    defaultValues: {
+      date: undefined,
+      time: '',
+      doctor: '',
+      serviceType: '',
+      description: '',
+    },
+  });
 
-  // Example doctor list and prices
-  const doctors = useMemo(
-    () => [
-      { name: 'Dr. Athena Papadopoulos', price: 120 },
-      { name: 'Dr. Nikos Stavros', price: 100 },
-      { name: 'Dr. Eleni Georgiou', price: 110 },
-    ],
-    []
-  );
-
-  useEffect(() => {
-    if (doctor) {
-      const found = doctors.find((d) => d.name === doctor);
-      setPrice(found ? found.price : null);
-    } else {
-      setPrice(null);
-    }
-  }, [doctor, doctors]);
+  const [doctorLists, setDoctorLists] = useState<User[]>();
 
   // 9am-5pm, 1 hour slots
   const timeSlots = Array.from({ length: 8 }, (_, i) => {
     const hour = 9 + i;
     return `${hour}:00 - ${hour + 1}:00`;
   });
+
+  const serviceTypes = ['Primary Care', 'Specialized Care', 'Emergency Care'];
+
+  useEffect(() => {
+    async function fetchDoctors() {
+      const doctorsData = await getAllDoctors();
+      setDoctorLists(doctorsData);
+    }
+    fetchDoctors();
+  }, []);
 
   // Trap focus inside modal
   useEffect(() => {
@@ -84,13 +98,19 @@ export default function ScheduleVisitModal({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      onClose();
-    }, 1200);
+  const onSubmit = async (data: FormValues) => {
+    if (!doctorLists || doctorLists.length === 0) {
+      console.error('No doctors available');
+      return;
+    }
+    await bookAppointment({
+      dateRequested: data.date ? new Date(data.date) : new Date(),
+      timeRequested: data.time,
+      serviceType: data.serviceType,
+      doctorId: doctorLists.find(d => d.name === data.doctor)?.id ?? '',
+      patientId: userId,
+      description: data.description,
+    })
   };
 
   return (
@@ -132,82 +152,157 @@ export default function ScheduleVisitModal({
             <h2 className="text-2xl font-bold mb-2 sm:mb-4 text-center text-blue-900">
               Schedule Your Visit
             </h2>
-            {submitted ? (
+
+            {isSubmitSuccessful ? (
               <motion.div
-                className="text-green-600 text-center py-12 font-semibold text-lg"
+                className="flex flex-col items-center justify-center py-12"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                Appointment scheduled!
+                <svg
+                  className="w-16 h-16 text-green-500 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" fill="none" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 12.5l3 3 5-5"
+                  />
+                </svg>
+                <h3 className="text-2xl font-bold text-green-700 mb-2">
+                  Appointment Requested!
+                </h3>
+                <p className="text-gray-500 text-sm text-center">
+                  You will be notified via email once your appointment is approved.
+                </p>
+                <Button
+                  className="mt-6 bg-blue-900 text-white hover:bg-blue-950 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-400"
+                  size="lg"
+                  onClick={onClose}
+                >
+                  Close
+                </Button>
               </motion.div>
             ) : (
               <form
                 className="flex flex-col gap-3 sm:gap-4 w-full"
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmit(onSubmit)}
               >
+                {/* Date Picker */}
                 <label className="font-semibold text-sm sm:text-base">
                   Select Date
                 </label>
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  required
-                  fromDate={new Date()}
-                  className="mb-1 border rounded-md w-full"
+                <Controller
+                  control={control}
+                  name="date"
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      fromDate={new Date()}
+                      className="mb-1 border rounded-md w-full"
+                    />
+                  )}
                 />
+
+                {/* Time Select */}
                 <label className="font-semibold text-sm sm:text-base">
                   Select Time
                 </label>
-                <Select value={time} onValueChange={setTime}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Choose a time slot" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeSlots.map((slot) => (
-                      <SelectItem key={slot} value={slot} className="text-base">
-                        {slot}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  control={control}
+                  name="time"
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Choose a time slot" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeSlots.map((slot) => (
+                          <SelectItem key={slot} value={slot} className="text-base">
+                            {slot}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+
+                {/* Service Type Dropdown */}
+                <label className="font-semibold text-sm sm:text-base">
+                  Service Type
+                </label>
+                <Controller
+                  control={control}
+                  name="serviceType"
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a service type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {serviceTypes.map((service) => (
+                          <SelectItem
+                            key={service}
+                            value={service}
+                            className="text-base"
+                          >
+                            {service}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+
+                {/* Doctor Select */}
                 <label className="font-semibold text-sm sm:text-base">
                   Select Doctor
                 </label>
-                <Select value={doctor} onValueChange={setDoctor}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Choose a doctor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {doctors.map((d) => (
-                      <SelectItem
-                        key={d.name}
-                        value={d.name}
-                        className="text-base"
-                      >
-                        {d.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {price !== null && (
-                  <div className="text-right text-blue-900 font-semibold text-lg mt-2 mb-1">
-                    Price: ${price}
-                  </div>
-                )}
+                <Controller
+                  control={control}
+                  name="doctor"
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Choose a doctor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {doctorLists?.map((d) => (
+                          <SelectItem
+                            key={d.name}
+                            value={d.name}
+                            className="text-base"
+                          >
+                            {d.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+
                 <label className="font-semibold text-sm sm:text-base">
-                  Phone Number
+                  Description
                 </label>
                 <Input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="(555) 123-4567"
-                  required
+                  type="text"
+                  placeholder="Brief reason for appointment"
                   className="w-full"
+                  {...register('description', { required: true })}
                 />
+
                 <Button
                   type="submit"
                   className="mt-2 bg-blue-900 text-white hover:bg-blue-950 transition-all duration-150 active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-400"

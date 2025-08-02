@@ -396,11 +396,10 @@ export default function Gallery() {
                   }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`relative flex-shrink-0 w-20 h-16 md:w-24 md:h-20 lg:w-28 lg:h-24 xl:w-32 xl:h-28 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                    selectedIndex === index
+                  className={`relative flex-shrink-0 w-20 h-16 md:w-24 md:h-20 lg:w-28 lg:h-24 xl:w-32 xl:h-28 rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedIndex === index
                       ? 'border-primary shadow-lg shadow-primary/20'
                       : 'border-slate-200 hover:border-primary/50'
-                  }`}
+                    }`}
                 >
                   <Image
                     src={image.src}
@@ -409,11 +408,10 @@ export default function Gallery() {
                     className="object-cover"
                   />
                   <div
-                    className={`absolute inset-0 transition-opacity duration-300 ${
-                      selectedIndex === index
+                    className={`absolute inset-0 transition-opacity duration-300 ${selectedIndex === index
                         ? 'bg-primary/20'
                         : 'bg-black/10 hover:bg-primary/10'
-                    }`}
+                      }`}
                   />
                   {selectedIndex === index && (
                     <motion.div
