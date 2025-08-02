@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -22,15 +22,17 @@
   h4,
   h5,
   h6 {
-    @apply font-fredoka font-semibold;
+    @apply font-serif font-bold;
   }
   :root {
     /* Light mode colors */
     --background: 217 64% 92%;
     --foreground: 222 47% 4%; /* hsl for #030712 */
-    --primary: 221 83% 58%; /* hsl for #2563eb */
+    /* --primary: 240 100% 25%; hsl for #000080 */
+    --primary: 240 100% 25.098%;
     --primary-foreground: 0 0% 100%; /* hsl for #ffffff */
-    --secondary: 0 80% 51%; /* hsl for #dc2626 */
+    /* --secondary: 0 84% 60%; hsl for #dc2626 - red-600 */
+    --secondary: 0 100% 50%;
     --secondary-foreground: 0 0% 100%; /* hsl for #ffffff */
     --accent: 220 14% 96%; /* hsl for #f3f4f6 */
     --accent-foreground: 222 47% 11%; /* hsl for #111827 */
@@ -44,14 +46,17 @@
     --input: 210 16% 93%; /* hsl for #e5e7eb */
     --ring: 221 83% 58%; /* hsl for #2563eb */
     --radius: 0.5rem;
+    --font-sans: Inter, sans-serif;
+    --font-serif: Merriweather, serif;
+    --font-mono: JetBrains Mono, monospace;
   }
   .dark {
     /* Dark mode colors */
     --background: 222 13% 8%; /* hsl for #0d1117 */
     --foreground: 217 64% 92%; /* hsl for #e6edf3 */
-    --primary: 217 91% 60%; /* hsl for #3b82f6 */
+    --primary: 240 100% 25%; /* hsl for #000080 */
     --primary-foreground: 0 0% 100%; /* hsl for #ffffff */
-    --secondary: 0 84% 60%; /* hsl for #ef4444 */
+    --secondary: 0 84% 60%; /* hsl for #dc2626 - red-600 */
     --secondary-foreground: 0 0% 100%; /* hsl for #ffffff */
     --accent: 0 0% 26%; /* hsl for #424242 */
     --accent-foreground: 0 0% 98%; /* hsl for #fafafa */
@@ -65,16 +70,44 @@
     --input: 217 14% 15%; /* hsl for #21262d */
     --ring: 217 91% 60%; /* hsl for #3b82f6 */
     --radius: 0.5rem;
+    --font-sans: Inter, sans-serif;
+    --font-serif: Merriweather, serif;
+    --font-mono: JetBrains Mono, monospace;
   }
 }
 
 @layer components {
-  .font-fredoka {
-    font-family: 'Fredoka', cursive;
+  .font-serif {
+    font-family: 'Merriweather', serif;
   }
 
   .font-inter {
     font-family: 'Inter', sans-serif;
+  }
+
+  .font-fredoka {
+    font-family: 'Fredoka', cursive;
+  }
+
+  /* Serif font utilities for flexibility */
+  .font-serif-light {
+    font-family: 'Merriweather', serif;
+    font-weight: 300;
+  }
+
+  .font-serif-normal {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+  }
+
+  .font-serif-bold {
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+  }
+
+  .font-serif-black {
+    font-family: 'Merriweather', serif;
+    font-weight: 900;
   }
 
   .gradient-ocean {
@@ -108,7 +141,7 @@
   }
 
   .text-gradient-health {
-    background: linear-gradient(135deg, #dc2626, #ef4444);
+    background: linear-gradient(135deg, #dc2626, #dc2626);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
