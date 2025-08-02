@@ -70,7 +70,7 @@ export default function ContactSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 font-serif">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 font-serif">
             Contact Us
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto font-serif">
