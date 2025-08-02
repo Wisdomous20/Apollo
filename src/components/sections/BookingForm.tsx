@@ -119,7 +119,7 @@ export function BookingForm() {
         dateRequested: formData.selectedDate ? new Date(formData.selectedDate) : new Date(),
         timeRequested: formData.selectedTime,
         serviceType: formData.service,
-        doctorId: doctorLists.find(d => d.name === formData.doctor)?.id ?? '',
+        doctorId: formData.doctor,
         patientId: userId,
         description: formData.service,
       })
