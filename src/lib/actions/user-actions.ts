@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/utils";
-import { $Enums } from "../../../generated/prisma";
+import { $Enums } from "@/generated/client";
 
 export async function getUserById(id: string) {
   const result = await prisma.user.findUnique({

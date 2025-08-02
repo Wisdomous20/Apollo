@@ -1,4 +1,4 @@
-import { AppointmentStatus } from "../../generated/prisma";
+import { AppointmentStatus } from "@/generated/client";
 
 export interface User {
   id: string;
