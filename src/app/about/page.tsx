@@ -3,8 +3,67 @@
 import Image from 'next/image';
 import Navigation from '../../components/Navigation';
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
 
 export default function AboutUs() {
+  const [activeValueSlide, setActiveValueSlide] = useState(0);
+  const [activeServiceSlide, setActiveServiceSlide] = useState(0);
+
+  useEffect(() => {
+    const valuesCarousel = document.getElementById('values-carousel');
+    const servicesCarousel = document.getElementById('services-carousel');
+
+    const handleValuesScroll = () => {
+      if (!valuesCarousel) return;
+      const scrollLeft = valuesCarousel.scrollLeft;
+      const slideWidth = 296; // 280px width + 16px gap
+      const currentSlide = Math.round(scrollLeft / slideWidth);
+      setActiveValueSlide(currentSlide);
+    };
+
+    const handleServicesScroll = () => {
+      if (!servicesCarousel) return;
+      const scrollLeft = servicesCarousel.scrollLeft;
+      const slideWidth = 316; // 300px width + 16px gap
+      const currentSlide = Math.round(scrollLeft / slideWidth);
+      setActiveServiceSlide(currentSlide);
+    };
+
+    if (valuesCarousel) {
+      valuesCarousel.addEventListener('scroll', handleValuesScroll);
+    }
+    if (servicesCarousel) {
+      servicesCarousel.addEventListener('scroll', handleServicesScroll);
+    }
+
+    return () => {
+      if (valuesCarousel) {
+        valuesCarousel.removeEventListener('scroll', handleValuesScroll);
+      }
+      if (servicesCarousel) {
+        servicesCarousel.removeEventListener('scroll', handleServicesScroll);
+      }
+    };
+  }, []);
+
+  const scrollToValueSlide = (slideIndex: number) => {
+    const carousel = document.getElementById('values-carousel');
+    if (carousel) {
+      const slideWidth = 296; // 280px width + 16px gap
+      carousel.scrollTo({ left: slideIndex * slideWidth, behavior: 'smooth' });
+      setActiveValueSlide(slideIndex);
+    }
+  };
+
+  const scrollToServiceSlide = (slideIndex: number) => {
+    const carousel = document.getElementById('services-carousel');
+    if (carousel) {
+      const slideWidth = 316; // 300px width + 16px gap
+      carousel.scrollTo({ left: slideIndex * slideWidth, behavior: 'smooth' });
+      setActiveServiceSlide(slideIndex);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -20,17 +79,17 @@ export default function AboutUs() {
         <Navigation />
 
         {/* Hero Section - Rooted in Healing */}
-        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden mt-[4.5rem] md:mt-[5.5rem]">
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden mt-[4.5rem] md:mt-[5.5rem] bg-primary">
           {/* Background Image with Gradient Overlay */}
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 z-0 w-full">
             <Image
-              src="/about-apollo.jpg"
+              src="/about-apollo-header.png"
               alt="Hospital exterior"
               fill
-              className="object-cover blur-xs md:blur-sm"
+              className="object-cover blur-xs md:blur-sm opacity-50"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-blue-900/20 to-black/50"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-primary/80 to-primary/50"></div>
           </div>
           {/* Content */}
           <div className="relative z-10 max-w-[75rem] mx-auto px-[1.5rem] text-center">
@@ -53,7 +112,7 @@ export default function AboutUs() {
             </p>
           </div>
           {/* Straight-line divider */}
-          <div className="absolute bottom-0 left-0 right-0 h-[0.125rem] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-[0.125rem] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
         </section>
 
         {/* Combined Mission and Values Section with Diagonal Split */}
@@ -84,12 +143,12 @@ export default function AboutUs() {
                   {/* Mission Content */}
                   <div className="order-2 lg:order-1">
                     <h2
-                      className="text-[2rem] md:text-[2.5rem] lg:text-[3rem] font-light text-slate-800 mb-[2rem] leading-[1.2]"
+                      className="text-[2rem] md:text-[2.5rem] lg:text-[3rem] font-light text-primary mb-[2rem] leading-[1.2]"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       Our Mission
                     </h2>
-                    <div className="w-[4rem] h-[0.125rem] bg-blue-600 mb-[2.5rem]"></div>
+                    <div className="w-[4rem] h-[0.125rem] bg-secondary mb-[2.5rem]"></div>
                     <p
                       className="text-[1.125rem] md:text-[1.25rem] lg:text-[1.375rem] text-slate-600 leading-[1.7] font-light mb-[1.5rem]"
                       style={{ fontFamily: "'Cinzel', serif" }}
@@ -204,12 +263,12 @@ export default function AboutUs() {
               <div className="max-w-[75rem] mx-auto px-[1.5rem]">
                 <div className="text-center mb-[3rem] md:mb-[4rem]">
                   <h2
-                    className="text-[2rem] md:text-[2.5rem] lg:text-[3rem] font-light text-slate-800 mb-[1.5rem] leading-[1.2]"
+                    className="text-[2rem] md:text-[2.5rem] lg:text-[3rem] font-light text-primary mb-[1.5rem] leading-[1.2]"
                     style={{ fontFamily: "'Cinzel', serif" }}
                   >
                     Our Values
                   </h2>
-                  <div className="w-[4rem] h-[0.125rem] bg-red-600 mx-auto"></div>
+                  <div className="w-[4rem] h-[0.125rem] bg-secondary mx-auto"></div>
                 </div>
 
                 {/* Desktop Values Grid */}
@@ -218,14 +277,14 @@ export default function AboutUs() {
                   <div className="text-center group">
                     <div className="relative w-[8rem] h-[8rem] mx-auto mb-[1.5rem] overflow-hidden bg-slate-100 rounded-full border-2 border-red-200 group-hover:border-red-300 transition-colors duration-300">
                       <Image
-                        src="/placeholder.svg?height=200&width=200"
+                        src="/values-excellence.jpg"
                         alt="Excellence in healthcare"
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <h3
-                      className="text-[1.25rem] md:text-[1.375rem] font-medium text-slate-800 mb-[1rem]"
+                      className="text-[1.25rem] md:text-[1.375rem] font-medium text-primary mb-[1rem]"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       Excellence
@@ -242,14 +301,14 @@ export default function AboutUs() {
                   <div className="text-center group">
                     <div className="relative w-[8rem] h-[8rem] mx-auto mb-[1.5rem] overflow-hidden bg-slate-100 rounded-full border-2 border-red-200 group-hover:border-red-300 transition-colors duration-300">
                       <Image
-                        src="/placeholder.svg?height=200&width=200"
+                        src="/values-compassion.png"
                         alt="Compassionate care"
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <h3
-                      className="text-[1.25rem] md:text-[1.375rem] font-medium text-slate-800 mb-[1rem]"
+                      className="text-[1.25rem] md:text-[1.375rem] font-medium text-primary mb-[1rem]"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       Compassion
@@ -266,14 +325,14 @@ export default function AboutUs() {
                   <div className="text-center group">
                     <div className="relative w-[8rem] h-[8rem] mx-auto mb-[1.5rem] overflow-hidden bg-slate-100 rounded-full border-2 border-red-200 group-hover:border-red-300 transition-colors duration-300">
                       <Image
-                        src="/placeholder.svg?height=200&width=200"
+                        src="/values-innovation.jpg"
                         alt="Healthcare innovation"
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <h3
-                      className="text-[1.25rem] md:text-[1.375rem] font-medium text-slate-800 mb-[1rem]"
+                      className="text-[1.25rem] md:text-[1.375rem] font-medium text-primary mb-[1rem]"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       Innovation
@@ -299,7 +358,7 @@ export default function AboutUs() {
                       <div className="flex-none w-[280px] snap-center text-center bg-white rounded-lg p-[1.5rem] border border-red-100">
                         <div className="relative w-[6rem] h-[6rem] mx-auto mb-[1rem] overflow-hidden bg-slate-100 rounded-full border-2 border-red-200">
                           <Image
-                            src="/placeholder.svg?height=200&width=200"
+                            src="/values-excellence.jpg"
                             alt="Excellence in healthcare"
                             fill
                             className="object-cover"
@@ -323,7 +382,7 @@ export default function AboutUs() {
                       <div className="flex-none w-[280px] snap-center text-center bg-white rounded-lg p-[1.5rem] border border-red-100">
                         <div className="relative w-[6rem] h-[6rem] mx-auto mb-[1rem] overflow-hidden bg-slate-100 rounded-full border-2 border-red-200">
                           <Image
-                            src="/placeholder.svg?height=200&width=200"
+                            src="/values-compassion.png"
                             alt="Compassionate care"
                             fill
                             className="object-cover"
@@ -347,7 +406,7 @@ export default function AboutUs() {
                       <div className="flex-none w-[280px] snap-center text-center bg-white rounded-lg p-[1.5rem] border border-red-100">
                         <div className="relative w-[6rem] h-[6rem] mx-auto mb-[1rem] overflow-hidden bg-slate-100 rounded-full border-2 border-red-200">
                           <Image
-                            src="/placeholder.svg?height=200&width=200"
+                            src="/values-innovation.jpg"
                             alt="Healthcare innovation"
                             fill
                             className="object-cover"
@@ -371,9 +430,24 @@ export default function AboutUs() {
 
                     {/* Pagination Dots */}
                     <div className="flex justify-center mt-[1.5rem] gap-[0.5rem]">
-                      <div className="w-[0.5rem] h-[0.5rem] rounded-full bg-red-600 transition-all duration-300"></div>
-                      <div className="w-[0.5rem] h-[0.5rem] rounded-full bg-red-200 transition-all duration-300"></div>
-                      <div className="w-[0.5rem] h-[0.5rem] rounded-full bg-red-200 transition-all duration-300"></div>
+                      <button
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                          activeValueSlide === 0 ? 'bg-red-600' : 'bg-red-200'
+                        }`}
+                        onClick={() => scrollToValueSlide(0)}
+                      ></button>
+                      <button
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                          activeValueSlide === 1 ? 'bg-red-600' : 'bg-red-200'
+                        }`}
+                        onClick={() => scrollToValueSlide(1)}
+                      ></button>
+                      <button
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                          activeValueSlide === 2 ? 'bg-red-600' : 'bg-red-200'
+                        }`}
+                        onClick={() => scrollToValueSlide(2)}
+                      ></button>
                     </div>
                   </div>
                 </div>
@@ -381,7 +455,7 @@ export default function AboutUs() {
             </div>
             {/* Diagonal divider line accent */}
             <div
-              className="absolute top-0 left-0 right-0 h-[0.25rem] bg-gradient-to-r from-red-500/20 via-blue-500/40 to-red-500/20"
+              className="absolute top-0 left-0 right-0 h-[0.25rem] bg-secondary"
               style={{
                 clipPath: 'polygon(0 100%, 100% 0, 100% 100%, 0 100%)',
               }}
@@ -403,12 +477,12 @@ export default function AboutUs() {
           <div className="relative z-10 max-w-[75rem] mx-auto px-[1.5rem]">
             <div className="text-center mb-[3rem] md:mb-[4rem]">
               <h2
-                className="text-[2rem] md:text-[2.5rem] lg:text-[3rem] font-light text-slate-800 mb-[1.5rem] leading-[1.2]"
+                className="text-[2rem] md:text-[2.5rem] lg:text-[3rem] font-light text-primary mb-[1.5rem] leading-[1.2]"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
                 Our Services
               </h2>
-              <div className="w-[4rem] h-[0.125rem] bg-slate-400 mx-auto mb-[1.5rem]"></div>
+              <div className="w-[4rem] h-[0.125rem] bg-secondary mx-auto mb-[1.5rem]"></div>
               <p
                 className="text-[1.125rem] md:text-[1.25rem] text-slate-600 max-w-[50rem] mx-auto leading-[1.6] font-light"
                 style={{ fontFamily: "'Cinzel', serif" }}
@@ -425,7 +499,7 @@ export default function AboutUs() {
                 {/* Service Header Image */}
                 <div className="relative h-[12rem] overflow-hidden bg-slate-100">
                   <Image
-                    src="/placeholder.svg?height=300&width=400"
+                    src="/services-primary.jpg"
                     alt="Primary care examination"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -433,9 +507,9 @@ export default function AboutUs() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 </div>
                 <div className="relative z-10 p-[2rem] md:p-[2.5rem]">
-                  <div className="w-[3rem] h-[0.125rem] bg-blue-600 mb-[1.5rem]"></div>
+                  <div className="w-[3rem] h-[0.125rem] bg-secondary mb-[1.5rem]"></div>
                   <h3
-                    className="text-[1.375rem] md:text-[1.5rem] font-medium text-slate-800 mb-[1rem] leading-[1.3]"
+                    className="text-[1.375rem] md:text-[1.5rem] font-medium text-primary mb-[1rem] leading-[1.3]"
                     style={{ fontFamily: "'Cinzel', serif" }}
                   >
                     Primary Care
@@ -465,7 +539,7 @@ export default function AboutUs() {
                 {/* Service Header Image */}
                 <div className="relative h-[12rem] overflow-hidden bg-slate-100">
                   <Image
-                    src="/placeholder.svg?height=300&width=400"
+                    src="/services-mental.jpg"
                     alt="Mental health therapy session"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -473,9 +547,9 @@ export default function AboutUs() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 </div>
                 <div className="relative z-10 p-[2rem] md:p-[2.5rem]">
-                  <div className="w-[3rem] h-[0.125rem] bg-red-600 mb-[1.5rem]"></div>
+                  <div className="w-[3rem] h-[0.125rem] bg-secondary mb-[1.5rem]"></div>
                   <h3
-                    className="text-[1.375rem] md:text-[1.5rem] font-medium text-slate-800 mb-[1rem] leading-[1.3]"
+                    className="text-[1.375rem] md:text-[1.5rem] font-medium text-primary mb-[1rem] leading-[1.3]"
                     style={{ fontFamily: "'Cinzel', serif" }}
                   >
                     Psychological & Mental Health
@@ -505,7 +579,7 @@ export default function AboutUs() {
                 {/* Service Header Image */}
                 <div className="relative h-[12rem] overflow-hidden bg-slate-100">
                   <Image
-                    src="/placeholder.svg?height=300&width=400"
+                    src="/services-aesthetic.jpg"
                     alt="Aesthetic medical treatment"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -513,9 +587,9 @@ export default function AboutUs() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 </div>
                 <div className="relative z-10 p-[2rem] md:p-[2.5rem]">
-                  <div className="w-[3rem] h-[0.125rem] bg-blue-600 mb-[1.5rem]"></div>
+                  <div className="w-[3rem] h-[0.125rem] bg-secondary mb-[1.5rem]"></div>
                   <h3
-                    className="text-[1.375rem] md:text-[1.5rem] font-medium text-slate-800 mb-[1rem] leading-[1.3]"
+                    className="text-[1.375rem] md:text-[1.5rem] font-medium text-primary mb-[1rem] leading-[1.3]"
                     style={{ fontFamily: "'Cinzel', serif" }}
                   >
                     Aesthetic Services
@@ -552,7 +626,7 @@ export default function AboutUs() {
                   <div className="flex-none w-[300px] snap-center bg-white border border-slate-200 overflow-hidden rounded-lg">
                     <div className="relative h-[10rem] overflow-hidden bg-slate-100">
                       <Image
-                        src="/placeholder.svg?height=300&width=400"
+                        src="/services-primary.jpg"
                         alt="Primary care examination"
                         fill
                         className="object-cover"
@@ -562,7 +636,7 @@ export default function AboutUs() {
                     <div className="p-[1.5rem]">
                       <div className="w-[2.5rem] h-[0.125rem] bg-blue-600 mb-[1rem]"></div>
                       <h3
-                        className="text-[1.125rem] font-medium text-slate-800 mb-[0.75rem] leading-[1.3]"
+                        className="text-[1.125rem] font-medium text-primary mb-[0.75rem] leading-[1.3]"
                         style={{ fontFamily: "'Cinzel', serif" }}
                       >
                         Primary Care
@@ -588,7 +662,7 @@ export default function AboutUs() {
                   <div className="flex-none w-[300px] snap-center bg-white border border-slate-200 overflow-hidden rounded-lg">
                     <div className="relative h-[10rem] overflow-hidden bg-slate-100">
                       <Image
-                        src="/placeholder.svg?height=300&width=400"
+                        src="/services-mental.jpg"
                         alt="Mental health therapy session"
                         fill
                         className="object-cover"
@@ -598,7 +672,7 @@ export default function AboutUs() {
                     <div className="p-[1.5rem]">
                       <div className="w-[2.5rem] h-[0.125rem] bg-red-600 mb-[1rem]"></div>
                       <h3
-                        className="text-[1.125rem] font-medium text-slate-800 mb-[0.75rem] leading-[1.3]"
+                        className="text-[1.125rem] font-medium text-primary mb-[0.75rem] leading-[1.3]"
                         style={{ fontFamily: "'Cinzel', serif" }}
                       >
                         Mental Health
@@ -624,7 +698,7 @@ export default function AboutUs() {
                   <div className="flex-none w-[300px] snap-center bg-white border border-slate-200 overflow-hidden rounded-lg">
                     <div className="relative h-[10rem] overflow-hidden bg-slate-100">
                       <Image
-                        src="/placeholder.svg?height=300&width=400"
+                        src="/services-aesthetic.jpg"
                         alt="Aesthetic medical treatment"
                         fill
                         className="object-cover"
@@ -634,7 +708,7 @@ export default function AboutUs() {
                     <div className="p-[1.5rem]">
                       <div className="w-[2.5rem] h-[0.125rem] bg-blue-600 mb-[1rem]"></div>
                       <h3
-                        className="text-[1.125rem] font-medium text-slate-800 mb-[0.75rem] leading-[1.3]"
+                        className="text-[1.125rem] font-medium text-primary mb-[0.75rem] leading-[1.3]"
                         style={{ fontFamily: "'Cinzel', serif" }}
                       >
                         Aesthetic Services
@@ -660,9 +734,24 @@ export default function AboutUs() {
 
                 {/* Pagination Dots */}
                 <div className="flex justify-center mt-[1.5rem] gap-[0.5rem]">
-                  <div className="w-[0.5rem] h-[0.5rem] rounded-full bg-blue-600 transition-all duration-300"></div>
-                  <div className="w-[0.5rem] h-[0.5rem] rounded-full bg-slate-300 transition-all duration-300"></div>
-                  <div className="w-[0.5rem] h-[0.5rem] rounded-full bg-slate-300 transition-all duration-300"></div>
+                  <button
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                      activeServiceSlide === 0 ? 'bg-blue-600' : 'bg-slate-300'
+                    }`}
+                    onClick={() => scrollToServiceSlide(0)}
+                  ></button>
+                  <button
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                      activeServiceSlide === 1 ? 'bg-blue-600' : 'bg-slate-300'
+                    }`}
+                    onClick={() => scrollToServiceSlide(1)}
+                  ></button>
+                  <button
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                      activeServiceSlide === 2 ? 'bg-blue-600' : 'bg-slate-300'
+                    }`}
+                    onClick={() => scrollToServiceSlide(2)}
+                  ></button>
                 </div>
               </div>
             </div>
@@ -672,15 +761,16 @@ export default function AboutUs() {
         </section>
 
         {/* Contact CTA Section */}
-        <section className="py-[3rem] md:py-[4rem] bg-slate-800 text-white relative overflow-hidden">
+        <section className="py-[3rem] md:py-[4rem] text-white relative overflow-hidden">
           {/* CTA Background Image */}
-          <div className="absolute inset-0 z-0 opacity-[0.1]">
+          <div className="absolute inset-0 z-0">
             <Image
-              src="/placeholder.svg?height=400&width=1200"
+              src="/about-hospital-footer.jpg"
               alt="Healthcare team"
               fill
               className="object-cover"
             />
+            <div className="absolute inset-0 bg-primary/90"></div>
           </div>
           <div className="relative z-10 max-w-[75rem] mx-auto px-[1.5rem] text-center">
             <h3
@@ -706,7 +796,7 @@ export default function AboutUs() {
               </a>
               <a
                 href="#contact"
-                className="inline-flex items-center px-[2rem] py-[0.75rem] border border-blue-400 hover:border-blue-500 text-blue-400 hover:text-blue-500 font-medium transition-colors duration-200 text-[1rem]"
+                className="inline-flex items-center px-[2rem] py-[0.75rem] border border-white hover:bg-white text-white hover:text-primary font-medium transition-colors duration-200 text-[1rem]"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
                 Schedule Online
