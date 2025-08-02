@@ -229,7 +229,7 @@ export default function Testimonials() {
                     </Button>
                     <CardContent className="p-8 text-center flex flex-col justify-center h-full space-y-6 font-serif">
                       <Quote
-                        className="w-12 h-12 text-blue-600 mx-auto"
+                        className="w-12 h-12 text-primary mx-auto"
                         aria-hidden="true"
                       />
                       <div
@@ -239,7 +239,7 @@ export default function Testimonials() {
                         {[...Array(currentTestimonial.rating)].map((_, i) => (
                           <Star
                             key={i}
-                            className="w-5 h-5 text-blue-400 fill-current"
+                            className="w-5 h-5 text-secondary fill-current"
                             aria-hidden="true"
                           />
                         ))}
@@ -248,8 +248,8 @@ export default function Testimonials() {
                         <span>&quot;{currentTestimonial.content}&quot;</span>
                       </blockquote>
                       <div className="flex flex-col items-center space-y-3">
-                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-blue-600 font-semibold text-lg font-serif">
+                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                          <span className="text-primary font-semibold text-lg font-serif">
                             {currentTestimonial.name
                               .split(' ')
                               .map((n) => n[0])
@@ -310,11 +310,11 @@ export default function Testimonials() {
                   viewport={{ once: true }}
                   className="flex-1"
                 >
-                  <Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 h-full border-t-4 border-t-blue-500">
+                  <Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 h-full border-t-4 border-t-primary">
                     <CardContent className="p-4 h-full">
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <Award className="w-4 h-4 text-blue-600" />
+                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                          <Award className="w-4 h-4 text-primary" />
                         </div>
                         <h4 className="text-sm font-semibold text-slate-800 font-serif">
                           Recent Awards
@@ -324,9 +324,9 @@ export default function Testimonials() {
                         {awards.slice(0, 2).map((award, index) => (
                           <div
                             key={index}
-                            className="flex items-start gap-2 p-2 bg-blue-50 rounded-lg"
+                            className="flex items-start gap-2 p-2 bg-primary/5 rounded-lg"
                           >
-                            <CheckCircle className="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5" />
+                            <CheckCircle className="w-3 h-3 text-primary flex-shrink-0 mt-0.5" />
                             <span className="text-xs text-slate-700 leading-tight font-serif">
                               {award}
                             </span>
@@ -345,11 +345,11 @@ export default function Testimonials() {
                   viewport={{ once: true }}
                   className="flex-1"
                 >
-                  <Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 h-full border-b-4 border-b-blue-500">
+                  <Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300 h-full border-b-4 border-b-primary">
                     <CardContent className="p-4 h-full">
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <Shield className="w-4 h-4 text-blue-600" />
+                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                          <Shield className="w-4 h-4 text-primary" />
                         </div>
                         <h4 className="text-sm font-semibold text-slate-800 font-serif">
                           Certifications
@@ -359,9 +359,9 @@ export default function Testimonials() {
                         {certifications.map((cert, index) => (
                           <div
                             key={index}
-                            className="flex items-center gap-1 p-2 bg-blue-50 rounded-lg"
+                            className="flex items-center gap-1 p-2 bg-primary/5 rounded-lg"
                           >
-                            <Building className="w-3 h-3 text-blue-500 flex-shrink-0" />
+                            <Building className="w-3 h-3 text-primary flex-shrink-0" />
                             <span className="text-xs text-slate-700 leading-tight font-serif">
                               {cert}
                             </span>
