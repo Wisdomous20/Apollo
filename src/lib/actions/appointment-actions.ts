@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "../utils";
-import { $Enums } from "../../../generated/prisma";
+import { $Enums } from "@/generated/client";
 
 interface AppointmentData {
   dateRequested: Date;
