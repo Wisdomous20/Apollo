@@ -153,81 +153,77 @@ export default function Navigation() {
                     </a>
                   ))}
                 </div>
-                {/* Account actions dropdown for mobile */}
-                <div className="mt-6 border-t border-gray-100 pt-4">
-                  <div className="flex flex-col gap-2">
-                    <button
-                      className="flex items-center gap-3 px-[1.2em] py-[0.7em] rounded-lg text-[#000080] font-semibold hover:bg-slate-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#000080] focus-visible:ring-offset-2"
-                      onClick={() => {
-                        window.location.href = '/account';
-                        setIsMenuOpen(false);
-                      }}
+
+                {/* Show login button if not logged in */}
+                {!tokenStatus ? (
+                  <div className="mt-6 border-t border-gray-100 pt-4">
+                    <a
+                      href="/login"
+                      className="block px-[1.2em] py-[0.7em] sm:px-[1.5em] sm:py-[1em] text-[#000080] font-bold rounded-full transition-all text-[clamp(1rem,1.2vw,1.15rem)] sm:text-[clamp(1.1rem,1.5vw,1.25rem)] hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#000080] focus-visible:ring-offset-2"
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      <svg
-                        className="w-5 h-5 text-[#000080]"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        focusable="false"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      Profile & Appointments
-                    </button>
-                    <button
-                      className="flex items-center gap-3 px-[1.2em] py-[0.7em] rounded-lg text-[#000080] font-semibold hover:bg-slate-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#000080] focus-visible:ring-offset-2"
-                      onClick={() => {
-                        window.location.href = '/account/settings';
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      <svg
-                        className="w-5 h-5 text-[#000080]"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        focusable="false"
-                      >
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 007 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.09A1.65 1.65 0 0012 5.1V5a2 2 0 014 0v.09a1.65 1.65 0 001 1.51h.09a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.09a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-                      </svg>
-                      Settings
-                    </button>
-                    <button
-                      className="flex items-center gap-3 px-[1.2em] py-[0.7em] rounded-lg text-red-600 font-semibold hover:bg-red-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
-                      onClick={() => {
-                        /* TODO: implement logout */ setIsMenuOpen(false);
-                      }}
-                    >
-                      <svg
-                        className="w-5 h-5 text-red-600"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        focusable="false"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"
-                        />
-                      </svg>
-                      Logout
-                    </button>
+                      Login
+                    </a>
                   </div>
-                </div>
+                ) : (
+                  /* Account actions dropdown for logged in users */
+                  <div className="mt-6 border-t border-gray-100 pt-4">
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className="flex items-center gap-3 px-[1.2em] py-[0.7em] rounded-lg text-[#000080] font-semibold hover:bg-slate-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#000080] focus-visible:ring-offset-2"
+                        onClick={() => {
+                          window.location.href = '/account';
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        <svg
+                          className="w-5 h-5 text-[#000080]"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                        Profile & Appointments
+                      </button>
+                      <button
+                        className="flex items-center gap-3 px-[1.2em] py-[0.7em] rounded-lg text-red-600 font-semibold hover:bg-red-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                        onClick={() => {
+                          localStorage.removeItem("accessToken");
+                          setIsMenuOpen(false);
+                          window.location.href = "/"
+                        }}
+                      >
+                        <svg
+                          className="w-5 h-5 text-red-600"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"
+                          />
+                        </svg>
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
+
           </div>
         </div>
       </nav>
