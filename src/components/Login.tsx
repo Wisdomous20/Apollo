@@ -34,11 +34,6 @@ const registerSchema = z
     path: ['confirmPassword'],
   });
 
-const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(1, 'Password is required'),
-});
-
 const heroSlides = [
   {
     title: 'Excellence',
@@ -367,11 +362,10 @@ export default function SignupForm() {
             {heroSlides.map((_, index) => (
               <motion.button
                 key={index}
-                className={`h-1 rounded transition-all duration-300 ${
-                  index === currentSlide
-                    ? 'w-6 sm:w-8 bg-white'
-                    : 'w-6 sm:w-8 bg-white/30 hover:bg-white/50'
-                }`}
+                className={`h-1 rounded transition-all duration-300 ${index === currentSlide
+                  ? 'w-6 sm:w-8 bg-white'
+                  : 'w-6 sm:w-8 bg-white/30 hover:bg-white/50'
+                  }`}
                 onClick={() => setCurrentSlide(index)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
