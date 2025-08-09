@@ -10,6 +10,7 @@ import { verifyAccessToken } from '@/lib/actions/jwt-actions';
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [tokenStatus, setTokenStatus] = useState(false);
+  const [accountType, setAccountType] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -22,6 +23,7 @@ export default function Navigation() {
           setTokenStatus(true);
           setName(verifyToken.name);
           setEmail(verifyToken.email);
+          setAccountType(verifyToken.userType);
         } else {
           setTokenStatus(false);
         }
@@ -100,7 +102,7 @@ export default function Navigation() {
 
                 {/* Account Dropdown (desktop only) */}
                 {tokenStatus ? (
-                  <AccountDropdown name={name} email={email} />
+                  <AccountDropdown name={name} email={email} accountType={accountType} />
                 ) : (
                   <a
                     href="/login"
@@ -223,7 +225,6 @@ export default function Navigation() {
                 )}
               </div>
             )}
-
           </div>
         </div>
       </nav>

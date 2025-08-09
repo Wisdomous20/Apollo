@@ -5,9 +5,7 @@ import { motion } from 'framer-motion';
 import {
   User,
   LogOut,
-  Calendar,
   ChevronDown,
-  LogIn,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -19,20 +17,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export default function AccountDropdown({ name, email }: { name?: string; email?: string }) {
+export default function AccountDropdown({ name, email, accountType }: { name?: string; email?: string; accountType?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleProfileClick = () => {
     // Navigate to account page
-    window.location.href = '/account';
-  };
-  const handleLogin = () => {
-    window.location.href = '/login';
-  };
-
-  const handleAppointmentsClick = () => {
-    // Navigate to account page and scroll to appointments section
-    window.location.href = '/account#appointments';
+    if (accountType === "DOCTOR") {
+      window.location.href = "/admin"
+    } else {
+      window.location.href = '/account';
+    }
   };
 
   const handleLogoutClick = () => {
@@ -92,20 +86,7 @@ export default function AccountDropdown({ name, email }: { name?: string; email?
           <span>My Profile</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem
-          onClick={handleAppointmentsClick}
-          className="cursor-pointer"
-        >
-          <Calendar className="mr-2 h-4 w-4" />
-          <span>Appointments</span>
-        </DropdownMenuItem>
-
         <DropdownMenuSeparator />
-
-        <DropdownMenuItem onClick={handleLogin} className="cursor-pointer">
-          <LogIn className="mr-2 h-4 w-4" />
-          <span>Login</span>
-        </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
