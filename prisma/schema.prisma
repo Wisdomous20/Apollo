@@ -21,16 +21,17 @@ enum AppointmentStatus {
 }
 
 model User {
-  id                  String        @id @default(cuid()) @map("_id")
+  id                  String               @id @default(cuid()) @map("_id")
   name                String
-  email               String        @unique
+  email               String               @unique
   avatar              String?
   phoneNumber         String
   password            String
   dateJoined          DateTime
   userType            UserType
-  doctorAppointments  Appointment[] @relation("DoctorAppointments")
-  patientAppointments Appointment[] @relation("PatientAppointments")
+  doctorAppointments  Appointment[]        @relation("DoctorAppointments")
+  patientAppointments Appointment[]        @relation("PatientAppointments")
+  doctorAvailability  DoctorAvailability[] @relation("DoctorAvailability")
 }
 
 model Appointment {
@@ -44,4 +45,12 @@ model Appointment {
   doctorId      String
   patient       User              @relation("PatientAppointments", fields: [patientId], references: [id])
   patientId     String
+}
+
+model DoctorAvailability {
+  id          String   @id @default(cuid()) @map("_id")
+  doctorId    String
+  doctor      User     @relation("DoctorAvailability", fields: [doctorId], references: [id])
+  date        DateTime
+  isAvailable Boolean  @default(false)
 }

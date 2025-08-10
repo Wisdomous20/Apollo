@@ -135,6 +135,13 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   patientId: 'patientId'
 };
 
+exports.Prisma.DoctorAvailabilityScalarFieldEnum = {
+  id: 'id',
+  doctorId: 'doctorId',
+  date: 'date',
+  isAvailable: 'isAvailable'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -157,7 +164,8 @@ exports.AppointmentStatus = exports.$Enums.AppointmentStatus = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Appointment: 'Appointment'
+  Appointment: 'Appointment',
+  DoctorAvailability: 'DoctorAvailability'
 };
 
 /**
