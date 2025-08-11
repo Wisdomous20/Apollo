@@ -4,14 +4,14 @@ import type React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Calendar, UserCheck, Phone, Heart } from 'lucide-react';
+import { CalendarIcon, UserCheck, Phone, Heart } from 'lucide-react';
 import { Calendar as DayPicker } from "@/components/ui/calendar";
 import { motion, AnimatePresence } from 'framer-motion';
 import { User } from '@/types/account';
 import { getAllDoctors } from '@/lib/actions/user-actions';
 import { bookAppointment } from '@/lib/actions/appointment-actions';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
-import { getAllReservedDays } from '@/lib/actions/doctor-actions';
+import { getReservedDays } from '@/lib/actions/doctor-actions';
 
 // Service and pricing data
 const services = [
@@ -38,6 +38,8 @@ export function BookingForm() {
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
+  const [hasSelectedDoctor, setHasSelectedDoctor] = useState(false);
+
   // Initialize form data with default values
 
   useEffect(() => {
@@ -57,14 +59,17 @@ export function BookingForm() {
       const doctorsData = await getAllDoctors();
       setDoctorLists(doctorsData);
     }
-
-    async function fetchReservedDays() {
-      const days = await getAllReservedDays();
-      setReservedDays(days.map(d => new Date(d.date)));
-    }
-    fetchReservedDays();
     fetchDoctors();
   }, []);
+
+  useEffect(() => {
+    async function fetchReservedDays() {
+      if (!formData.doctor) return;
+      const reserved = await getReservedDays(formData.doctor);
+      setReservedDays(reserved.map(r => new Date(r.date)));
+    }
+    fetchReservedDays();
+  }, [formData.doctor]);
 
   useEffect(() => {
     const today = new Date();
@@ -112,6 +117,13 @@ export function BookingForm() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleDoctorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const doctorId = e.target.value;
+    console.log("Selected doctor ID:", doctorId);
+    setFormData((prev) => ({ ...prev, doctor: doctorId }));
+    setHasSelectedDoctor(!!doctorId);
+  }
 
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
@@ -293,7 +305,7 @@ export function BookingForm() {
             <div className="grid grid-cols-2 gap-3">
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
+                  <CalendarIcon className="w-3 h-3" />
                   Date
                 </label>
                 <Button
@@ -307,7 +319,7 @@ export function BookingForm() {
               </motion.div>
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
+                  <CalendarIcon className="w-3 h-3" />
                   Time
                 </label>
                 <select
@@ -439,7 +451,7 @@ export function BookingForm() {
             <div className="grid grid-cols-2 gap-4">
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <CalendarIcon className="w-4 h-4" />
                   Date
                 </label>
                 <Button
@@ -453,7 +465,7 @@ export function BookingForm() {
               </motion.div>
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <CalendarIcon className="w-4 h-4" />
                   Time
                 </label>
                 <select
@@ -570,7 +582,7 @@ export function BookingForm() {
               <select
                 name="doctor"
                 value={formData.doctor}
-                onChange={handleInputChange}
+                onChange={handleDoctorChange}
                 className="bg-input border border-border rounded-md px-3 py-2 w-full focus:outline-none"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
@@ -587,12 +599,13 @@ export function BookingForm() {
               variants={fieldVariants}
             >
               <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 Date
               </label>
               <Button
                 variant="outline"
                 className="w-full h-9 text-xs"
+                disabled={!hasSelectedDoctor}
                 onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
@@ -604,7 +617,7 @@ export function BookingForm() {
               variants={fieldVariants}
             >
               <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 Time
               </label>
               <select
