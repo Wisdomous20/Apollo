@@ -152,7 +152,7 @@ export function BookingForm() {
 
     setIsSubmitting(true);
     try {
-      await bookAppointment({
+      const submision = await bookAppointment({
         dateRequested: formData.selectedDate ? new Date(formData.selectedDate) : new Date(),
         timeRequested: formData.selectedTime,
         serviceType: formData.service,
@@ -160,6 +160,12 @@ export function BookingForm() {
         patientId: userId,
         description: formData.service,
       })
+
+      if (typeof submision === 'string') {
+        alert(submision);
+        return;
+      }
+
       alert(
         `Appointment request submitted successfully!\n\nService: ${formData.service}\nDoctor: ${formData.doctor}\nDate: ${formData.selectedDate}`
       );
