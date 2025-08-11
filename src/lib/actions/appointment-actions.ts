@@ -13,6 +13,17 @@ interface AppointmentData {
 }
 
 export async function bookAppointment(data: AppointmentData) {
+
+  const reservationExists = await prisma.appointment.findFirst({
+    where: {
+      dateRequested: data.dateRequested,
+      timeRequested: data.timeRequested,
+      doctorId: data.doctorId
+    }
+  });
+
+  if (reservationExists) return "This date and time is already reserved. Please select another schedule."
+
   return await prisma.appointment.create({
     data
   })

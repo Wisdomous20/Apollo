@@ -1,14 +1,8 @@
 'use client';
 
-// import { useCallback } from "react";
 import { BookingForm } from './BookingForm';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-// import Link from 'next/link';
-// import { Button } from '@/components/ui/button';
-// import { useState, useEffect } from 'react';
-// import ScheduleVisitModal from '@/components/account/ScheduleVisitModal';
-
 // Export services array for use in Services.tsx
 export const services = [
   { title: 'Primary Care' },
@@ -101,7 +95,6 @@ export default function Hero() {
       </div>
 
       {/* ===== TEXT CONTENT SECTION ===== */}
-      {/* Mobile: Near top, Desktop: Left 60% */}
       <motion.div
         className="relative z-20 
           w-full pt-16 pb-20 px-4
