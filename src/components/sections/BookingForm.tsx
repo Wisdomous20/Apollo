@@ -286,7 +286,7 @@ export function BookingForm() {
                 <select
                   name="doctor"
                   value={formData.doctor}
-                  onChange={handleInputChange}
+                  onChange={handleDoctorChange}
                   className="bg-input border border-border rounded-md px-2 py-2 w-full focus:outline-none text-xs h-9"
                   style={{ fontFamily: "'Cinzel', serif" }}
                 >
@@ -432,7 +432,7 @@ export function BookingForm() {
                 <select
                   name="doctor"
                   value={formData.doctor}
-                  onChange={handleInputChange}
+                  onChange={handleDoctorChange}
                   className="bg-input border border-border rounded-md px-3 py-2 w-full focus:outline-none"
                   style={{ fontFamily: "'Cinzel', serif" }}
                 >
