@@ -120,7 +120,6 @@ export function BookingForm() {
 
   const handleDoctorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const doctorId = e.target.value;
-    console.log("Selected doctor ID:", doctorId);
     setFormData((prev) => ({ ...prev, doctor: doctorId }));
     setHasSelectedDoctor(!!doctorId);
   }
