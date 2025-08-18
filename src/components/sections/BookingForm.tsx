@@ -1,7 +1,7 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import type React from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CalendarIcon, UserCheck, Phone, Heart } from 'lucide-react';
@@ -12,6 +12,7 @@ import { getAllDoctors } from '@/lib/actions/user-actions';
 import { bookAppointment } from '@/lib/actions/appointment-actions';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
 import { getReservedDays } from '@/lib/actions/doctor-actions';
+import { sendEmail } from '@/lib/actions/email-actions';
 
 // Service and pricing data
 const services = [
@@ -35,13 +36,11 @@ export function BookingForm() {
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [reservedDays, setReservedDays] = useState<Date[]>([]);
-
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
   const [hasSelectedDoctor, setHasSelectedDoctor] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   // Initialize form data with default values
-
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -49,6 +48,7 @@ export function BookingForm() {
         if (user) {
           setToken(token);
           setUserId(user.userId);
+          setUserEmail(user.email);
         }
       });
     }
@@ -160,6 +160,8 @@ export function BookingForm() {
         patientId: userId,
         description: formData.service,
       })
+
+      await sendEmail(userEmail);
 
       if (typeof submision === 'string') {
         alert(submision);
