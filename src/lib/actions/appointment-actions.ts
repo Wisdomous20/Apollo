@@ -2,6 +2,8 @@
 
 import { prisma } from "../utils";
 import { $Enums } from "@/generated/client";
+import { verifyAccessToken } from "../auth";
+import { cookies } from "next/headers";
 
 interface AppointmentData {
   dateRequested: Date;
@@ -9,6 +11,22 @@ interface AppointmentData {
   serviceType: string;
   description: string;
   patientId: string;
+}
+
+async function verifyDoctorAuth() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('accessToken')?.value;
+
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+
+  const payload = verifyAccessToken(token);
+  if (!payload || payload.userType !== 'DOCTOR') {
+    throw new Error('Doctor access required');
+  }
+
+  return payload;
 }
 
 export async function bookAppointment(data: AppointmentData) {
@@ -28,6 +46,9 @@ export async function bookAppointment(data: AppointmentData) {
 }
 
 export async function getAllAppointments() {
+  // Verify doctor authorization
+  await verifyDoctorAuth();
+
   const result = await prisma.appointment.findMany({
     include: {
       patient: true
@@ -49,6 +70,9 @@ export async function getAppointmentsByUserId(id: string) {
 }
 
 export async function handleAppointmentStatus(appointmentId: string, status: $Enums.AppointmentStatus) {
+  // Verify doctor authorization
+  await verifyDoctorAuth();
+
   await prisma.appointment.update({
     where: {
       id: appointmentId

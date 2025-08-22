@@ -66,6 +66,15 @@ export async function POST(request: NextRequest) {
       path: '/',
     });
 
+    // Set access token as HTTP-only cookie for server actions
+    response.cookies.set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000, // 15 minutes (same as token expiry)
+      path: '/',
+    });
+
     return response;
   } catch (error) {
     console.error('Token refresh error:', error);

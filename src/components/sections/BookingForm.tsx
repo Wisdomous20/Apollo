@@ -9,7 +9,7 @@ import { Calendar as DayPicker } from "@/components/ui/calendar";
 import { motion, AnimatePresence } from 'framer-motion';
 import { bookAppointment } from '@/lib/actions/appointment-actions';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
-import { getReservedDays } from '@/lib/actions/doctor-actions';
+import { getPublicReservedDays } from '@/lib/actions/doctor-actions';
 import { sendEmail } from '@/lib/actions/email-actions';
 
 // Service and pricing data
@@ -51,7 +51,7 @@ export function BookingForm() {
 
   useEffect(() => {
     async function fetchReservedDays() {
-      const reserved = await getReservedDays();
+      const reserved = await getPublicReservedDays();
 
       if (!reserved) return;
 

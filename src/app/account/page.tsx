@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import AccountTabs from '@/components/account/AccountTabs';
@@ -10,55 +11,71 @@ import { getUserFromToken } from '@/lib/actions/jwt-actions';
 import { getUserById } from '@/lib/actions/user-actions';
 
 export default function AccountPage() {
-
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [appointments, setAppointments] = useState<Appointment[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    setToken(token);
-  }, []);
+    async function checkAuthAndFetchData() {
+      const localToken = localStorage.getItem('accessToken');
 
-  useEffect(() => {
-    async function fetchAppointments() {
-      setIsLoading(true);
+      if (!localToken) {
+        router.push('/login');
+        return;
+      }
+      setToken(localToken);
+
       try {
-        if (!token) {
-          console.log("No token. Please try Again.")
-          return;
-        }
-        const user = await getUserFromToken(token);
+        setIsLoading(true);
+
+        const user = await getUserFromToken(localToken);
         if (!user) {
-          console.error('Invalid or missing token');
+          router.push('/login');
           return;
         }
+
+        setIsAuthenticated(true);
+
         const [userData, appointmentsData] = await Promise.all([
           getUserById(user.userId),
           getAppointmentsByUserId(user.userId)
-        ])
+        ]);
+
         if (typeof userData === 'string' || !appointmentsData) {
-          console.error('Failed to fetch appointments');
+          console.error('Failed to fetch user data');
+          setIsLoading(false);
         } else {
           setAppointments(appointmentsData);
           setUser(userData);
+          setIsLoading(false);
         }
       } catch (error) {
-        console.error('Error fetching appointments:', error);
-      } finally {
+        console.error('Error during authentication or data fetch:', error);
         setIsLoading(false);
+        router.push('/account?tab=login');
       }
     }
-    fetchAppointments();
-  }, [token]);
+
+    checkAuthAndFetchData();
+  }, [token, router]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <p className="text-lg text-slate-600">Loading...</p>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading your account...</p>
+        </div>
       </div>
     );
+  }
+
+  // Don't render account content if not authenticated
+  if (!isAuthenticated || !user || !appointments) {
+    return null;
   }
 
   return (
