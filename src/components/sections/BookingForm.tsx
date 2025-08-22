@@ -4,11 +4,9 @@ import { useState, useEffect } from 'react';
 import type React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CalendarIcon, UserCheck, Phone, Heart } from 'lucide-react';
+import { CalendarIcon, Phone, Heart } from 'lucide-react';
 import { Calendar as DayPicker } from "@/components/ui/calendar";
 import { motion, AnimatePresence } from 'framer-motion';
-import { User } from '@/types/account';
-import { getAllDoctors } from '@/lib/actions/user-actions';
 import { bookAppointment } from '@/lib/actions/appointment-actions';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
 import { getReservedDays } from '@/lib/actions/doctor-actions';
@@ -28,16 +26,13 @@ export function BookingForm() {
     selectedDate: '',
     selectedTime: '',
     service: '',
-    doctor: '',
     phone: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [doctorLists, setDoctorLists] = useState<User[]>([]);
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [reservedDays, setReservedDays] = useState<Date[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [hasSelectedDoctor, setHasSelectedDoctor] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
   // Initialize form data with default values
@@ -55,21 +50,15 @@ export function BookingForm() {
   }, []);
 
   useEffect(() => {
-    async function fetchDoctors() {
-      const doctorsData = await getAllDoctors();
-      setDoctorLists(doctorsData);
-    }
-    fetchDoctors();
-  }, []);
-
-  useEffect(() => {
     async function fetchReservedDays() {
-      if (!formData.doctor) return;
-      const reserved = await getReservedDays(formData.doctor);
+      const reserved = await getReservedDays();
+
+      if (!reserved) return;
+
       setReservedDays(reserved.map(r => new Date(r.date)));
     }
     fetchReservedDays();
-  }, [formData.doctor]);
+  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -79,7 +68,6 @@ export function BookingForm() {
       selectedDate: tomorrow.toISOString().split('T')[0],
       selectedTime: '09:00',
       service: '',
-      doctor: '',
       phone: '',
     });
   }, []);
@@ -118,12 +106,6 @@ export function BookingForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDoctorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const doctorId = e.target.value;
-    setFormData((prev) => ({ ...prev, doctor: doctorId }));
-    setHasSelectedDoctor(!!doctorId);
-  }
-
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
     if (reservedDays.some(d => d.toDateString() === date.toDateString())) {
@@ -140,7 +122,7 @@ export function BookingForm() {
   };
 
   const handleSubmit = async () => {
-    if (!formData.service || !formData.doctor || !formData.phone) {
+    if (!formData.service || !formData.phone) {
       alert('Please fill in all required fields.');
       return;
     }
@@ -156,7 +138,6 @@ export function BookingForm() {
         dateRequested: formData.selectedDate ? new Date(formData.selectedDate) : new Date(),
         timeRequested: formData.selectedTime,
         serviceType: formData.service,
-        doctorId: formData.doctor,
         patientId: userId,
         description: formData.service,
       })
@@ -169,7 +150,7 @@ export function BookingForm() {
       }
 
       alert(
-        `Appointment request submitted successfully!\n\nService: ${formData.service}\nDoctor: ${formData.doctor}\nDate: ${formData.selectedDate}`
+        `Appointment request submitted successfully!\n\nService: ${formData.service}\nDate: ${formData.selectedDate}`
       );
 
       // Reset form
@@ -180,7 +161,6 @@ export function BookingForm() {
         selectedDate: tomorrow.toISOString().split('T')[0],
         selectedTime: '09:00',
         service: '',
-        doctor: '',
         phone: '',
       });
     } catch {
@@ -282,26 +262,6 @@ export function BookingForm() {
                   {services.map((service) => (
                     <option key={service.id} value={service.id}>
                       {service.icon} {service.name}
-                    </option>
-                  ))}
-                </select>
-              </motion.div>
-              <motion.div className="space-y-2" variants={fieldVariants}>
-                <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                  <UserCheck className="w-3 h-3" />
-                  Doctor
-                </label>
-                <select
-                  name="doctor"
-                  value={formData.doctor}
-                  onChange={handleDoctorChange}
-                  className="bg-input border border-border rounded-md px-2 py-2 w-full focus:outline-none text-xs h-9"
-                  style={{ fontFamily: "'Cinzel', serif" }}
-                >
-                  <option value="">Select doctor</option>
-                  {doctorLists.map((doctor) => (
-                    <option key={doctor.id} value={doctor.id}>
-                      {doctor.name}
                     </option>
                   ))}
                 </select>
@@ -428,26 +388,6 @@ export function BookingForm() {
                   {services.map((service) => (
                     <option key={service.id} value={service.id}>
                       {service.icon} {service.name}
-                    </option>
-                  ))}
-                </select>
-              </motion.div>
-              <motion.div className="space-y-2" variants={fieldVariants}>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <UserCheck className="w-4 h-4" />
-                  Doctor
-                </label>
-                <select
-                  name="doctor"
-                  value={formData.doctor}
-                  onChange={handleDoctorChange}
-                  className="bg-input border border-border rounded-md px-3 py-2 w-full focus:outline-none"
-                  style={{ fontFamily: "'Cinzel', serif" }}
-                >
-                  <option value="">Select doctor</option>
-                  {doctorLists.map((doctor) => (
-                    <option key={doctor.id} value={doctor.id}>
-                      {doctor.name}
                     </option>
                   ))}
                 </select>
@@ -583,36 +523,12 @@ export function BookingForm() {
               variants={fieldVariants}
             >
               <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <UserCheck className="w-4 h-4" />
-                Doctor
-              </label>
-              <select
-                name="doctor"
-                value={formData.doctor}
-                onChange={handleDoctorChange}
-                className="bg-input border border-border rounded-md px-3 py-2 w-full focus:outline-none"
-                style={{ fontFamily: "'Cinzel', serif" }}
-              >
-                <option value="">Select doctor</option>
-                {doctorLists.map((doctor) => (
-                  <option key={doctor.id} value={doctor.id}>
-                    {doctor.name}
-                  </option>
-                ))}
-              </select>
-            </motion.div>
-            <motion.div
-              className="space-y-2 w-full lg:flex-1 lg:min-w-0"
-              variants={fieldVariants}
-            >
-              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <CalendarIcon className="w-4 h-4" />
                 Date
               </label>
               <Button
                 variant="outline"
                 className="w-full h-9 text-xs"
-                disabled={!hasSelectedDoctor}
                 onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                 style={{ fontFamily: "'Cinzel', serif" }}
               >

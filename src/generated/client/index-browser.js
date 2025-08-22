@@ -131,13 +131,11 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   serviceType: 'serviceType',
   description: 'description',
   status: 'status',
-  doctorId: 'doctorId',
   patientId: 'patientId'
 };
 
 exports.Prisma.DoctorAvailabilityScalarFieldEnum = {
   id: 'id',
-  doctorId: 'doctorId',
   date: 'date',
   isAvailable: 'isAvailable'
 };

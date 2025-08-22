@@ -14,7 +14,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getAppointmentsByUserId } from '@/lib/actions/appointment-actions';
+import { getAllAppointments } from '@/lib/actions/appointment-actions';
 import { Appointment } from '@/types/account';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
 import { handleAppointmentStatus } from '@/lib/actions/appointment-actions';
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    await reserveDay(user.userId, reserveDate);
+    await reserveDay(reserveDate);
     setIsReserveModalOpen(false);
   };
 
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     setToken(token);
-  }, []);
+  }, [])
 
   useEffect(() => {
     async function fetchAppointments() {
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
         return;
       }
       setUserId(user.userId);
-      const data = await getAppointmentsByUserId(user.userId);
+      const data = await getAllAppointments();
       if (data) {
         setAppointments(data);
       } else {
@@ -132,7 +132,7 @@ export default function AdminDashboard() {
 
     async function fetchReservedDays() {
       if (!userId) return;
-      const days = await getReservedDays(userId);
+      const days = await getReservedDays();
       setReservedDays(days.map(d => new Date(d.date)));
     }
     fetchAppointments();

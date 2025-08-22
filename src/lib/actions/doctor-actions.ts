@@ -2,22 +2,17 @@
 
 import { prisma } from "@/lib/utils";
 
-export async function reserveDay(doctorId: string, date: Date) {
+export async function reserveDay(date: Date) {
   await prisma.doctorAvailability.create({
     data: {
-      doctorId,
       date,
       isAvailable: false
     }
   });
 }
 
-export async function getReservedDays(doctorId: string) {
-  return await prisma.doctorAvailability.findMany({
-    where: {
-      doctorId
-    }
-  });
+export async function getReservedDays() {
+  return await prisma.doctorAvailability.findMany();
 }
 
 export async function getAllReservedDays() {

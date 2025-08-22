@@ -15,7 +15,6 @@ export interface Appointment {
   serviceType: string;
   status: AppointmentStatus;
   description: string | null;
-  doctor: User;
   patient: User;
 }
 
