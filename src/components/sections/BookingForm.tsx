@@ -1,15 +1,16 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import type React from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Calendar, UserCheck, Phone, Heart } from 'lucide-react';
+import { CalendarIcon, Phone, Heart } from 'lucide-react';
+import { Calendar as DayPicker } from "@/components/ui/calendar";
 import { motion, AnimatePresence } from 'framer-motion';
-import { User } from '@/types/account';
-import { getAllDoctors } from '@/lib/actions/user-actions';
 import { bookAppointment } from '@/lib/actions/appointment-actions';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
+import { getReservedDays } from '@/lib/actions/doctor-actions';
+import { sendEmail } from '@/lib/actions/email-actions';
 
 // Service and pricing data
 const services = [
@@ -25,16 +26,16 @@ export function BookingForm() {
     selectedDate: '',
     selectedTime: '',
     service: '',
-    doctor: '',
     phone: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [doctorLists, setDoctorLists] = useState<User[]>([]);
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
+  const [reservedDays, setReservedDays] = useState<Date[]>([]);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   // Initialize form data with default values
-
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -42,17 +43,21 @@ export function BookingForm() {
         if (user) {
           setToken(token);
           setUserId(user.userId);
+          setUserEmail(user.email);
         }
       });
     }
   }, []);
 
   useEffect(() => {
-    async function fetchDoctors() {
-      const doctorsData = await getAllDoctors();
-      setDoctorLists(doctorsData);
+    async function fetchReservedDays() {
+      const reserved = await getReservedDays();
+
+      if (!reserved) return;
+
+      setReservedDays(reserved.map(r => new Date(r.date)));
     }
-    fetchDoctors();
+    fetchReservedDays();
   }, []);
 
   useEffect(() => {
@@ -63,7 +68,6 @@ export function BookingForm() {
       selectedDate: tomorrow.toISOString().split('T')[0],
       selectedTime: '09:00',
       service: '',
-      doctor: '',
       phone: '',
     });
   }, []);
@@ -102,8 +106,23 @@ export function BookingForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleDateSelect = (date: Date | undefined) => {
+    if (!date) return;
+    if (reservedDays.some(d => d.toDateString() === date.toDateString())) {
+      alert("This day is unavailable.");
+      return;
+    }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const localDateString = `${year}-${month}-${day}`;
+
+    setFormData(prev => ({ ...prev, selectedDate: localDateString }));
+    setIsCalendarOpen(false);
+  };
+
   const handleSubmit = async () => {
-    if (!formData.service || !formData.doctor || !formData.phone) {
+    if (!formData.service || !formData.phone) {
       alert('Please fill in all required fields.');
       return;
     }
@@ -115,16 +134,23 @@ export function BookingForm() {
 
     setIsSubmitting(true);
     try {
-      await bookAppointment({
+      const submision = await bookAppointment({
         dateRequested: formData.selectedDate ? new Date(formData.selectedDate) : new Date(),
         timeRequested: formData.selectedTime,
         serviceType: formData.service,
-        doctorId: formData.doctor,
         patientId: userId,
         description: formData.service,
       })
+
+      await sendEmail(userEmail);
+
+      if (typeof submision === 'string') {
+        alert(submision);
+        return;
+      }
+
       alert(
-        `Appointment request submitted successfully!\n\nService: ${formData.service}\nDoctor: ${formData.doctor}\nTime: ${formData.selectedTime}`
+        `Appointment request submitted successfully!\n\nService: ${formData.service}\nDate: ${formData.selectedDate}`
       );
 
       // Reset form
@@ -135,7 +161,6 @@ export function BookingForm() {
         selectedDate: tomorrow.toISOString().split('T')[0],
         selectedTime: '09:00',
         service: '',
-        doctor: '',
         phone: '',
       });
     } catch {
@@ -171,6 +196,32 @@ export function BookingForm() {
       transition: {
         duration: 0.4,
         ease: 'easeOut',
+      },
+    },
+  } as const;
+
+  const modalVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.95,
+      y: 20,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
+        ease: [0.4, 0.0, 0.2, 1], // easeOut cubic-bezier
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      y: 20,
+      transition: {
+        duration: 0.15,
+        ease: [0.4, 0.0, 1, 1], // easeIn cubic-bezier
       },
     },
   } as const;
@@ -215,48 +266,27 @@ export function BookingForm() {
                   ))}
                 </select>
               </motion.div>
-              <motion.div className="space-y-2" variants={fieldVariants}>
-                <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                  <UserCheck className="w-3 h-3" />
-                  Doctor
-                </label>
-                <select
-                  name="doctor"
-                  value={formData.doctor}
-                  onChange={handleInputChange}
-                  className="bg-input border border-border rounded-md px-2 py-2 w-full focus:outline-none text-xs h-9"
-                  style={{ fontFamily: "'Cinzel', serif" }}
-                >
-                  <option value="">Select doctor</option>
-                  {doctorLists.map((doctor) => (
-                    <option key={doctor.id} value={doctor.id}>
-                      {doctor.name}
-                    </option>
-                  ))}
-                </select>
-              </motion.div>
             </div>
 
             {/* Row 2: Date and Time */}
             <div className="grid grid-cols-2 gap-3">
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
+                  <CalendarIcon className="w-3 h-3" />
                   Date
                 </label>
-                <Input
-                  type="date"
-                  name="selectedDate"
-                  value={formData.selectedDate}
-                  onChange={handleInputChange}
-                  className="bg-input border-border text-xs h-9"
+                <Button
+                  variant="outline"
+                  className="w-full h-9 text-xs"
+                  onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                   style={{ fontFamily: "'Cinzel', serif" }}
-                  min={new Date().toISOString().split('T')[0]}
-                />
+                >
+                  Select Date
+                </Button>
               </motion.div>
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
+                  <CalendarIcon className="w-3 h-3" />
                   Time
                 </label>
                 <select
@@ -362,48 +392,27 @@ export function BookingForm() {
                   ))}
                 </select>
               </motion.div>
-              <motion.div className="space-y-2" variants={fieldVariants}>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <UserCheck className="w-4 h-4" />
-                  Doctor
-                </label>
-                <select
-                  name="doctor"
-                  value={formData.doctor}
-                  onChange={handleInputChange}
-                  className="bg-input border border-border rounded-md px-3 py-2 w-full focus:outline-none"
-                  style={{ fontFamily: "'Cinzel', serif" }}
-                >
-                  <option value="">Select doctor</option>
-                  {doctorLists.map((doctor) => (
-                    <option key={doctor.id} value={doctor.id}>
-                      {doctor.name}
-                    </option>
-                  ))}
-                </select>
-              </motion.div>
             </div>
 
             {/* Row 2: Date and Time */}
             <div className="grid grid-cols-2 gap-4">
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <CalendarIcon className="w-4 h-4" />
                   Date
                 </label>
-                <Input
-                  type="date"
-                  name="selectedDate"
-                  value={formData.selectedDate}
-                  onChange={handleInputChange}
-                  className="bg-input border-border"
+                <Button
+                  variant="outline"
+                  className="w-full h-9 text-xs"
+                  onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                   style={{ fontFamily: "'Cinzel', serif" }}
-                  min={new Date().toISOString().split('T')[0]}
-                />
+                >
+                  Select Date
+                </Button>
               </motion.div>
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <CalendarIcon className="w-4 h-4" />
                   Time
                 </label>
                 <select
@@ -514,48 +523,24 @@ export function BookingForm() {
               variants={fieldVariants}
             >
               <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <UserCheck className="w-4 h-4" />
-                Doctor
-              </label>
-              <select
-                name="doctor"
-                value={formData.doctor}
-                onChange={handleInputChange}
-                className="bg-input border border-border rounded-md px-3 py-2 w-full focus:outline-none"
-                style={{ fontFamily: "'Cinzel', serif" }}
-              >
-                <option value="">Select doctor</option>
-                {doctorLists.map((doctor) => (
-                  <option key={doctor.id} value={doctor.id}>
-                    {doctor.name}
-                  </option>
-                ))}
-              </select>
-            </motion.div>
-            <motion.div
-              className="space-y-2 w-full lg:flex-1 lg:min-w-0"
-              variants={fieldVariants}
-            >
-              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 Date
               </label>
-              <Input
-                type="date"
-                name="selectedDate"
-                value={formData.selectedDate}
-                onChange={handleInputChange}
-                className="bg-input border-border"
+              <Button
+                variant="outline"
+                className="w-full h-9 text-xs"
+                onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                 style={{ fontFamily: "'Cinzel', serif" }}
-                min={new Date().toISOString().split('T')[0]}
-              />
+              >
+                Select Date
+              </Button>
             </motion.div>
             <motion.div
               className="space-y-2 w-full lg:flex-1 lg:min-w-0"
               variants={fieldVariants}
             >
               <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 Time
               </label>
               <select
@@ -635,6 +620,62 @@ export function BookingForm() {
           </div>
         </motion.div>
       </motion.div>
+
+      <AnimatePresence>
+        {isCalendarOpen && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setIsCalendarOpen(false);
+              }
+            }}
+          >
+            <motion.div
+              className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full"
+              variants={modalVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4 pt-10">
+                <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: "'Cinzel', serif" }}>
+                  Select Date
+                </h3>
+              </div>
+              <DayPicker
+                mode="single"
+                selected={formData.selectedDate ? new Date(formData.selectedDate) : undefined}
+                onSelect={handleDateSelect}
+                disabled={[
+                  ...reservedDays,
+                  (date) => date < new Date() // Disable past dates
+                ]}
+                modifiers={{
+                  reserved: reservedDays
+                }}
+                modifiersClassNames={{
+                  reserved: "bg-red-100 text-red-800 line-through"
+                }}
+                className="mx-auto"
+              />
+              <div className="flex justify-end mt-4 pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => setIsCalendarOpen(false)}
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -432,21 +432,18 @@ export default function AboutUs() {
                     {/* Pagination Dots */}
                     <div className="flex justify-center mt-[1.5rem] gap-[0.5rem]">
                       <button
-                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
-                          activeValueSlide === 0 ? 'bg-red-600' : 'bg-red-200'
-                        }`}
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeValueSlide === 0 ? 'bg-red-600' : 'bg-red-200'
+                          }`}
                         onClick={() => scrollToValueSlide(0)}
                       ></button>
                       <button
-                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
-                          activeValueSlide === 1 ? 'bg-red-600' : 'bg-red-200'
-                        }`}
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeValueSlide === 1 ? 'bg-red-600' : 'bg-red-200'
+                          }`}
                         onClick={() => scrollToValueSlide(1)}
                       ></button>
                       <button
-                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
-                          activeValueSlide === 2 ? 'bg-red-600' : 'bg-red-200'
-                        }`}
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeValueSlide === 2 ? 'bg-red-600' : 'bg-red-200'
+                          }`}
                         onClick={() => scrollToValueSlide(2)}
                       ></button>
                     </div>
@@ -736,21 +733,18 @@ export default function AboutUs() {
                 {/* Pagination Dots */}
                 <div className="flex justify-center mt-[1.5rem] gap-[0.5rem]">
                   <button
-                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
-                      activeServiceSlide === 0 ? 'bg-blue-600' : 'bg-slate-300'
-                    }`}
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeServiceSlide === 0 ? 'bg-blue-600' : 'bg-slate-300'
+                      }`}
                     onClick={() => scrollToServiceSlide(0)}
                   ></button>
                   <button
-                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
-                      activeServiceSlide === 1 ? 'bg-blue-600' : 'bg-slate-300'
-                    }`}
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeServiceSlide === 1 ? 'bg-blue-600' : 'bg-slate-300'
+                      }`}
                     onClick={() => scrollToServiceSlide(1)}
                   ></button>
                   <button
-                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
-                      activeServiceSlide === 2 ? 'bg-blue-600' : 'bg-slate-300'
-                    }`}
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeServiceSlide === 2 ? 'bg-blue-600' : 'bg-slate-300'
+                      }`}
                     onClick={() => scrollToServiceSlide(2)}
                   ></button>
                 </div>

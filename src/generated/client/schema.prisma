@@ -29,7 +29,6 @@ model User {
   password            String
   dateJoined          DateTime
   userType            UserType
-  doctorAppointments  Appointment[] @relation("DoctorAppointments")
   patientAppointments Appointment[] @relation("PatientAppointments")
 }
 
@@ -40,8 +39,12 @@ model Appointment {
   serviceType   String
   description   String
   status        AppointmentStatus @default(PENDING)
-  doctor        User              @relation("DoctorAppointments", fields: [doctorId], references: [id])
-  doctorId      String
   patient       User              @relation("PatientAppointments", fields: [patientId], references: [id])
   patientId     String
+}
+
+model DoctorAvailability {
+  id          String   @id @default(cuid()) @map("_id")
+  date        DateTime
+  isAvailable Boolean  @default(false)
 }

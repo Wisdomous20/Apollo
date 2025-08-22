@@ -214,14 +214,13 @@ export default function SignupForm() {
               email: formData.email,
               phoneNumber: formData.phoneNumber,
               password: formData.password,
-              userType: 'PATIENT', // Will always be 'PATIENT' for public registration
+              userType: 'PATIENT',
             }),
           });
 
           const data = await response.json();
 
           if (response.ok) {
-            // Store token and redirect to account page
             localStorage.setItem('accessToken', data.accessToken);
             router.push('/account');
           } else {

@@ -5,19 +5,54 @@ import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import { Calendar as LucideCalendar } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { getAppointmentsByUserId } from '@/lib/actions/appointment-actions';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { getAllAppointments } from '@/lib/actions/appointment-actions';
 import { Appointment } from '@/types/account';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
 import { handleAppointmentStatus } from '@/lib/actions/appointment-actions';
+import { getReservedDays, reserveDay } from '@/lib/actions/doctor-actions';
 
 export default function AdminDashboard() {
+  const [userId, setUserId] = useState<string | null>(null);
+
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [token, setToken] = useState<string | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
+  const [isReserveModalOpen, setIsReserveModalOpen] = useState(false);
+  const [reserveDate, setReserveDate] = useState<Date | null>(null);
+  const [reservedDays, setReservedDays] = useState<Date[]>([]);
+
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 5;
+
+  const openReserveModal = () => {
+    if (!selectedDate) return;
+    setReserveDate(selectedDate);
+    setIsReserveModalOpen(true);
+  };
+
+  const handleReserveConfirm = async () => {
+    if (!reserveDate || !token) return;
+
+    const user = await getUserFromToken(token);
+    if (!user) {
+      console.error("Invalid or missing token");
+      return;
+    }
+
+    await reserveDay(reserveDate);
+    setIsReserveModalOpen(false);
+  };
 
   const appointmentDates = appointments.map(a => new Date(a.dateRequested));
 
@@ -73,7 +108,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     setToken(token);
-  }, []);
+  }, [])
 
   useEffect(() => {
     async function fetchAppointments() {
@@ -86,15 +121,23 @@ export default function AdminDashboard() {
         console.error('Invalid or missing token');
         return;
       }
-      const data = await getAppointmentsByUserId(user.userId);
+      setUserId(user.userId);
+      const data = await getAllAppointments();
       if (data) {
         setAppointments(data);
       } else {
         console.error('Failed to fetch appointments');
       }
     }
+
+    async function fetchReservedDays() {
+      if (!userId) return;
+      const days = await getReservedDays();
+      setReservedDays(days.map(d => new Date(d.date)));
+    }
     fetchAppointments();
-  }, [token]);
+    fetchReservedDays();
+  }, [token, userId]);
 
   return (
     <div
@@ -126,12 +169,44 @@ export default function AdminDashboard() {
                 disabled={{ dayOfWeek: [0] }}
                 modifiers={{
                   appointment: appointmentDates,
+                  reserved: reservedDays,
                 }}
                 modifiersClassNames={{
                   appointment: "bg-green-500 text-white rounded-full",
+                  reserved: "bg-red-500 text-white rounded-full",
                 }}
               />
+
+              <Button
+                onClick={openReserveModal}
+                disabled={!selectedDate}
+                className="mt-4"
+              >
+                Reserve Selected Day
+              </Button>
             </div>
+
+            {/* Reserve Day Modal - shadcn */}
+            <Dialog open={isReserveModalOpen} onOpenChange={setIsReserveModalOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Reserve Day</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to reserve{" "}
+                    {reserveDate?.toLocaleDateString()} for the doctor?
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsReserveModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={handleReserveConfirm}>Confirm</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             {/* Latest Appointments */}
             <div className="bg-white rounded-xl shadow p-6">
               <h2 className="text-xl font-semibold mb-4">
