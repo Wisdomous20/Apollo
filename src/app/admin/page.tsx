@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import { Calendar as LucideCalendar } from 'lucide-react';
@@ -21,7 +22,10 @@ import { handleAppointmentStatus } from '@/lib/actions/appointment-actions';
 import { getReservedDays, reserveDay } from '@/lib/actions/doctor-actions';
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [token, setToken] = useState<string | null>(null);
@@ -111,17 +115,45 @@ export default function AdminDashboard() {
   }, [])
 
   useEffect(() => {
-    async function fetchAppointments() {
+    async function checkAuthorization() {
+      const token = localStorage.getItem('accessToken');
+
       if (!token) {
-        console.log("No token. Please try Again.")
+        router.push('/login');
         return;
       }
-      const user = await getUserFromToken(token);
-      if (!user) {
-        console.error('Invalid or missing token');
+
+      try {
+        const user = await getUserFromToken(token);
+        if (!user) {
+          router.push('/login');
+          return;
+        }
+
+        setUserId(user.userId);
+
+        if (user.userType !== 'DOCTOR') {
+          router.push('/'); // Redirect to home page
+          return;
+        }
+
+        setIsAuthorized(true);
+      } catch (error) {
+        console.error('Authorization check failed:', error);
+        router.push('/login');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    checkAuthorization();
+  }, [router]);
+
+  useEffect(() => {
+    async function fetchAppointments() {
+      if (!token || !isAuthorized) {
         return;
       }
-      setUserId(user.userId);
       const data = await getAllAppointments();
       if (data) {
         setAppointments(data);
@@ -131,13 +163,33 @@ export default function AdminDashboard() {
     }
 
     async function fetchReservedDays() {
-      if (!userId) return;
+      if (!userId || !isAuthorized) return;
       const days = await getReservedDays();
       setReservedDays(days.map(d => new Date(d.date)));
     }
-    fetchAppointments();
-    fetchReservedDays();
-  }, [token, userId]);
+
+    if (isAuthorized) {
+      fetchAppointments();
+      fetchReservedDays();
+    }
+  }, [token, userId, isAuthorized]);
+
+  // Show loading state while checking authorization
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Verifying access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render the admin dashboard if not authorized
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <div
