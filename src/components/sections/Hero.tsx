@@ -3,6 +3,8 @@
 import { BookingForm } from './BookingForm';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
 // Export services array for use in Services.tsx
 export const services = [
   { title: 'Primary Care' },
@@ -10,7 +12,52 @@ export const services = [
   { title: 'Emergency Care' },
 ];
 
+const useTypewriter = (texts: string[], speed = 100, delayBetween = 200) => {
+  const [displayTexts, setDisplayTexts] = useState(['', '', '']);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+
+  useEffect(() => {
+    if (currentTextIndex < texts.length) {
+      const currentText = texts[currentTextIndex];
+
+      if (currentCharIndex < currentText.length) {
+        const timeout = setTimeout(() => {
+          setDisplayTexts((prev) => {
+            const newTexts = [...prev];
+            newTexts[currentTextIndex] = currentText.slice(
+              0,
+              currentCharIndex + 1
+            );
+            return newTexts;
+          });
+          setCurrentCharIndex((prev) => prev + 1);
+        }, speed);
+
+        return () => clearTimeout(timeout);
+      } else if (currentTextIndex < texts.length - 1) {
+        const timeout = setTimeout(() => {
+          setCurrentTextIndex((prev) => prev + 1);
+          setCurrentCharIndex(0);
+        }, delayBetween);
+
+        return () => clearTimeout(timeout);
+      } else {
+        setIsAnimationComplete(true);
+      }
+    }
+  }, [currentTextIndex, currentCharIndex, texts, speed, delayBetween]);
+
+  return { displayTexts, isAnimationComplete };
+};
+
 export default function Hero() {
+  const {
+    displayTexts: [whereText, healingText, beginsText],
+    isAnimationComplete,
+  } = useTypewriter(['Where ', 'Healing ', 'BEGINs'], 60, 100);
+
   // ===== ANIMATION VARIANTS =====
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -100,66 +147,68 @@ export default function Hero() {
           w-full pt-16 pb-20 px-4
           sm:pt-20 sm:pb-24 sm:px-6
           md:pt-24 md:pb-32 md:px-8
-          lg:w-[60%] lg:pt-0 lg:pb-0 lg:px-8 lg:min-h-screen lg:flex lg:flex-col lg:items-start lg:justify-center
+          lg:w-[60%] lg:pt-0 lg:pb-0 lg:px-8 lg:min-h-screen lg:flex lg:flex-col lg:items-start lg:justify-start
           xl:px-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="w-full max-w-4xl lg:w-full lg:flex lg:flex-col lg:items-start">
+        <div className="w-full max-w-4xl lg:w-full lg:flex lg:flex-col lg:items-start lg:mt-20 xl:mt-28">
           <motion.div
             className="text-foreground text-center lg:text-left"
             variants={itemVariants}
           >
             {/* Hero Headline */}
-            <motion.div
-              className="text-center mb-6 sm:mb-8"
+            <motion.h1
+              className="font-bold text-primary leading-[0.85] mb-4 md:mb-6 lg:mb-8
+                text-[clamp(2.5rem,7vw,6rem)]
+                md:text-[clamp(3.5rem,8vw,7rem)] 
+                lg:text-[clamp(4.5rem,9vw,8rem)]
+                xl:text-[clamp(5.5rem,10vw,9rem)]"
               variants={itemVariants}
             >
-              <motion.h1
-                className="font-serif-black leading-tight text-primary flex flex-col items-center gap-1 sm:gap-2
-                  text-2xl
-                  sm:text-3xl
-                  md:text-4xl
-                  lg:text-5xl
-                  xl:text-6xl
-                  2xl:text-7xl"
-                variants={itemVariants}
-              >
-                <span className="text-primary whitespace-nowrap">
-                  WHERE HEALING
+              <div className="text-balance max-w-[12ch]">
+                <span style={{ display: 'inline-block', minWidth: '6ch' }}>
+                  {whereText}
                 </span>
-                <motion.span
-                  className="text-secondary font-serif-black"
-                  variants={itemVariants}
+                <br />
+                <span style={{ display: 'inline-block', minWidth: '7ch' }}>
+                  {healingText}
+                </span>
+                <br />
+                <span
+                  className="relative text-secondary"
+                  style={{
+                    display: 'inline-block',
+                    minWidth: '6ch',
+                  }}
                 >
-                  BEGINS
-                </motion.span>
-              </motion.h1>
-
-              {/* Hero Description */}
-              <motion.p
-                className="text-primary max-w-3xl mx-auto font-serif-normal mt-4 sm:mt-6
-                  text-sm leading-relaxed
-                  sm:text-base sm:leading-relaxed
-                  md:text-lg md:leading-relaxed
-                  lg:text-xl lg:leading-relaxed
-                  xl:text-2xl xl:leading-relaxed"
-                variants={itemVariants}
-              >
-                At Apollo Medical Group, we blend trusted care with modern
-                treatments to guide you on your path to
-                <span className="text-secondary font-serif-bold">
-                  {' '}
-                  wellness.
+                  {beginsText}
+                  {beginsText.length >= 6 && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 w-full 
+                        h-[clamp(0.25rem,0.5vw,0.75rem)] 
+                        bg-primary"
+                      initial={{ width: 0 }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 0.8, delay: 1.0 }}
+                    />
+                  )}
                 </span>
-              </motion.p>
-            </motion.div>
+              </div>
+            </motion.h1>
+
+            {/* Hero Description */}
+            <motion.p
+              className="text-gray-700 leading-relaxed font-serif 
+                text-[clamp(1rem,2.5vw,1.5rem)]
+                max-w-[42ch] lg:max-w-[45ch] xl:max-w-[48ch]"
+              variants={itemVariants}
+            >
+              At Apollo Medical Group, we blend trusted care with modern
+              treatments to guide you on your path to wellness.
+            </motion.p>
           </motion.div>
-          {/* ===== BOOKING FORM SECTION (desktop only) ===== */}
-          <div className="mt-8 w-full lg:w-3/4 lg:mx-0 hidden lg:block">
-            <BookingForm />
-          </div>
         </div>
       </motion.div>
 
@@ -174,9 +223,9 @@ export default function Hero() {
         initial="hidden"
         animate="visible"
       >
-        <div className="relative w-full h-full flex items-end justify-center opacity-90">
+        <div className="relative w-full h-full flex items-end justify-center">
           <Image
-            src="/apollo.png"
+            src="/apollo-heropage.png"
             alt="Two medical professionals - a Black woman and white man with glasses, both in white coats"
             fill
             className="object-contain object-bottom 
@@ -188,10 +237,8 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* ===== BOOKING FORM SECTION (mobile/tablet only) ===== */}
-      <div className="block lg:hidden w-full px-4 sm:px-6 md:px-8 mt-6">
-        <BookingForm />
-      </div>
+      {/* Booking Form Section */}
+      <BookingForm />
     </section>
   );
 }
