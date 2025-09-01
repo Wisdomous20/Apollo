@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Eye, EyeOff, ArrowRight, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 
 const registerSchema = z
@@ -80,6 +80,16 @@ export default function SignupForm() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  // Read mode query param (e.g. /login?mode=signup) to open signup mode by default
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const mode = searchParams?.get('mode');
+    if (mode === 'signup') {
+      setIsLoginMode(false);
+    }
+    // If mode is 'login' or absent, keep default
+  }, [searchParams]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -361,10 +371,11 @@ export default function SignupForm() {
             {heroSlides.map((_, index) => (
               <motion.button
                 key={index}
-                className={`h-1 rounded transition-all duration-300 ${index === currentSlide
-                  ? 'w-6 sm:w-8 bg-white'
-                  : 'w-6 sm:w-8 bg-white/30 hover:bg-white/50'
-                  }`}
+                className={`h-1 rounded transition-all duration-300 ${
+                  index === currentSlide
+                    ? 'w-6 sm:w-8 bg-white'
+                    : 'w-6 sm:w-8 bg-white/30 hover:bg-white/50'
+                }`}
                 onClick={() => setCurrentSlide(index)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -429,7 +440,7 @@ export default function SignupForm() {
                 : 'Already have an account? '}
               <button
                 onClick={toggleMode}
-                className="text-[hsl(var(--secondary))] hover:text-[hsl(var(--secondary))]/80 transition-colors underline"
+                className="text-secondary hover:text-secondary/80 transition-colors underline"
               >
                 {isLoginMode ? 'Sign up' : 'Log in'}
               </button>
