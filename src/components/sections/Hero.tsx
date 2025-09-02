@@ -153,7 +153,7 @@ export default function Hero() {
         initial="hidden"
         animate="visible"
       >
-        <div className="w-full max-w-4xl lg:w-full lg:flex lg:flex-col lg:items-start lg:mt-20 xl:mt-28">
+        <div className="w-full max-w-4xl mx-auto lg:mx-0 lg:w-full lg:flex lg:flex-col lg:items-start lg:mt-20 xl:mt-28">
           <motion.div
             className="text-foreground text-center lg:text-left"
             variants={itemVariants}
@@ -161,13 +161,14 @@ export default function Hero() {
             {/* Hero Headline */}
             <motion.h1
               className="font-bold text-primary leading-[0.85] mb-4 md:mb-6 lg:mb-8
-                text-[clamp(2.5rem,7vw,6rem)]
+                text-center lg:text-left
+                text-[clamp(3rem,9vw,6.5rem)]
                 md:text-[clamp(3.5rem,8vw,7rem)] 
                 lg:text-[clamp(4.5rem,9vw,8rem)]
                 xl:text-[clamp(5.5rem,10vw,9rem)]"
               variants={itemVariants}
             >
-              <div className="text-balance max-w-[12ch]">
+              <div className="text-balance max-w-[12ch] mx-auto text-center lg:text-left">
                 <span style={{ display: 'inline-block', minWidth: '6ch' }}>
                   {whereText}
                 </span>
@@ -202,7 +203,8 @@ export default function Hero() {
             <motion.p
               className="text-gray-700 leading-relaxed font-serif 
                 text-[clamp(1rem,2.5vw,1.5rem)]
-                max-w-[42ch] lg:max-w-[45ch] xl:max-w-[48ch]"
+                max-w-[42ch] lg:max-w-[45ch] xl:max-w-[48ch]
+                mx-auto text-center lg:text-left lg:mx-0"
               variants={itemVariants}
             >
               At Apollo Medical Group, we blend trusted care with modern
@@ -218,7 +220,7 @@ export default function Hero() {
         className="absolute bottom-0 right-0 
           w-full h-[32vh] sm:h-[38vh] md:h-[45vh]
           lg:w-[40%] lg:h-full 
-          z-20"
+          z-20 hidden lg:block"
         variants={imageVariants}
         initial="hidden"
         animate="visible"
