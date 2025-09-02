@@ -87,15 +87,15 @@ export default function AboutUs() {
               src="/about-apollo-header.png"
               alt="Hospital exterior"
               fill
-              className="object-cover blur-xs md:blur-sm opacity-50"
+              className="object-cover blur-xs md:blur-sm opacity-100"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-primary/80 to-primary/50"></div>
+            <div className="absolute inset-0 bg-primary opacity-60"></div>
           </div>
           {/* Content */}
           <div className="relative z-10 max-w-[75rem] mx-auto px-[1.5rem] text-center">
             <h1
-              className="text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] font-light text-white mb-[1.5rem] leading-[1.1]"
+              className="text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] font-light text-primary-foreground mb-[1.5rem] leading-[1.1]"
               style={{ fontFamily: "'Cinzel', serif" }}
             >
               Rooted in Healing,
@@ -103,7 +103,7 @@ export default function AboutUs() {
               <span className="font-medium">Dedicated to Your Well-being</span>
             </h1>
             <p
-              className="text-[1.125rem] md:text-[1.25rem] lg:text-[1.375rem] text-slate-200 max-w-[50rem] mx-auto leading-[1.6] font-light"
+              className="text-[1.125rem] md:text-[1.25rem] lg:text-[1.375rem] text-primary-foreground max-w-[50rem] mx-auto leading-[1.6] font-light"
               style={{ fontFamily: "'Cinzel', serif" }}
             >
               For over three decades, we have been a cornerstone of healthcare
@@ -113,7 +113,7 @@ export default function AboutUs() {
             </p>
           </div>
           {/* Straight-line divider */}
-          <div className="absolute bottom-0 left-0 right-0 h-[0.125rem] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-[0.125rem] bg-gradient-to-r from-transparent via-primary to-transparent"></div>
         </section>
 
         {/* Combined Mission and Values Section with Diagonal Split */}
@@ -432,18 +432,21 @@ export default function AboutUs() {
                     {/* Pagination Dots */}
                     <div className="flex justify-center mt-[1.5rem] gap-[0.5rem]">
                       <button
-                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeValueSlide === 0 ? 'bg-red-600' : 'bg-red-200'
-                          }`}
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                          activeValueSlide === 0 ? 'bg-red-600' : 'bg-red-200'
+                        }`}
                         onClick={() => scrollToValueSlide(0)}
                       ></button>
                       <button
-                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeValueSlide === 1 ? 'bg-red-600' : 'bg-red-200'
-                          }`}
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                          activeValueSlide === 1 ? 'bg-red-600' : 'bg-red-200'
+                        }`}
                         onClick={() => scrollToValueSlide(1)}
                       ></button>
                       <button
-                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeValueSlide === 2 ? 'bg-red-600' : 'bg-red-200'
-                          }`}
+                        className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                          activeValueSlide === 2 ? 'bg-red-600' : 'bg-red-200'
+                        }`}
                         onClick={() => scrollToValueSlide(2)}
                       ></button>
                     </div>
@@ -733,18 +736,21 @@ export default function AboutUs() {
                 {/* Pagination Dots */}
                 <div className="flex justify-center mt-[1.5rem] gap-[0.5rem]">
                   <button
-                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeServiceSlide === 0 ? 'bg-blue-600' : 'bg-slate-300'
-                      }`}
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                      activeServiceSlide === 0 ? 'bg-blue-600' : 'bg-slate-300'
+                    }`}
                     onClick={() => scrollToServiceSlide(0)}
                   ></button>
                   <button
-                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeServiceSlide === 1 ? 'bg-blue-600' : 'bg-slate-300'
-                      }`}
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                      activeServiceSlide === 1 ? 'bg-blue-600' : 'bg-slate-300'
+                    }`}
                     onClick={() => scrollToServiceSlide(1)}
                   ></button>
                   <button
-                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${activeServiceSlide === 2 ? 'bg-blue-600' : 'bg-slate-300'
-                      }`}
+                    className={`w-[0.5rem] h-[0.5rem] rounded-full transition-all duration-300 ${
+                      activeServiceSlide === 2 ? 'bg-blue-600' : 'bg-slate-300'
+                    }`}
                     onClick={() => scrollToServiceSlide(2)}
                   ></button>
                 </div>
@@ -765,7 +771,7 @@ export default function AboutUs() {
               fill
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-primary/90"></div>
+            <div className="absolute inset-0 bg-primary opacity-80"></div>
           </div>
           <div className="relative z-10 max-w-[75rem] mx-auto px-[1.5rem] text-center">
             <h3
