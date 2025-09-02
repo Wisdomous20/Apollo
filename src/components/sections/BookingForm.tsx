@@ -63,7 +63,7 @@ export function BookingForm() {
   // Helper function to find the earliest available date
   const findEarliestAvailableDate = () => {
     const today = new Date();
-    let checkDate = new Date(today);
+    const checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() + 1); // Start from tomorrow
 
     // Keep checking until we find a date that's not reserved
@@ -173,13 +173,13 @@ export function BookingForm() {
     }
 
     if (!token) {
-      alert('Please log in first in order to book an ppointment.');
+      alert('Please log in first in order to book an appointment.');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const submision = await bookAppointment({
+      const submission = await bookAppointment({
         dateRequested: formData.selectedDate
           ? new Date(formData.selectedDate)
           : new Date(),
@@ -191,8 +191,8 @@ export function BookingForm() {
 
       await sendEmail(userEmail);
 
-      if (typeof submision === 'string') {
-        alert(submision);
+      if (typeof submission === 'string') {
+        alert(submission);
         return;
       }
 
@@ -274,23 +274,26 @@ export function BookingForm() {
   return (
     <>
       <motion.div
-        className="absolute bottom-4 sm:bottom-5 md:bottom-6 lg:bottom-8 left-4 right-4 sm:left-6 sm:right-6 lg:left-8 lg:right-8 z-20 max-w-xl lg:max-w-3xl xl:max-w-6xl mx-auto"
+        className="absolute bottom-3 xs:bottom-4 sm:bottom-5 md:bottom-6 lg:bottom-8 left-3 right-3 xs:left-4 xs:right-4 sm:left-6 sm:right-6 lg:left-8 lg:right-8 z-20 max-w-xl lg:max-w-3xl xl:max-w-6xl mx-auto"
         variants={formVariants}
         initial="hidden"
         animate="visible"
       >
         <motion.div
-          className="bg-card backdrop-blur-md p-3 sm:p-4 md:p-6 lg:p-8 shadow-2xl rounded-lg border border-border/30 font-serif"
+          className="bg-card backdrop-blur-md p-2.5 xs:p-3 sm:p-4 md:p-6 lg:p-8 shadow-2xl rounded-lg border border-border/30 font-serif"
           whileHover={{
             scale: 1.02,
             transition: { duration: 0.2 },
           }}
         >
-          {/* Mobile Layout (sm and below) */}
-          <div className="flex flex-col gap-3 sm:hidden">
-            {/* Row 1: Service and Doctor */}
-            <div className="grid grid-cols-2 gap-3">
-              <motion.div className="space-y-2" variants={fieldVariants}>
+          {/* Enhanced Mobile Layout (xs and sm) */}
+          <div className="flex flex-col gap-2.5 xs:gap-3 sm:hidden">
+            {/* Row 1: Service - full width on very small screens */}
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-2.5 xs:gap-3">
+              <motion.div
+                className="space-y-1.5 xs:space-y-2"
+                variants={fieldVariants}
+              >
                 <label className="text-xs font-medium text-foreground flex items-center gap-1">
                   <Heart className="w-3 h-3 text-secondary" />
                   Service
@@ -299,7 +302,7 @@ export function BookingForm() {
                   name="service"
                   value={formData.service}
                   onChange={handleInputChange}
-                  className="bg-input border border-border rounded-md px-2 py-2 w-full focus:outline-none text-sm leading-4 h-9 font-normal font-sans"
+                  className="bg-input border border-border rounded-md px-2 py-2 w-full focus:outline-none text-xs xs:text-sm leading-4 h-8 xs:h-9 font-normal font-sans"
                 >
                   {services.map((service) => (
                     <option key={service.id} value={service.id}>
@@ -311,8 +314,11 @@ export function BookingForm() {
             </div>
 
             {/* Row 2: Date and Time */}
-            <div className="grid grid-cols-2 gap-3">
-              <motion.div className="space-y-2" variants={fieldVariants}>
+            <div className="grid grid-cols-2 gap-2.5 xs:gap-3">
+              <motion.div
+                className="space-y-1.5 xs:space-y-2"
+                variants={fieldVariants}
+              >
                 <label className="text-xs font-medium text-foreground flex items-center gap-1">
                   <CalendarIcon className="w-3 h-3 text-secondary" />
                   Date
@@ -324,17 +330,26 @@ export function BookingForm() {
                   onKeyDown={(e) =>
                     e.key === 'Enter' && setIsCalendarOpen(true)
                   }
-                  className="bg-input border border-border rounded-md px-2 py-2 w-full focus:outline-none text-sm leading-4 h-9 font-normal font-sans text-left flex items-center justify-between cursor-pointer"
+                  className="bg-input border border-border rounded-md px-1.5 xs:px-2 py-2 w-full focus:outline-none text-xs xs:text-sm leading-4 h-8 xs:h-9 font-normal font-sans text-left flex items-center justify-between cursor-pointer"
                 >
-                  <span className="truncate">
+                  <span className="truncate text-xs xs:text-sm">
                     {formData.selectedDate
-                      ? new Date(formData.selectedDate).toLocaleDateString()
-                      : 'Select Date'}
+                      ? new Date(formData.selectedDate).toLocaleDateString(
+                          'en-US',
+                          {
+                            month: 'short',
+                            day: 'numeric',
+                          }
+                        )
+                      : 'Date'}
                   </span>
-                  <ChevronDown className="w-4 h-4 text-secondary ml-2" />
+                  <ChevronDown className="w-3 h-3 xs:w-4 xs:h-4 text-secondary ml-1 xs:ml-2 flex-shrink-0" />
                 </div>
               </motion.div>
-              <motion.div className="space-y-2" variants={fieldVariants}>
+              <motion.div
+                className="space-y-1.5 xs:space-y-2"
+                variants={fieldVariants}
+              >
                 <label className="text-xs font-medium text-foreground flex items-center gap-1">
                   <CalendarIcon className="w-3 h-3 text-secondary" />
                   Time
@@ -343,31 +358,34 @@ export function BookingForm() {
                   name="selectedTime"
                   value={formData.selectedTime}
                   onChange={handleInputChange}
-                  className="bg-input border border-border rounded-md px-2 py-2 w-full focus:outline-none text-sm leading-4 h-9 font-normal font-sans"
+                  className="bg-input border border-border rounded-md px-1.5 xs:px-2 py-2 w-full focus:outline-none text-xs xs:text-sm leading-4 h-8 xs:h-9 font-normal font-sans"
                 >
-                  <option value="08:00">8:00 AM</option>
-                  <option value="09:00">9:00 AM</option>
-                  <option value="10:00">10:00 AM</option>
-                  <option value="11:00">11:00 AM</option>
-                  <option value="12:00">12:00 PM</option>
-                  <option value="13:00">1:00 PM</option>
-                  <option value="14:00">2:00 PM</option>
-                  <option value="15:00">3:00 PM</option>
-                  <option value="16:00">4:00 PM</option>
-                  <option value="17:00">5:00 PM</option>
+                  <option value="08:00">8 AM</option>
+                  <option value="09:00">9 AM</option>
+                  <option value="10:00">10 AM</option>
+                  <option value="11:00">11 AM</option>
+                  <option value="12:00">12 PM</option>
+                  <option value="13:00">1 PM</option>
+                  <option value="14:00">2 PM</option>
+                  <option value="15:00">3 PM</option>
+                  <option value="16:00">4 PM</option>
+                  <option value="17:00">5 PM</option>
                 </select>
               </motion.div>
             </div>
 
-            {/* Row 3: Phone and Price */}
-            <div className="grid grid-cols-2 gap-3">
-              <motion.div className="space-y-2" variants={fieldVariants}>
+            {/* Row 3: Phone - full width on very small screens */}
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-2.5 xs:gap-3">
+              <motion.div
+                className="space-y-1.5 xs:space-y-2"
+                variants={fieldVariants}
+              >
                 <label className="text-xs text-foreground flex items-center gap-1 font-normal">
                   <Phone className="w-3 h-3 text-secondary" />
                   Phone Number
                 </label>
                 <div className="flex">
-                  <span className="inline-flex items-center px-3 py-2 bg-input border border-border rounded-l-md text-sm font-normal font-sans">
+                  <span className="inline-flex items-center px-2 xs:px-3 py-2 bg-input border border-border rounded-l-md text-xs xs:text-sm font-normal font-sans">
                     +1
                   </span>
                   <Input
@@ -376,13 +394,13 @@ export function BookingForm() {
                     placeholder="(555) 123-4567"
                     value={formatPhone(formData.phone)}
                     onChange={handlePhoneChange}
-                    className="bg-input border border-border rounded-none rounded-r-md text-sm leading-4 h-9 px-2 w-full font-normal font-sans"
+                    className="bg-input border border-border rounded-none rounded-r-md text-xs xs:text-sm leading-4 h-8 xs:h-9 px-1.5 xs:px-2 w-full font-normal font-sans"
                   />
                 </div>
               </motion.div>
             </div>
 
-            {/* Row 4: Button */}
+            {/* Row 4: Button - enhanced mobile button */}
             <motion.div
               variants={fieldVariants}
               whileHover={{ scale: 1.02 }}
@@ -391,7 +409,7 @@ export function BookingForm() {
               <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-md font-medium w-full h-10 text-sm"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-3 xs:px-4 py-2.5 xs:py-2 rounded-md font-medium w-full h-9 xs:h-10 text-xs xs:text-sm"
               >
                 <AnimatePresence mode="wait">
                   {isSubmitting ? (
@@ -402,7 +420,7 @@ export function BookingForm() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                     >
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-3 w-3 xs:h-4 xs:w-4 border-b-2 border-white mr-1.5 xs:mr-2"></div>
                       Booking...
                     </motion.div>
                   ) : (
@@ -423,7 +441,7 @@ export function BookingForm() {
           {/* Tablet Layout (sm to lg) */}
           <div className="hidden sm:flex lg:hidden flex-col gap-4">
             {/* Row 1: Service and Doctor */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-sm font-medium text-foreground flex items-center gap-2">
                   <Heart className="w-4 h-4 text-secondary" />
@@ -445,7 +463,7 @@ export function BookingForm() {
             </div>
 
             {/* Row 2: Date and Time */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <motion.div className="space-y-2" variants={fieldVariants}>
                 <label className="text-sm font-medium text-foreground flex items-center gap-2">
                   <CalendarIcon className="w-4 h-4 text-secondary" />
@@ -675,10 +693,11 @@ export function BookingForm() {
         </motion.div>
       </motion.div>
 
+      {/* Enhanced Calendar Modal for mobile */}
       <AnimatePresence>
         {isCalendarOpen && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 xs:p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -689,15 +708,15 @@ export function BookingForm() {
             }}
           >
             <motion.div
-              className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full"
+              className="bg-white rounded-lg shadow-xl p-4 xs:p-6 max-w-sm xs:max-w-md w-full max-h-[90vh] overflow-y-auto"
               variants={modalVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between mb-4 pt-10">
-                <h3 className="text-lg text-gray-900 font-normal">
+              <div className="flex items-center justify-between mb-3 xs:mb-4 pt-6 xs:pt-10">
+                <h3 className="text-base xs:text-lg text-gray-900 font-normal">
                   Select Date
                 </h3>
               </div>
@@ -719,12 +738,12 @@ export function BookingForm() {
                 modifiersClassNames={{
                   reserved: 'bg-red-100 text-red-800 line-through',
                 }}
-                className="mx-auto"
+                className="mx-auto text-sm xs:text-base"
               />
-              <div className="flex justify-end mt-4 pt-4 border-t border-gray-200">
+              <div className="flex justify-end mt-3 xs:mt-4 pt-3 xs:pt-4 border-t border-gray-200">
                 <button
                   onClick={() => setIsCalendarOpen(false)}
-                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors font-serif"
+                  className="px-3 xs:px-4 py-2 text-xs xs:text-sm text-gray-600 hover:text-gray-800 transition-colors font-serif"
                 >
                   Cancel
                 </button>
