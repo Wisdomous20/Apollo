@@ -10,7 +10,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { bookAppointment } from '@/lib/actions/appointment-actions';
 import { getUserFromToken } from '@/lib/actions/jwt-actions';
 import { getPublicReservedDays } from '@/lib/actions/doctor-actions';
-import { sendEmail } from '@/lib/actions/email-actions';
 
 // Service and pricing data
 const services = [
@@ -33,7 +32,6 @@ export function BookingForm() {
   const [userId, setUserId] = useState("");
   const [reservedDays, setReservedDays] = useState<Date[]>([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
 
   // Initialize form data with default values
   useEffect(() => {
@@ -43,7 +41,6 @@ export function BookingForm() {
         if (user) {
           setToken(token);
           setUserId(user.userId);
-          setUserEmail(user.email);
         }
       });
     }
@@ -142,15 +139,13 @@ export function BookingForm() {
         description: formData.service,
       })
 
-      await sendEmail(userEmail);
-
       if (typeof submision === 'string') {
         alert(submision);
         return;
       }
 
       alert(
-        `Appointment request submitted successfully!\n\nService: ${formData.service}\nDate: ${formData.selectedDate}`
+        `Appointment request submitted successfully!`
       );
 
       // Reset form

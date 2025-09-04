@@ -82,16 +82,16 @@ export default function AdminDashboard() {
     )
     .slice(0, 5);
 
-  const handleApprove = async (id: string) => {
+  const handleApprove = async (id: string, email: string) => {
 
-    await handleAppointmentStatus(id, 'APPROVED')
+    await handleAppointmentStatus(id, email, 'APPROVED')
 
     setAppointments((prev) =>
       prev.map((a) => (a.id === id ? { ...a, status: 'APPROVED' } : a))
     );
   };
-  const handleReject = async (id: string) => {
-    await handleAppointmentStatus(id, "REJECTED")
+  const handleReject = async (id: string, email: string) => {
+    await handleAppointmentStatus(id, email, "REJECTED")
 
     setAppointments((prev) =>
       prev.map((a) => (a.id === id ? { ...a, status: 'REJECTED' } : a))
@@ -295,7 +295,8 @@ export default function AdminDashboard() {
                           className="px-3 py-1 rounded bg-green-500 text-white text-xs hover:bg-green-600"
                           onClick={() =>
                             handleApprove(
-                              a.id
+                              a.id,
+                              a.patient.email
                             )
                           }
                         >
@@ -305,7 +306,8 @@ export default function AdminDashboard() {
                           className="px-3 py-1 rounded bg-red-500 text-white text-xs hover:bg-red-600"
                           onClick={() =>
                             handleReject(
-                              a.id
+                              a.id,
+                              a.patient.email
                             )
                           }
                         >
@@ -366,13 +368,13 @@ export default function AdminDashboard() {
                       <div className="mt-2 flex gap-2">
                         <button
                           className="px-3 py-1 rounded bg-green-500 text-white text-xs hover:bg-green-600"
-                          onClick={() => handleApprove(a.id)}
+                          onClick={() => handleApprove(a.id, a.patient.email)}
                         >
                           Approve
                         </button>
                         <button
                           className="px-3 py-1 rounded bg-red-500 text-white text-xs hover:bg-red-600"
-                          onClick={() => handleReject(a.id)}
+                          onClick={() => handleReject(a.id, a.patient.email)}
                         >
                           Reject
                         </button>

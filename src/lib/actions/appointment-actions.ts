@@ -4,6 +4,10 @@ import { prisma } from "../utils";
 import { $Enums } from "@/generated/client";
 import { verifyAccessToken } from "../auth";
 import { cookies } from "next/headers";
+import {
+  // sendEmail,
+  respondEmail
+} from "./email-actions";
 
 interface AppointmentData {
   dateRequested: Date;
@@ -69,9 +73,13 @@ export async function getAppointmentsByUserId(id: string) {
   return result;
 }
 
-export async function handleAppointmentStatus(appointmentId: string, status: $Enums.AppointmentStatus) {
+export async function handleAppointmentStatus(appointmentId: string, email: string, status: $Enums.AppointmentStatus) {
   // Verify doctor authorization
   await verifyDoctorAuth();
+
+  // await sendEmail(email)
+
+  await respondEmail(email, `Your appointment has been ${status}!`)
 
   await prisma.appointment.update({
     where: {
