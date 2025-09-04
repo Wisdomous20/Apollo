@@ -18,8 +18,11 @@ const registerSchema = z
     email: z.string().email('Please enter a valid email address'),
     phoneNumber: z
       .string()
-      .min(10, 'Phone number must be at least 10 digits')
-      .regex(/^\+?[\d\s\-\(\)]{10,}$/, 'Phone number is invalid'),
+      .min(14, 'Phone number is required')
+      .regex(
+        /^\(\d{3}\) \d{3}-\d{4}$/,
+        'Phone number must be in format (XXX) XXX-XXXX'
+      ),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
     agreeToTerms: z
@@ -118,7 +121,26 @@ export default function SignupForm() {
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field === 'phoneNumber' && typeof value === 'string') {
+      // Format phone number as US format (XXX) XXX-XXXX
+      const digitsOnly = value.replace(/\D/g, '');
+      let formatted = '';
+
+      if (digitsOnly.length > 0) {
+        if (digitsOnly.length <= 3) {
+          formatted = `(${digitsOnly}`;
+        } else if (digitsOnly.length <= 6) {
+          formatted = `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3)}`;
+        } else {
+          formatted = `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3, 6)}-${digitsOnly.slice(6, 10)}`;
+        }
+      }
+
+      setFormData((prev) => ({ ...prev, [field]: formatted }));
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    }
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
@@ -533,11 +555,12 @@ export default function SignupForm() {
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="tel"
-                    placeholder="Phone Number"
+                    placeholder="(123) 456-7890"
                     value={formData.phoneNumber}
                     onChange={(e) =>
                       handleInputChange('phoneNumber', e.target.value)
                     }
+                    maxLength={14}
                     className={`bg-white border-border text-foreground placeholder:text-muted-foreground rounded-lg h-11 sm:h-12 pl-10 transition-all duration-200 focus:border-primary focus:ring-1 focus:ring-primary ${errors.phoneNumber ? 'border-red-500' : ''}`}
                   />
                 </div>
