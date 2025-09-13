@@ -153,7 +153,7 @@ export default function Services() {
                         <h3 className="text-xl font-bold text-primary dark:text-white leading-tight mb-1 font-serif">
                           {service.title}
                         </h3>
-                        <p className="text-xs text-primary/80 dark:text-white/70 mb-0 font-serif">
+                        <p className="text-xs text-secondary mb-0 font-serif">
                           {service.duration}
                         </p>
                       </div>
@@ -161,13 +161,7 @@ export default function Services() {
                     <p className="text-primary dark:text-white text-sm leading-relaxed mb-6 mt-1 font-serif">
                       {service.description}
                     </p>
-                    <div className="flex items-center justify-between mt-auto gap-2">
-                      <button
-                        className="text-primary dark:text-white text-sm font-semibold underline underline-offset-2 hover:text-primary/80 dark:hover:text-white transition-colors duration-200 px-0 bg-transparent border-none font-serif focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-                        tabIndex={0}
-                      >
-                        + More
-                      </button>
+                    <div className="flex items-center justify-end mt-auto gap-2">
                       <Button
                         className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                         tabIndex={0}
@@ -198,10 +192,11 @@ export default function Services() {
                   });
                 }}
                 aria-label={`Go to service ${idx + 1}`}
-                className={`w-2 h-2 rounded-full transition-all duration-200 ${idx === activeIndex
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                  idx === activeIndex
                     ? 'bg-white w-6'
                     : 'bg-white/50 hover:bg-white/70'
-                  }`}
+                }`}
               />
             ))}
           </nav>
@@ -235,7 +230,7 @@ export default function Services() {
                       <h3 className="text-xl md:text-2xl font-bold text-primary dark:text-white leading-tight mb-1 font-serif">
                         {service.title}
                       </h3>
-                      <p className="text-xs md:text-sm text-primary/80 dark:text-white/70 mb-0 font-serif">
+                      <p className="text-xs md:text-sm text-secondary mb-0 font-serif">
                         {service.duration}
                       </p>
                     </div>
@@ -243,13 +238,7 @@ export default function Services() {
                   <p className="text-primary dark:text-white text-sm md:text-base leading-relaxed mb-6 mt-1 font-serif">
                     {service.description}
                   </p>
-                  <div className="flex items-center justify-between mt-auto gap-2">
-                    <button
-                      className="text-primary dark:text-white text-sm font-semibold underline underline-offset-2 hover:text-primary/80 dark:hover:text-white transition-colors duration-200 px-0 bg-transparent border-none font-serif focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-                      tabIndex={0}
-                    >
-                      + More
-                    </button>
+                  <div className="flex items-center justify-end mt-auto gap-2">
                     <Button
                       className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
                       tabIndex={0}

@@ -96,9 +96,9 @@ export function BackgroundWrapper({
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="hsl(var(--primary) / 0.3)" />
-            <stop offset="50%" stopColor="hsl(var(--primary) / 0.2)" />
-            <stop offset="100%" stopColor="hsl(var(--primary) / 0.1)" />
+            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.3" />
+            <stop offset="50%" stopColor="var(--primary)" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.1" />
           </linearGradient>
 
           <linearGradient
@@ -108,9 +108,9 @@ export function BackgroundWrapper({
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="hsl(var(--primary) / 0.2)" />
-            <stop offset="50%" stopColor="hsl(var(--primary) / 0.15)" />
-            <stop offset="100%" stopColor="hsl(var(--primary) / 0.1)" />
+            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.2" />
+            <stop offset="50%" stopColor="var(--primary)" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.1" />
           </linearGradient>
 
           <linearGradient
@@ -120,9 +120,9 @@ export function BackgroundWrapper({
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="hsl(var(--primary) / 0.4)" />
-            <stop offset="50%" stopColor="hsl(var(--primary) / 0.3)" />
-            <stop offset="100%" stopColor="hsl(var(--primary) / 0.2)" />
+            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="var(--primary)" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.2" />
           </linearGradient>
 
           <pattern
@@ -138,35 +138,40 @@ export function BackgroundWrapper({
               y="0"
               width="100"
               height="20"
-              fill="hsl(var(--primary) / 0.1)"
+              fill="var(--primary)"
+              fillOpacity="0.1"
             />
             <rect
               x="10"
               y="5"
               width="15"
               height="10"
-              fill="hsl(var(--primary) / 0.3)"
+              fill="var(--primary)"
+              fillOpacity="0.3"
             />
             <rect
               x="35"
               y="5"
               width="15"
               height="10"
-              fill="hsl(var(--primary) / 0.3)"
+              fill="var(--primary)"
+              fillOpacity="0.3"
             />
             <rect
               x="60"
               y="5"
               width="15"
               height="10"
-              fill="hsl(var(--primary) / 0.3)"
+              fill="var(--primary)"
+              fillOpacity="0.3"
             />
             <rect
               x="85"
               y="5"
               width="15"
               height="10"
-              fill="hsl(var(--primary) / 0.3)"
+              fill="var(--primary)"
+              fillOpacity="0.3"
             />
           </pattern>
         </defs>
@@ -189,7 +194,7 @@ export function BackgroundWrapper({
           className="w-full h-full border border-primary/30"
           style={{
             clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-            background: `linear-gradient(45deg, transparent, hsl(var(--primary) / 0.1), transparent)`,
+            background: `linear-gradient(45deg, transparent, var(--primary), transparent)`,
           }}
         />
       </motion.div>

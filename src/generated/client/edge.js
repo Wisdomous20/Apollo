@@ -148,7 +148,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/arshie/Desktop/GH/apollo/src/generated/client",
+      "value": "/Users/jonwayne/Documents/Software Projects/Work/Apollo/src/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -157,7 +157,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "darwin-arm64",
         "native": true
       },
       {
@@ -170,7 +170,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/arshie/Desktop/GH/apollo/prisma/schema.prisma",
+    "sourceFilePath": "/Users/jonwayne/Documents/Software Projects/Work/Apollo/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -184,6 +184,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mongodb",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

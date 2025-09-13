@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, type PanInfo } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -76,6 +76,11 @@ export default function Testimonials() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
+  const isPausedRef = useRef(false);
+
+  // Autoplay interval (ms)
+  const autoplayInterval = 6000;
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -114,7 +119,7 @@ export default function Testimonials() {
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    if (touchStart === null || touchEnd === null) return;
 
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
@@ -129,6 +134,31 @@ export default function Testimonials() {
   };
 
   const currentTestimonial = testimonials[currentIndex];
+
+  // Keyboard navigation
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') nextTestimonial();
+      if (e.key === 'ArrowLeft') prevTestimonial();
+    };
+
+    el.addEventListener('keydown', onKey as any);
+    return () => el.removeEventListener('keydown', onKey as any);
+  }, [containerRef.current]);
+
+  // Autoplay
+  useEffect(() => {
+    const handle = setInterval(() => {
+      if (!isPausedRef.current) {
+        setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+      }
+    }, autoplayInterval);
+
+    return () => clearInterval(handle);
+  }, []);
 
   return (
     <section
@@ -194,7 +224,20 @@ export default function Testimonials() {
               <h3 className="text-2xl font-semibold text-white mb-8 text-center font-serif">
                 What Our Patients Say
               </h3>
-              <section aria-label="Testimonials carousel" className="relative">
+              <section
+                aria-label="Testimonials carousel"
+                className="relative"
+                ref={(el) => {
+                  containerRef.current = el;
+                }}
+                tabIndex={0}
+                onMouseEnter={() => (isPausedRef.current = true)}
+                onMouseLeave={() => (isPausedRef.current = false)}
+                onFocus={() => (isPausedRef.current = true)}
+                onBlur={() => (isPausedRef.current = false)}
+                onTouchStart={() => (isPausedRef.current = true)}
+                onTouchEnd={() => (isPausedRef.current = false)}
+              >
                 <motion.article
                   key={currentIndex}
                   initial={{ opacity: 0 }}
@@ -207,6 +250,18 @@ export default function Testimonials() {
                   onTouchStart={onTouchStart}
                   onTouchMove={onTouchMove}
                   onTouchEnd={onTouchEnd}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.15}
+                  whileTap={{ scale: 0.995 }}
+                  onDragEnd={(_event, info: PanInfo) => {
+                    const offset = info.offset.x;
+                    if (offset < -minSwipeDistance) {
+                      nextTestimonial();
+                    } else if (offset > minSwipeDistance) {
+                      prevTestimonial();
+                    }
+                  }}
                 >
                   <Card className="bg-white shadow-lg h-full rounded-2xl relative overflow-hidden group">
                     <Button
@@ -314,9 +369,9 @@ export default function Testimonials() {
                     <CardContent className="p-4 h-full">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                          <Award className="w-4 h-4 text-primary" />
+                          <Award className="w-4 h-4 text-secondary" />
                         </div>
-                        <h4 className="text-sm font-semibold text-slate-800 font-serif">
+                        <h4 className="text-sm font-semibold text-primary font-serif">
                           Recent Awards
                         </h4>
                       </div>
@@ -349,9 +404,9 @@ export default function Testimonials() {
                     <CardContent className="p-4 h-full">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                          <Shield className="w-4 h-4 text-primary" />
+                          <Shield className="w-4 h-4 text-secondary" />
                         </div>
-                        <h4 className="text-sm font-semibold text-slate-800 font-serif">
+                        <h4 className="text-sm font-semibold text-primary font-serif">
                           Certifications
                         </h4>
                       </div>
