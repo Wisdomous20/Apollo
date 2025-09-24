@@ -134,6 +134,19 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   patientId: 'patientId'
 };
 
+exports.Prisma.ServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  description: 'description',
+  duration: 'duration',
+  price: 'price',
+  isActive: 'isActive',
+  icon: 'icon',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.DoctorAvailabilityScalarFieldEnum = {
   id: 'id',
   date: 'date',
@@ -160,9 +173,16 @@ exports.AppointmentStatus = exports.$Enums.AppointmentStatus = {
   REJECTED: 'REJECTED'
 };
 
+exports.ServiceCategory = exports.$Enums.ServiceCategory = {
+  INJECTION_THERAPIES: 'INJECTION_THERAPIES',
+  IV_DRIP_THERAPIES: 'IV_DRIP_THERAPIES',
+  ADVANCED_WELLNESS_THERAPIES: 'ADVANCED_WELLNESS_THERAPIES'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Appointment: 'Appointment',
+  Service: 'Service',
   DoctorAvailability: 'DoctorAvailability'
 };
 
