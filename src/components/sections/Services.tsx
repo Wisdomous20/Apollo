@@ -4,7 +4,26 @@ import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Syringe, Droplets, Microscope } from 'lucide-react';
+import {
+  Syringe,
+  Droplets,
+  Microscope,
+  Shield,
+  Zap,
+  Dumbbell,
+  Clock,
+  Target,
+  RefreshCcw,
+  Sparkles,
+  Martini,
+  Leaf,
+  Crown,
+  Activity,
+  Citrus,
+  Heart,
+  Brain,
+  Lightbulb,
+} from 'lucide-react';
 import Image from 'next/image';
 import { ServiceCategoryInfo, SERVICE_CATEGORIES } from '@/types/services';
 
@@ -29,6 +48,29 @@ const categoryIcons = {
   INJECTION_THERAPIES: Syringe,
   IV_DRIP_THERAPIES: Droplets,
   ADVANCED_WELLNESS_THERAPIES: Microscope,
+};
+
+// Icon mapping for individual services to replace emojis
+const serviceIcons: Record<string, React.ComponentType<any>> = {
+  '💉': Syringe,
+  '🩺': Shield,
+  '⚡': Zap,
+  '💪': Dumbbell,
+  '⏰': Clock,
+  '🎯': Target,
+  '🔄': RefreshCcw,
+  '💧': Droplets,
+  '🔬': Microscope,
+  '✨': Sparkles,
+  '🍸': Martini,
+  '🌿': Leaf,
+  '👑': Crown,
+  '🧬': Activity, // DNA/science-related
+  '🍊': Citrus,
+  '🩸': Heart, // Blood-related
+  '🛡️': Shield,
+  '🧠': Brain,
+  '💡': Lightbulb,
 };
 
 export default function Services() {
@@ -105,6 +147,86 @@ export default function Services() {
     );
   }
 
+  // Uniform ServiceCard component to ensure consistent design across breakpoints
+  function ServiceCard({
+    category,
+    onBook,
+  }: {
+    category: ServiceCategoryInfo;
+    onBook: (title: string) => void;
+  }) {
+    const IconComponent =
+      categoryIcons[category.category as keyof typeof categoryIcons];
+
+    return (
+      <article
+        className="group outline-none focus-visible:ring-4 focus-visible:ring-primary rounded-2xl"
+        tabIndex={0}
+      >
+        <Card className="h-full bg-white/95 dark:bg-primary/90 shadow-xl border border-primary/20 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
+          <CardContent className="p-5 md:p-6 flex flex-col h-full">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-primary rounded-full flex items-center justify-center shadow-sm border border-secondary/20 dark:border-white/10">
+                <IconComponent
+                  className="w-8 h-8 text-secondary dark:text-white"
+                  aria-hidden="true"
+                />
+              </div>
+              <div className="flex-1 text-right">
+                <h3 className="text-xl md:text-2xl font-bold text-primary dark:text-white leading-tight mb-1 font-serif min-h-[3.5rem] flex items-center justify-end">
+                  <span className="text-balance">{category.title}</span>
+                </h3>
+              </div>
+            </div>
+
+            <p className="text-primary dark:text-white text-sm md:text-base leading-relaxed mb-6 mt-1 font-serif min-h-[3rem] flex items-start">
+              <span>{category.description}</span>
+            </p>
+
+            <div className="mb-6 flex-grow min-h-[12rem]">
+              <ul className="text-sm text-primary dark:text-white/90 space-y-2">
+                {category.services.slice(0, 6).map((service) => {
+                  const ServiceIconComponent =
+                    serviceIcons[service.icon || '💉'] || Syringe;
+                  return (
+                    <li key={service.id} className="flex items-start gap-3">
+                      <span className="text-secondary mt-0.5 flex-shrink-0">
+                        <ServiceIconComponent className="w-4 h-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <span className="font-medium block truncate">
+                          {service.name}
+                        </span>
+                        <span className="text-xs text-foreground block">
+                          {service.duration}
+                        </span>
+                      </div>
+                    </li>
+                  );
+                })}
+                {category.services.length > 6 && (
+                  <li className="text-secondary/70 text-sm italic">
+                    +{category.services.length - 6} more services available
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            <div className="flex items-center justify-end mt-auto gap-2">
+              <Button
+                className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
+                tabIndex={0}
+                onClick={() => onBook(category.title)}
+              >
+                Book Now
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </article>
+    );
+  }
+
   return (
     <section
       className="relative py-[clamp(2.5rem,6vw,7rem)] bg-transparent font-serif"
@@ -167,75 +289,14 @@ export default function Services() {
             style={{ WebkitOverflowScrolling: 'touch' }}
             aria-label="Service categories carousel"
           >
-            {serviceCategories.map((category, index) => {
-              const IconComponent =
-                categoryIcons[category.category as keyof typeof categoryIcons];
-              return (
-                <motion.article
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  tabIndex={0}
-                  className="group outline-none focus-visible:ring-4 focus-visible:ring-primary rounded-2xl min-w-full max-w-full snap-center flex-shrink-0"
-                >
-                  <Card className="h-full bg-white/95 dark:bg-primary/90 shadow-xl border border-primary/20 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
-                    <CardContent className="p-5 flex flex-col h-full">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-primary rounded-full flex items-center justify-center shadow-sm border border-secondary/20 dark:border-white/10">
-                          <IconComponent
-                            className="w-8 h-8 text-secondary dark:text-white"
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <div className="flex-1 text-right">
-                          <h3 className="text-xl font-bold text-primary dark:text-white leading-tight mb-1 font-serif">
-                            {category.title}
-                          </h3>
-                          <p className="text-xs text-secondary mb-0 font-serif">
-                            {category.services.length} Service
-                            {category.services.length !== 1 ? 's' : ''}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="text-primary dark:text-white text-sm leading-relaxed mb-6 mt-1 font-serif">
-                        {category.description}
-                      </p>
-                      <div className="mb-6">
-                        <ul className="text-xs text-primary dark:text-white/90 space-y-1">
-                          {category.services.slice(0, 4).map((service) => (
-                            <li
-                              key={service.id}
-                              className="flex items-center gap-2"
-                            >
-                              <span className="text-secondary">
-                                {service.icon}
-                              </span>
-                              <span className="truncate">{service.name}</span>
-                            </li>
-                          ))}
-                          {category.services.length > 4 && (
-                            <li className="text-secondary/70">
-                              +{category.services.length - 4} more services
-                            </li>
-                          )}
-                        </ul>
-                      </div>
-                      <div className="flex items-center justify-end mt-auto gap-2">
-                        <Button
-                          className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
-                          tabIndex={0}
-                          onClick={() => scrollToBookingForm(category.title)}
-                        >
-                          Book Now
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.article>
-              );
-            })}
+            {serviceCategories.map((category, index) => (
+              <div
+                key={index}
+                className="min-w-full max-w-full snap-center flex-shrink-0"
+              >
+                <ServiceCard category={category} onBook={scrollToBookingForm} />
+              </div>
+            ))}
           </div>
           <nav
             className="flex justify-center items-center gap-2 mt-2"
@@ -268,83 +329,13 @@ export default function Services() {
           aria-label="Service categories"
           className="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto"
         >
-          {serviceCategories.map((category, index) => {
-            const IconComponent =
-              categoryIcons[category.category as keyof typeof categoryIcons];
-            return (
-              <motion.article
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                tabIndex={0}
-                className="group outline-none focus-visible:ring-4 focus-visible:ring-primary rounded-2xl"
-              >
-                <Card className="h-full bg-white/95 dark:bg-primary/90 shadow-xl border border-primary/20 dark:border-white/10 flex flex-col justify-between p-0 rounded-2xl transition-transform duration-200 group-hover:-translate-y-1 group-focus:-translate-y-1">
-                  <CardContent className="p-6 md:p-7 flex flex-col h-full">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-14 h-14 min-w-14 min-h-14 bg-white dark:bg-primary rounded-full flex items-center justify-center shadow-sm border border-secondary/20 dark:border-white/10">
-                        <IconComponent
-                          className="w-8 h-8 text-secondary dark:text-white"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <div className="flex-1 text-right">
-                        <h3 className="text-xl md:text-2xl font-bold text-primary dark:text-white leading-tight mb-1 font-serif">
-                          {category.title}
-                        </h3>
-                        <p className="text-xs md:text-sm text-secondary mb-0 font-serif">
-                          {category.services.length} Service
-                          {category.services.length !== 1 ? 's' : ''}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-primary dark:text-white text-sm md:text-base leading-relaxed mb-6 mt-1 font-serif">
-                      {category.description}
-                    </p>
-                    <div className="mb-6 flex-grow">
-                      <ul className="text-sm text-primary dark:text-white/90 space-y-2">
-                        {category.services.slice(0, 6).map((service) => (
-                          <li
-                            key={service.id}
-                            className="flex items-start gap-3"
-                          >
-                            <span className="text-secondary mt-0.5 flex-shrink-0">
-                              {service.icon}
-                            </span>
-                            <div className="min-w-0">
-                              <span className="font-medium block">
-                                {service.name}
-                              </span>
-                              <span className="text-xs text-secondary block">
-                                {service.duration}
-                              </span>
-                            </div>
-                          </li>
-                        ))}
-                        {category.services.length > 6 && (
-                          <li className="text-secondary/70 text-sm italic">
-                            +{category.services.length - 6} more services
-                            available
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-                    <div className="flex items-center justify-end mt-auto gap-2">
-                      <Button
-                        className="bg-primary hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary text-white font-bold px-4 py-2 rounded shadow-none ml-auto font-serif transition-colors duration-200"
-                        tabIndex={0}
-                        onClick={() => scrollToBookingForm(category.title)}
-                      >
-                        Book Now
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.article>
-            );
-          })}
+          {serviceCategories.map((category, index) => (
+            <ServiceCard
+              key={index}
+              category={category}
+              onBook={scrollToBookingForm}
+            />
+          ))}
         </section>
       </div>
     </section>
