@@ -51,7 +51,10 @@ const categoryIcons = {
 };
 
 // Icon mapping for individual services to replace emojis
-const serviceIcons: Record<string, React.ComponentType<any>> = {
+const serviceIcons: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   '💉': Syringe,
   '🩺': Shield,
   '⚡': Zap,

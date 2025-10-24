@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -61,7 +61,7 @@ export function BookingForm() {
   }, []);
 
   // Helper function to find the earliest available date
-  const findEarliestAvailableDate = () => {
+  const findEarliestAvailableDate = useCallback(() => {
     const today = new Date();
     const checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() + 1); // Start from tomorrow
@@ -77,7 +77,7 @@ export function BookingForm() {
     }
 
     return checkDate.toISOString().split('T')[0];
-  };
+  }, [reservedDays]);
 
   useEffect(() => {
     // Only set defaults after reservedDays are loaded
@@ -91,7 +91,7 @@ export function BookingForm() {
         service: services[0].id,
       }));
     }
-  }, [reservedDays]); // Remove findEarliestAvailableDate dependency
+  }, [reservedDays, findEarliestAvailableDate]);
 
   // Listen for service pre-selection from Services section
   useEffect(() => {

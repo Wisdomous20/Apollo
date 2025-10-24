@@ -55,7 +55,6 @@ const useTypewriter = (texts: string[], speed = 100, delayBetween = 200) => {
 export default function Hero() {
   const {
     displayTexts: [whereText, healingText, beginsText],
-    isAnimationComplete,
   } = useTypewriter(['Where ', 'Healing ', 'BEGINs'], 60, 100);
 
   // ===== ANIMATION VARIANTS =====

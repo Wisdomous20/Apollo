@@ -145,9 +145,9 @@ export default function Testimonials() {
       if (e.key === 'ArrowLeft') prevTestimonial();
     };
 
-    el.addEventListener('keydown', onKey as any);
-    return () => el.removeEventListener('keydown', onKey as any);
-  }, [containerRef.current]);
+    el.addEventListener('keydown', onKey);
+    return () => el.removeEventListener('keydown', onKey);
+  }, []);
 
   // Autoplay
   useEffect(() => {
