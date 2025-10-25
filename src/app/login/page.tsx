@@ -1,5 +1,7 @@
-import LoginPage from '@/components/Login';
+import dynamic from 'next/dynamic';
 
-export default function Login() {
+const LoginPage = dynamic(() => import('@/components/Login'), { ssr: false });
+
+export default function LoginRoute() {
   return <LoginPage />;
 }
