@@ -55,7 +55,6 @@ const useTypewriter = (texts: string[], speed = 100, delayBetween = 200) => {
 export default function Hero() {
   const {
     displayTexts: [whereText, healingText, beginsText],
-    isAnimationComplete,
   } = useTypewriter(['Where ', 'Healing ', 'BEGINs'], 60, 100);
 
   // ===== ANIMATION VARIANTS =====
@@ -147,13 +146,13 @@ export default function Hero() {
           w-full pt-16 pb-20 px-4
           sm:pt-20 sm:pb-24 sm:px-6
           md:pt-24 md:pb-32 md:px-8
-          lg:w-[60%] lg:pt-0 lg:pb-0 lg:px-8 lg:min-h-screen lg:flex lg:flex-col lg:items-start lg:justify-start
+          lg:w-[60%] lg:pt-24 lg:pb-0 lg:px-8 lg:min-h-screen lg:flex lg:flex-col lg:items-start lg:justify-start
           xl:px-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="w-full max-w-4xl mx-auto lg:mx-0 lg:w-full lg:flex lg:flex-col lg:items-start lg:mt-20 xl:mt-28">
+        <div className="w-full max-w-4xl mx-auto lg:mx-0 lg:w-full lg:flex lg:flex-col lg:items-start lg:mt-8 xl:mt-12">
           <motion.div
             className="text-foreground text-center lg:text-left"
             variants={itemVariants}

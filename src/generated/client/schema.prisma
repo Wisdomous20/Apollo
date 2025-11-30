@@ -20,6 +20,12 @@ enum AppointmentStatus {
   REJECTED
 }
 
+enum ServiceCategory {
+  INJECTION_THERAPIES
+  IV_DRIP_THERAPIES
+  ADVANCED_WELLNESS_THERAPIES
+}
+
 model User {
   id                  String        @id @default(cuid()) @map("_id")
   name                String
@@ -41,6 +47,19 @@ model Appointment {
   status        AppointmentStatus @default(PENDING)
   patient       User              @relation("PatientAppointments", fields: [patientId], references: [id])
   patientId     String
+}
+
+model Service {
+  id          String          @id @default(cuid()) @map("_id")
+  name        String
+  category    ServiceCategory
+  description String
+  duration    String
+  price       Float?
+  isActive    Boolean         @default(true)
+  icon        String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 }
 
 model DoctorAvailability {

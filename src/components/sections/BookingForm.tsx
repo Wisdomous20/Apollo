@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,13 +13,13 @@ import { getPublicReservedDays } from '@/lib/actions/doctor-actions';
 import { sendEmail } from '@/lib/actions/email-actions';
 
 // Service and pricing data
-const services = [
-  { id: 'primary-care', name: 'Primary Care', icon: '🩺' },
-  { id: 'specialized-care', name: 'Specialized Care', icon: '⚕️' },
-  { id: 'emergency-care', name: 'Emergency Care', icon: '🚨' },
-  { id: 'consultation', name: 'Consultation', icon: '💬' },
-  { id: 'check-up', name: 'Health Check-up', icon: '🔍' },
-];
+import { ALL_SERVICES } from '@/types/services';
+
+const services = ALL_SERVICES.map((service) => ({
+  id: service.id,
+  name: service.name,
+  icon: service.icon || '🩺',
+}));
 
 export function BookingForm() {
   const [formData, setFormData] = useState({
@@ -61,7 +61,7 @@ export function BookingForm() {
   }, []);
 
   // Helper function to find the earliest available date
-  const findEarliestAvailableDate = () => {
+  const findEarliestAvailableDate = useCallback(() => {
     const today = new Date();
     const checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() + 1); // Start from tomorrow
@@ -77,7 +77,7 @@ export function BookingForm() {
     }
 
     return checkDate.toISOString().split('T')[0];
-  };
+  }, [reservedDays]);
 
   useEffect(() => {
     // Only set defaults after reservedDays are loaded
@@ -91,19 +91,33 @@ export function BookingForm() {
         service: services[0].id,
       }));
     }
-  }, [reservedDays]);
+  }, [reservedDays, findEarliestAvailableDate]);
 
   // Listen for service pre-selection from Services section
   useEffect(() => {
     const handleServiceSelection = (event: CustomEvent) => {
       const { serviceTitle } = event.detail;
-      const serviceMap: Record<string, string> = {
-        'Primary Care': 'primary-care',
-        'Specialized Care': 'specialized-care',
-        'Emergency Care': 'emergency-care',
-      };
 
-      const serviceId = serviceMap[serviceTitle];
+      // Try to find exact match first
+      let serviceId = services.find((s) => s.name === serviceTitle)?.id;
+
+      // If no exact match, try to find by category title
+      if (!serviceId) {
+        const categoryMap: Record<string, string> = {
+          'Injection Therapies':
+            services.find(
+              (s) => s.id.includes('injection') || s.id.includes('biotin')
+            )?.id || '',
+          'IV Drip Therapies':
+            services.find((s) => s.id.includes('iv') || s.id.includes('immune'))
+              ?.id || '',
+          'Advanced Wellness Therapies':
+            services.find((s) => s.id.includes('alpha') || s.id.includes('led'))
+              ?.id || '',
+        };
+        serviceId = categoryMap[serviceTitle];
+      }
+
       if (serviceId) {
         setFormData((prev) => ({ ...prev, service: serviceId }));
       }
@@ -118,7 +132,7 @@ export function BookingForm() {
         'focus-booking-form',
         handleServiceSelection as EventListener
       );
-  }, []);
+  }, []); // Remove services dependency as it's defined outside component
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
